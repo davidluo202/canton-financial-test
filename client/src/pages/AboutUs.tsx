@@ -14,7 +14,7 @@ export default function AboutUs() {
           {/* Page Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">
-              {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
+              {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
             </h1>
             <p className="text-lg text-white max-w-2xl mx-auto drop-shadow-md">
               {language === "zh" 
