@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Navbar() {
-  const [language, setLanguage] = useState<"zh" | "en">("zh");
+  const { language, toggleLanguage } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const toggleLanguage = () => {
-    setLanguage(language === "zh" ? "en" : "zh");
-  };
 
   const menuItems = [
     { zh: "關於我們", en: "About Us", id: "about" },
@@ -26,24 +23,26 @@ export default function Navbar() {
     setMobileMenuOpen(false);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setMobileMenuOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <div className="flex items-center">
+          {/* Logo - Clickable to return to top */}
+          <button
+            onClick={scrollToTop}
+            className="flex items-center hover:opacity-80 transition-opacity"
+          >
             <img
-              src="/logo.svg"
+              src="/Logoblack.png"
               alt="誠港金融"
               className="h-12 w-auto"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
             />
-            <span className="ml-3 text-xl font-bold text-blue-900">
-              誠港金融
-            </span>
-          </div>
+          </button>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
