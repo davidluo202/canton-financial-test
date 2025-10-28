@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, Globe } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Navbar() {
@@ -8,11 +8,11 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { zh: "關於我們", en: "About Us", id: "about" },
-    { zh: "我們可以", en: "What We Can Do", id: "services" },
-    { zh: "思想領導力", en: "Thought Leadership", id: "leadership" },
-    { zh: "職業發展", en: "Career", id: "career" },
-    { zh: "聯繫我們", en: "Contact Us", id: "contact" },
+    { zh: "总览格局，锤穹之势", en: "Overview", id: "about" },
+    { zh: "战略纵深，破浪布局", en: "Strategic Depth", id: "services" },
+    { zh: "承纲执樞，龙骧虎步", en: "Leadership Excellence", id: "leadership" },
+    { zh: "求贤若渴，群英并举", en: "Talent Recruitment", id: "career" },
+    { zh: "四海志士，垂詢見教", en: "Contact", id: "contact" },
   ];
 
   const scrollToSection = (id: string) => {
@@ -32,14 +32,14 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          {/* Logo - Clickable to return to top */}
+          {/* Logo - Clickable to return to top, switches based on language */}
           <button
             onClick={scrollToTop}
             className="flex items-center hover:opacity-80 transition-opacity"
           >
             <img
-              src="/Logoblack.png"
-              alt="誠港金融"
+              src={language === "zh" ? "/logo-chinese.png" : "/Logoblack.png"}
+              alt={language === "zh" ? "誠港金融" : "CMFinancial"}
               className="h-12 w-auto"
             />
           </button>
@@ -56,23 +56,25 @@ export default function Navbar() {
               </button>
             ))}
             <Button
-              variant="outline"
-              size="sm"
+              variant="ghost"
+              size="icon"
               onClick={toggleLanguage}
               className="ml-4"
+              title={language === "zh" ? "Switch to English" : "切换到中文"}
             >
-              {language === "zh" ? "EN" : "中文"}
+              <Globe className="h-5 w-5" />
             </Button>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-2">
             <Button
-              variant="outline"
-              size="sm"
+              variant="ghost"
+              size="icon"
               onClick={toggleLanguage}
+              title={language === "zh" ? "Switch to English" : "切换到中文"}
             >
-              {language === "zh" ? "EN" : "中文"}
+              <Globe className="h-5 w-5" />
             </Button>
             <Button
               variant="ghost"

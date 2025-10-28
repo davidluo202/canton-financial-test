@@ -52,7 +52,7 @@ export default function Home() {
           </p>
           <div className="mt-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              {language === "zh" ? "關於我們" : "About Us"}
+              {language === "zh" ? "总览格局，锤穹之势" : "Overview"}
             </h2>
             <p className="text-lg max-w-2xl mx-auto">
               {language === "zh"
@@ -78,12 +78,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/90 via-gray-800/90 to-slate-900/90"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "關於我們" : "About Us"}
+            {language === "zh" ? "总览格局，锤穹之势" : "Overview"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
             {language === "zh"
-              ? "了解我們的公司背景、價值觀和領導團隊，探索誠港金融的專業實力與企業文化。"
-              : "Learn about our company background, values and leadership team, and explore Canton Financial's professional strength and corporate culture."
+              ? "纵观全局，把握大势。以宏观视野洞察市场格局，以战略眼光布局未来发展，铸就稳固根基，成就卓越之势。"
+              : "Grasp the overall situation with a macro perspective. Understand market patterns with strategic vision, build solid foundations, and achieve excellence."
             }
           </p>
         </div>
@@ -103,12 +103,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/85 via-blue-900/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "我們可以" : "What We Can Do"}
+            {language === "zh" ? "战略纵深，破浪布局" : "Strategic Depth"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
             {language === "zh"
-              ? "探索我們的核心業務服務，包括投資銀行、固定收益股權方案和資產財富管理解決方案。"
-              : "Explore our core business services, including investment banking, fixed income equity solutions, and asset wealth management solutions."
+              ? "深耕战略纵深，乘风破浪前行。以专业实力开拓市场，以创新思维引领发展，为客户提供全方位的金融服务解决方案。"
+              : "Cultivate strategic depth and forge ahead through challenges. Expand markets with professional strength, lead development with innovative thinking, and provide comprehensive financial service solutions."
             }
           </p>
         </div>
@@ -128,12 +128,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/85 via-gray-700/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "思想領導力" : "Thought Leadership"}
+            {language === "zh" ? "承纲执樞，龙骧虎步" : "Leadership Excellence"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
             {language === "zh"
-              ? "深入了解我們的市場洞察、行業分析和前瞻性思維，引領金融服務創新發展。"
-              : "Gain insights into our market perspectives, industry analysis, and forward-thinking approach to leading financial services innovation."
+              ? "执掌核心要务，引领行业发展。以卓越的领导力和专业洞察，把握市场脉搏，开创金融服务新格局。"
+              : "Master core affairs and lead industry development. With outstanding leadership and professional insights, grasp market pulse and create new patterns in financial services."
             }
           </p>
         </div>
@@ -153,12 +153,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-800/85 via-indigo-900/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "職業發展" : "Career Development"}
+            {language === "zh" ? "求贤若渴，群英并举" : "Talent Recruitment"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed">
             {language === "zh"
-              ? "加入我們的專業團隊，在充滿活力的環境中發展您的職業生涯。"
-              : "Join our professional team and develop your career in a dynamic environment."
+              ? "广纳天下英才，共创辉煌未来。我们诚邀各界精英加入，在充满机遇的平台上施展才华，共同成就卓越事业。"
+              : "Welcome talents from all fields to create a brilliant future together. We sincerely invite elites to join us, showcase their talents on a platform full of opportunities, and achieve excellence together."
             }
           </p>
         </div>
@@ -178,12 +178,12 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-pink-900/85 via-rose-800/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "歡迎與我們預約聯繫" : "Welcome to Contact Us"}
+            {language === "zh" ? "四海志士，垂詢見教" : "Contact"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
             {language === "zh"
-              ? "準備開始合作？聯繫我們的專業團隊，討論您的金融需求和投資目標。"
-              : "Ready to start cooperation? Contact our professional team to discuss your financial needs and investment goals."
+              ? "欢迎各界志士仁人垂询指教。我们期待与您携手合作，共同探讨金融服务的无限可能，开创互利共赢的美好未来。"
+              : "Welcome inquiries from all aspiring individuals. We look forward to working with you to explore the infinite possibilities of financial services and create a mutually beneficial future."
             }
           </p>
           <Button
