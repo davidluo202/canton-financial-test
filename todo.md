@@ -114,3 +114,11 @@
 - [x] What We Do页面添加VH1.jpg作为背景
 - [x] Thought Leadership页面添加VictoriaHarborevening.jpg作为背景
 - [x] 调整各页面卡片背景透明度，增强背景图片可见度
+
+## 新增功能需求 - 页面视觉优化
+- [x] 调整三个二级页面（About Us/What We Do/Thought Leadership）的布局，减小卡片尺寸，让背景图更多露出
+- [x] 增强卡片背景透明度（85%→75%），提高背景图可见度
+- [x] 提高文字与卡片背景的对比度，确保可读性
+- [x] 提升首页各区块背景图的对比度和亮度
+- [x] 等比例缩小页面文字大小，使页面更精致
+- [x] 大幅缩小Career和Contact页面的建筑插图，使其起衬托作用

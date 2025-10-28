@@ -77,8 +77,8 @@ export default function Contact() {
 
         <div className="container py-16">
           {/* Building Image Section */}
-          <section className="mb-16">
-            <div className="rounded-2xl overflow-hidden shadow-2xl">
+          <section className="mb-12 flex justify-center">
+            <div className="rounded-xl overflow-hidden shadow-lg max-w-md">
               <img 
                 src="/308building-2.jpg" 
                 alt="CMFinancial Office Building"

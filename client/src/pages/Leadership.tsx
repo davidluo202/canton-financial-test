@@ -42,13 +42,13 @@ export default function Leadership() {
       
       <div className="flex-1 pt-20">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-indigo-900 via-purple-900 to-blue-900 text-white py-24">
+        <div className="relative bg-gradient-to-r from-indigo-900 via-purple-900 to-blue-900 text-white py-16">
           <div className="absolute inset-0 bg-black/20"></div>
           <div className="container relative z-10">
-            <h1 className="text-5xl md:text-6xl font-bold text-center mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
               {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}
             </h1>
-            <p className="text-xl md:text-2xl text-center text-blue-100 max-w-4xl mx-auto">
+            <p className="text-lg md:text-xl text-center text-blue-100 max-w-3xl mx-auto">
               {language === "zh" 
                 ? "以智化勢，以策導大局，引領行業前行"
                 : "Shaping the Future of Finance Through Vision and Innovation"
@@ -57,23 +57,23 @@ export default function Leadership() {
           </div>
         </div>
 
-        <div className="container py-16">
+        <div className="max-w-6xl mx-auto px-4 py-12">
           {/* Introduction Section */}
-          <section className="mb-20">
-            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
+          <section className="mb-16">
+            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
                 {language === "zh" ? (
                   <>
-                    <p className="text-xl leading-relaxed mb-6">
+                    <p className="text-lg leading-relaxed mb-4">
                       思領者，不徒自思；<br/>
                       以智化勢，以策導大局，使群賓同向光明之途。不但專精於業務，更在以卓識引眾志，以遠見定潮向：以獨立之判斷開先河，以原創之洞察開新局。
                     </p>
-                    <p className="text-lg text-gray-700 mb-8">
+                    <p className="text-base text-gray-700 mb-6">
                       誠港金融之思領，所寓於四：
                     </p>
                   </>
                 ) : (
-                  <p className="text-xl leading-relaxed">
+                  <p className="text-lg leading-relaxed">
                     Thought leadership goes beyond expertise — it is the ability to influence, inspire, and guide others through original insights, independent judgment, and forward-looking perspectives. In finance and investment banking, thought leadership means anticipating market shifts, framing new solutions to complex challenges, and setting industry standards rather than following them.
                   </p>
                 )}
@@ -82,7 +82,7 @@ export default function Leadership() {
           </section>
 
           {/* Four Pillars Section */}
-          <section className="mb-20">
+          <section className="mb-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {pillars.map((pillar, index) => (
                 <div

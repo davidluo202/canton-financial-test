@@ -10,14 +10,14 @@ export default function Services() {
     <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VH1.jpg)' }}>
       <Navbar />
       
-      <div className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
+      <div className="pt-20 pb-12">
+        <div className="max-w-6xl mx-auto px-4">
           {/* Page Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">
               {language === "zh" ? "战略纵深，破浪布局" : "What We Do"}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto drop-shadow-md">
               {language === "zh" 
                 ? "深耕战略纵深，乘风破浪前行，为客户提供全方位的金融服务解决方案"
                 : "Cultivate strategic depth and forge ahead, providing comprehensive financial service solutions"
@@ -26,16 +26,16 @@ export default function Services() {
           </div>
 
           {/* Section 1: Investment Banking Services - 投行服務 */}
-          <section id="investment-banking" className="mb-20">
-            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+          <section id="investment-banking" className="mb-16">
+            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "投行服務" : "Investment Banking Services"}
               </h2>
               
               {/* Chinese-only introduction */}
               {language === "zh" && (
-                <div className="text-center mb-12">
-                  <p className="text-lg text-gray-700 italic leading-relaxed whitespace-pre-line">
+                <div className="text-center mb-8">
+                  <p className="text-base text-gray-700 italic leading-relaxed whitespace-pre-line">
                     以謀為綱，以信為盾；通資本以濟實業，順勢勢以創新局。
 — 誠港金融之投行之道
                   </p>
@@ -43,7 +43,7 @@ export default function Services() {
               )}
 
               {/* Three Service Blocks */}
-              <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="grid md:grid-cols-3 gap-6 mt-8">
                 {/* Block 1: Liability Management & Restructuring */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 hover:shadow-xl transition-shadow">
                   <h3 className="text-2xl font-bold text-blue-700 mb-4 text-center">
@@ -147,9 +147,9 @@ export default function Services() {
           </section>
 
           {/* Section 2: FICC and Equity - FICC 與股票業務 */}
-          <section id="ficc-equity" className="mb-20">
-            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+          <section id="ficc-equity" className="mb-16">
+            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "FICC 與股票業務" : "FICC and Equity"}
               </h2>
               
@@ -221,9 +221,9 @@ export default function Services() {
           </section>
 
           {/* Section 3: Asset and Wealth Management - 資產與財富管理 */}
-          <section id="asset-wealth" className="mb-20">
-            <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl shadow-lg p-8 md:p-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+          <section id="asset-wealth" className="mb-16">
+            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "資產與財富管理" : "Asset and Wealth Management"}
               </h2>
               

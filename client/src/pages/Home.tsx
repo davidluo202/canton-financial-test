@@ -23,7 +23,7 @@ export default function Home() {
         }}
       >
         {/* Reduced opacity for brighter background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-slate-900/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-purple-900/20 to-slate-900/30"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           {/* Company Name Image - switches based on language */}
           <div className="mb-8 flex justify-center">
@@ -59,7 +59,7 @@ export default function Home() {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/85 via-gray-800/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/70 via-gray-800/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
@@ -89,7 +89,7 @@ export default function Home() {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/85 via-blue-900/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-blue-900/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "战略纵深，破浪布局" : "What We Do"}
@@ -119,7 +119,7 @@ export default function Home() {
           backgroundBlendMode: "overlay",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-800/85 via-gray-700/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800/70 via-gray-700/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}
@@ -149,7 +149,7 @@ export default function Home() {
           backgroundBlendMode: "overlay",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-800/85 via-indigo-900/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-800/70 via-indigo-900/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "求贤若渴，群英并举" : "Talent Recruitment"}
@@ -179,7 +179,7 @@ export default function Home() {
           backgroundBlendMode: "overlay",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-800/85 via-rose-900/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-800/70 via-rose-900/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "四海志士，垂詢見教" : "Contact"}

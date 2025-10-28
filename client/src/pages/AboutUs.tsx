@@ -9,14 +9,14 @@ export default function AboutUs() {
     <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarbor.jpg)' }}>
       <Navbar />
       
-      <div className="pt-24 pb-16">
-        <div className="container mx-auto px-4">
+      <div className="pt-20 pb-12">
+        <div className="max-w-6xl mx-auto px-4">
           {/* Page Header */}
-          <div className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 drop-shadow-lg">
               {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-white max-w-2xl mx-auto drop-shadow-md">
               {language === "zh" 
                 ? "了解誠港金融的发展历程、核心价值观和领导团队"
                 : "Learn about CMFinancial's journey, core values, and leadership team"
@@ -25,14 +25,14 @@ export default function AboutUs() {
           </div>
 
           {/* Section 1: Overview - 略陳梗概 */}
-          <section id="overview" className="mb-20">
-            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
+          <section id="overview" className="mb-16">
+            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 {language === "zh" ? "略陳梗概" : "Overview"}
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
                 {language === "zh" ? (
-                  <p className="text-lg whitespace-pre-line">
+                  <p className="text-base whitespace-pre-line">
                     誠港金融者，創業於香江，奉監於證府，備经纪、諮詢、管理諸牌照，立信乎市，立義乎人。恪守誠正，以為立身之本；講究獨見，以為謀事之樞；尚求變化，以為通達之道。每承客賓所託，皆盡心焉，務使善策得施，良效可彰。
                     
 其事則：理債券以濟資，參證券以匡投，綜資產以御風險；更與有資格者，共通市埸之脈，研未來之勢，盡投資管理之能事。
@@ -40,7 +40,7 @@ export default function AboutUs() {
 積學以厚業，昌明以達道；願與客君長相與，偕行善世之途。使財者既裕，而道者亦尊；利可長久，名可垂遠。
                   </p>
                 ) : (
-                  <p className="text-lg">
+                  <p className="text-base">
                     Canton Mutual Financial Limited (CMFinancial) is a Hong Kong–based boutique investment banking firm, duly licensed and regulated by the Securities and Futures Commission. We are committed to delivering superior results through trusted, independent, and innovative financial solutions tailored to the needs of our clients.
                     <br /><br />
                     Our core services span debt offerings, securities investment advisory, and portfolio management. In addition, we provide qualified clients with securities execution, global market strategy research, and comprehensive investment management services.
@@ -53,12 +53,12 @@ export default function AboutUs() {
           </section>
 
           {/* Section 2: Our Values - 立身之本 */}
-          <section id="values" className="mb-20">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          <section id="values" className="mb-16">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-white mb-3 drop-shadow-lg">
                 {language === "zh" ? "立身之本" : "Our Values"}
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-lg text-white drop-shadow-md">
                 {language === "zh" 
                   ? "三大核心价值观指引我们的发展方向"
                   : "Three core values that guide our journey"
@@ -68,7 +68,7 @@ export default function AboutUs() {
 
             <div className="grid md:grid-cols-3 gap-8">
               {/* Value 1: Profession */}
-              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-blue-600 mb-2">
                     {language === "zh" ? "專精立業" : "Profession"}
@@ -93,7 +93,7 @@ export default function AboutUs() {
               </div>
 
               {/* Value 2: Potential */}
-              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-purple-600 mb-2">
                     {language === "zh" ? "潛能傲世" : "Potential"}
@@ -118,7 +118,7 @@ export default function AboutUs() {
               </div>
 
               {/* Value 3: Partnership */}
-              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-green-600 mb-2">
                     {language === "zh" ? "同道致遠" : "Partnership"}
@@ -144,14 +144,14 @@ export default function AboutUs() {
           </section>
 
           {/* Section 3: Leadership - 倡遠駕策 */}
-          <section id="leadership" className="mb-20">
-            <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-2xl shadow-lg p-8 md:p-12 text-white">
-              <h2 className="text-4xl font-bold mb-6">
+          <section id="leadership" className="mb-16">
+            <div className="bg-gradient-to-br from-blue-900 to-purple-900 rounded-xl shadow-lg p-6 md:p-8 text-white">
+              <h2 className="text-3xl font-bold mb-4">
                 {language === "zh" ? "倡遠駕策" : "Leadership"}
               </h2>
               <div className="prose prose-lg max-w-none leading-relaxed">
                 {language === "zh" ? (
-                  <p className="text-lg whitespace-pre-line text-white">
+                  <p className="text-base whitespace-pre-line text-white">
                     領眾以德與識，御勢以智與規；斯為誠港金融之領導所宗。於誠港金融而言，領導非徒管理之謂也。
 在於定方略以導向，啟士氣以共進，
 並以誠信立交，與客戶相期不負。
@@ -166,16 +166,16 @@ export default function AboutUs() {
 因客之需而篤行。
                   </p>
                 ) : (
-                  <p className="text-lg text-white">
+                  <p className="text-base text-white">
                     At CMFinancial, leadership means more than management — it is about setting direction, inspiring our people, and building trust with our clients. Our leadership team is composed of seasoned professionals with diverse backgrounds in global markets, technology, and asset management. Together, they foster a culture of accountability, collaboration, and innovation, ensuring that CMFinancial remains agile and client-focused in a dynamic financial environment.
                   </p>
                 )}
               </div>
 
               {/* Executive Bios */}
-              <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Jack Mou Bio */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/15 transition-all">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/15 transition-all">
                   <div className="flex flex-col md:flex-row gap-6 mb-6">
                     <div className="flex-shrink-0">
                       <img 
@@ -222,7 +222,7 @@ Jack's leadership philosophy—"Compliance precedes commerce"—permeates every 
                 </div>
 
                 {/* Xintao Luo Bio */}
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 hover:bg-white/15 transition-all">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/15 transition-all">
                   <div className="flex flex-col md:flex-row gap-6 mb-6">
                     <div className="flex-shrink-0">
                       <img 
