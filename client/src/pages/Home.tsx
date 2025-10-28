@@ -2,16 +2,12 @@ import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Link } from "wouter";
 
 export default function Home() {
   const { language } = useLanguage();
 
-  const scrollToContact = () => {
-    const element = document.getElementById("contact");
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+
 
   return (
     <div className="min-h-screen">
@@ -52,14 +48,19 @@ export default function Home() {
           </p>
           <div className="mt-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              {language === "zh" ? "总览格局，锤穹之势" : "Overview"}
+              {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
             </h2>
-            <p className="text-lg max-w-2xl mx-auto">
+            <p className="text-lg max-w-2xl mx-auto mb-8">
               {language === "zh"
                 ? "了解我們的公司背景、價值觀和領導團隊，探索誠港金融的專業實力與企業文化。"
                 : "Learn about our company background, values and leadership team, and explore Canton Financial's professional strength and corporate culture."
               }
             </p>
+            <Link href="/about">
+              <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
+                {language === "zh" ? "了解更多" : "Learn More"}
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -78,14 +79,19 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/90 via-gray-800/90 to-slate-900/90"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "总览格局，锤穹之势" : "Overview"}
+            {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
               ? "纵观全局，把握大势。以宏观视野洞察市场格局，以战略眼光布局未来发展，铸就稳固根基，成就卓越之势。"
               : "Grasp the overall situation with a macro perspective. Understand market patterns with strategic vision, build solid foundations, and achieve excellence."
             }
           </p>
+          <Link href="/about">
+            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
+              {language === "zh" ? "了解更多" : "Learn More"}
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -105,12 +111,17 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "战略纵深，破浪布局" : "Strategic Depth"}
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
               ? "深耕战略纵深，乘风破浪前行。以专业实力开拓市场，以创新思维引领发展，为客户提供全方位的金融服务解决方案。"
               : "Cultivate strategic depth and forge ahead through challenges. Expand markets with professional strength, lead development with innovative thinking, and provide comprehensive financial service solutions."
             }
           </p>
+          <Link href="/services">
+            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
+              {language === "zh" ? "了解更多" : "Learn More"}
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -130,12 +141,17 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "承纲执樞，龙骧虎步" : "Leadership Excellence"}
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
               ? "执掌核心要务，引领行业发展。以卓越的领导力和专业洞察，把握市场脉搏，开创金融服务新格局。"
               : "Master core affairs and lead industry development. With outstanding leadership and professional insights, grasp market pulse and create new patterns in financial services."
             }
           </p>
+          <Link href="/leadership">
+            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
+              {language === "zh" ? "了解更多" : "Learn More"}
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -155,12 +171,17 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "求贤若渴，群英并举" : "Talent Recruitment"}
           </h2>
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
               ? "广纳天下英才，共创辉煌未来。我们诚邀各界精英加入，在充满机遇的平台上施展才华，共同成就卓越事业。"
               : "Welcome talents from all fields to create a brilliant future together. We sincerely invite elites to join us, showcase their talents on a platform full of opportunities, and achieve excellence together."
             }
           </p>
+          <Link href="/career">
+            <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
+              {language === "zh" ? "了解更多" : "Learn More"}
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -186,13 +207,14 @@ export default function Home() {
               : "Welcome inquiries from all aspiring individuals. We look forward to working with you to explore the infinite possibilities of financial services and create a mutually beneficial future."
             }
           </p>
-          <Button
-            size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg"
-            onClick={() => alert(language === "zh" ? "聯繫功能即將推出" : "Contact feature coming soon")}
-          >
-            {language === "zh" ? "聯繫我們" : "Contact Us"}
-          </Button>
+          <Link href="/contact">
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg"
+            >
+              {language === "zh" ? "聯繫我們" : "Contact Us"}
+            </Button>
+          </Link>
         </div>
       </section>
 
