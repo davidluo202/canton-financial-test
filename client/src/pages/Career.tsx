@@ -25,7 +25,7 @@ export default function Career() {
             </h1>
             <p className="text-xl md:text-2xl text-center text-blue-100 max-w-4xl mx-auto">
               {language === "zh" 
-                ? "广纳天下英才，共创辉煌未来"
+                ? "廣納天下英才，共創輝煌未來"
                 : "Welcome Talents from All Fields to Create a Brilliant Future Together"
               }
             </p>
@@ -50,14 +50,12 @@ export default function Career() {
               <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
                 {language === "zh" ? (
                   <>
-                    <p className="text-xl mb-8">
-                      我们诚邀各界精英加入，在充满机遇的平台上施展才华，共同成就卓越事业。
+                    <p className="text-xl mb-8 whitespace-pre-line">
+                      誠邀英才，共襄偉業。
+誠港金融以弘毅為志，志在構建一方充盈生氣、創意與專業之園地。吾輩深信，人之才華，乃企業最珍之寶。無論君為歷練深厚之金融宿將，抑或意氣風發之初露青年，皆誠迎並肩而行。
                     </p>
-                    <p className="text-lg text-gray-700 mb-8">
-                      誠港金融致力於打造一個充滿活力、創新和專業的工作環境。我們相信，優秀的人才是公司最寶貴的資產。無論您是經驗豐富的金融專業人士，還是充滿激情的應屆畢業生，我們都期待您的加入。
-                    </p>
-                    <p className="text-lg text-gray-700 mb-12">
-                      在誠港金融，您將有機會參與全球市場的投資銀行業務，與行業頂尖專家共事，在充滿挑戰和機遇的環境中不斷成長。
+                    <p className="text-lg text-gray-700 mb-12 whitespace-pre-line">
+                      在誠港金融，君將得與寰球市場並馳，參與投行宏業；與業界俊彥同席共策；於挑戰與機遇並陳之境，砥礪自新，日進不已。
                     </p>
 
                     {/* Contact Information */}

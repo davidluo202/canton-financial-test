@@ -181,14 +181,14 @@ export default function Services() {
                   {
                     titleZh: "股票現貨與執行方案",
                     titleEn: "Cash Equities & Execution Solutions",
-                    contentZh: "我司提供全方位現貨股票服務：\n大宗交易、程式交易、電子執行等吖備。\n\n以智能路徑、低時延科技，\n銜接亞歐美深厚之流動池，\n務求最佳執行。\n\n按組合之需與監管之度量身定制策略，\n以透明高效，貫串交易全鏈。",
+                    contentZh: "我司提供全方位現貨股票服務：\n大宗交易、程式交易、電子執行等悉備。\n\n以智能路徑、低時延科技，\n銜接亞歐美深厚之流動池，\n務求最佳執行。\n\n按組合之需與監管之度量身定制策略，\n以透明高效，貫串交易全鏈。",
                     contentEn: "Our platform offers comprehensive cash equities services solutions, including block trading, program trading, and electronic execution. We deliver best-execution solutions through smart order routing, low-latency technology, and access to deep pools of liquidity in Asia, Europe, and the United States. With a client-centric approach, we provide customized execution strategies aligned with portfolio objectives, regulatory requirements, and market conditions, ensuring transparency and efficiency throughout the entire trade cycle.",
                     color: "bg-gradient-to-br from-purple-50 to-pink-100"
                   },
                   {
                     titleZh: "衍生品",
                     titleEn: "Derivatives",
-                    contentZh: "所涉範圍包括：期權、互換、期貨、結構化產品。\n\n我司為客戶設計避險、增利與風險轉移之策，\n融量化模型與即時行情而為判斷，\n助投資者控波動、優資本、拓資產敖口。\n\n無論基礎工具或定制複合結構，\n我司皆精於執行與策謀。",
+                    contentZh: "所涉範圍包括：期權、互換、期貨、結構化產品。\n\n我司為客戶設計避險、增利與風險轉移之策，\n融量化模型與即時行情而為判斷，\n助投資者控波動、優資本、拓資產敞口。\n\n無論基礎工具或定制複合結構，\n我司皆精於執行與策謀。",
                     contentEn: "We offer a full spectrum of derivative solutions across FICC and equities, including options, swaps, futures, and structured products. Our team designs innovative hedging, yield-enhancement, and risk-transfer strategies tailored to client portfolios. By integrating robust quantitative models with real-time market data, we help qualified investors manage volatility, optimize capital efficiency, and gain exposure to targeted asset classes. From plain-vanilla instruments to bespoke structured derivatives, CMFinancial provides both execution expertise and advisory depth to support dynamic investment strategies.",
                     color: "bg-gradient-to-br from-green-50 to-teal-100"
                   },

@@ -70,7 +70,7 @@ export default function Home() {
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
-              ? "纵观全局，把握大势。以宏观视野洞察市场格局，以战略眼光布局未来发展，铸就稳固根基，成就卓越之势。"
+              ? "縱觀全局，把握大勢。以宏觀視野洞察市場格局，以戰略眼光佈局未來發展，鑄就穩固根基，成就卓越之勢。"
               : "Grasp the overall situation with a macro perspective. Understand market patterns with strategic vision, build solid foundations, and achieve excellence."
             }
           </p>
@@ -100,7 +100,7 @@ export default function Home() {
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
-              ? "深耕战略纵深，乘风破浪前行。以专业实力开拓市场，以创新思维引领发展，为客户提供全方位的金融服务解决方案。"
+              ? "深耕戰略縱深，乘風破浪前行。以專業實力開拓市場，以創新思維引領發展，為客戶提供全方位的金融服務解決方案。"
               : "Cultivate strategic depth and forge ahead through challenges. Expand markets with professional strength, lead development with innovative thinking, and provide comprehensive financial service solutions."
             }
           </p>
@@ -130,7 +130,7 @@ export default function Home() {
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
-              ? "执掌核心要务，引领行业发展。以卓越的领导力和专业洞察，把握市场脉搏，开创金融服务新格局。"
+              ? "執掌核心要務，引領行業發展。以卓越的領導力和專業洞察，把握市場脈搏，開創金融服務新格局。"
               : "Master core affairs and lead industry development. With outstanding leadership and professional insights, grasp market pulse and create new patterns in financial services."
             }
           </p>
@@ -190,7 +190,7 @@ export default function Home() {
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-12">
             {language === "zh"
-              ? "欢迎各界志士仁人垂询指教。我们期待与您携手合作，共同探讨金融服务的无限可能，开创互利共赢的美好未来。"
+              ? "歡迎各界志士仁人垂詢指教。我們期待與您攜手合作，共同探討金融服務的無限可能，開創互利共贏的美好未來。"
               : "Welcome inquiries from all aspiring individuals. We look forward to working with you to explore the infinite possibilities of financial services and create a mutually beneficial future."
             }
           </p>
