@@ -53,7 +53,7 @@ export default function Home() {
         id="about"
         className="relative h-screen flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/central-night.jpg')",
+          backgroundImage: "url('/VIctoriaHarbor.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
@@ -83,7 +83,7 @@ export default function Home() {
         id="services"
         className="relative h-screen flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('/contact-bg.jpg')",
+          backgroundImage: "url('/VH1.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
@@ -113,7 +113,7 @@ export default function Home() {
         id="leadership"
         className="relative h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 via-gray-700 to-slate-900 text-white"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070')",
+          backgroundImage: "url('/VictoriaHarborevening.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundBlendMode: "overlay",

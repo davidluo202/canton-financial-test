@@ -126,3 +126,8 @@
 ## 新增功能需求 - 品牌资产更新
 - [x] 替换首页中文版中央的公司名称图片为新版本
 - [x] 修改英文版导航栏"About Us"为"About CMF"
+
+## 新增功能需求 - 首页背景图更新
+- [x] 将About CMF区块背景图替换为VictoriaHarbor.jpg
+- [x] 将What We Do区块背景图替换为VH1.jpg
+- [x] 将Thought Leadership区块背景图替换为VictoriaHarborevening.jpg
