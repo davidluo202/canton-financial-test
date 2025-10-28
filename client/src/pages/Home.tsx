@@ -56,7 +56,7 @@ export default function Home() {
           backgroundImage: "url('/VIctoriaHarbor.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 via-gray-800/40 to-slate-900/40"></div>
@@ -86,7 +86,7 @@ export default function Home() {
           backgroundImage: "url('/VH1.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundAttachment: "fixed",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-slate-900/40"></div>
@@ -116,7 +116,7 @@ export default function Home() {
           backgroundImage: "url('/VictoriaHarborevening.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundBlendMode: "overlay",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/40 via-gray-700/40 to-slate-900/40"></div>
