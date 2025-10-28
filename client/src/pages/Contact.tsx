@@ -1,10 +1,15 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { MapPin, Phone, FileText, Mail, Globe, Clock } from "lucide-react";
 
 export default function Contact() {
   const { language } = useLanguage();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const contactInfo = [
     {

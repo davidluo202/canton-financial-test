@@ -1,9 +1,14 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Leadership() {
   const { language } = useLanguage();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const pillars = [
     {

@@ -1,10 +1,15 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ServiceCarousel from "@/components/ServiceCarousel";
 
 export default function Services() {
   const { language } = useLanguage();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VH1.jpg)' }}>
@@ -27,7 +32,7 @@ export default function Services() {
 
           {/* Section 1: Investment Banking Services - 投行服務 */}
           <section id="investment-banking" className="mb-16">
-            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "投行服務" : "Investment Banking Services"}
               </h2>
@@ -148,7 +153,7 @@ export default function Services() {
 
           {/* Section 2: FICC and Equity - FICC 與股票業務 */}
           <section id="ficc-equity" className="mb-16">
-            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "FICC 與股票業務" : "FICC and Equity"}
               </h2>
@@ -222,7 +227,7 @@ export default function Services() {
 
           {/* Section 3: Asset and Wealth Management - 資產與財富管理 */}
           <section id="asset-wealth" className="mb-16">
-            <div className="bg-white/75 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">
                 {language === "zh" ? "資產與財富管理" : "Asset and Wealth Management"}
               </h2>

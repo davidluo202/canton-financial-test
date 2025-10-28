@@ -1,12 +1,17 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function AboutUs() {
   const { language } = useLanguage();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarbor.jpg)', backgroundColor: '#e0f2fe' }}>
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarbor.jpg)' }}>
       <Navbar />
       
       <div className="pt-20 pb-12">
@@ -26,7 +31,7 @@ export default function AboutUs() {
 
            {/* Section 1: Overview - 略陳梗概 */}
           <section id="overview" className="mb-16">
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 {language === "zh" ? "略陳梗概" : "Overview"}
               </h2>
@@ -145,7 +150,7 @@ export default function AboutUs() {
 
           {/* Section 3: Leadership - 倡遠駕策 */}
           <section id="leadership" className="mb-16">
-            <div className="bg-white/70 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
+            <div className="bg-white/60 backdrop-blur-sm rounded-xl shadow-lg p-6 md:p-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 {language === "zh" ? "倡遠駕策" : "Leadership"}
               </h2>

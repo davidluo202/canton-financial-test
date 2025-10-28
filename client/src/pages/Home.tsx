@@ -27,14 +27,18 @@ export default function Home() {
         <div className="container mx-auto px-4 relative z-10 text-center">
           {/* Company Name Image - switches based on language */}
           <div className="mb-8 flex justify-center">
-            <img
-              src={language === "zh" ? "/诚港金融股份有限公司White.png" : "/CANTONMUTUALFINANCIALLIMITED.png"}
-              alt={language === "zh" ? "誠港金融股份有限公司" : "Canton Mutual Financial Limited"}
-              className="w-full max-w-2xl h-auto px-4 md:px-8"
-              style={{
-                filter: language === "en" ? "invert(1)" : "none"
-              }}
-            />
+            {language === "zh" ? (
+              <h1 className="text-5xl md:text-7xl font-bold text-white" style={{ fontFamily: '楷体, KaiTi, STKaiti, serif' }}>
+                誠港金融股份有限公司
+              </h1>
+            ) : (
+              <img
+                src="/CANTONMUTUALFINANCIALLIMITED.png"
+                alt="Canton Mutual Financial Limited"
+                className="w-full max-w-2xl h-auto px-4 md:px-8"
+                style={{ filter: "invert(1)" }}
+              />
+            )}
           </div>
           <p className="text-2xl md:text-3xl mb-8 font-light">
             {language === "zh" ? "專業，潛力和合作夥伴" : "Profession, Potential and Partnership"}
