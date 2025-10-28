@@ -55,3 +55,15 @@
 - [x] 创建“四海志士，垂詢見教”二级页面
 - [x] 实现页面路由系统
 - [x] 更新导航栏以支持页面跳转
+
+## 新增功能需求 - 第三轮
+- [x] 移除首页中重复的第一部分About Us
+- [x] 修正首页英文版核心价值：Professional → Profession，Partners → Partnership
+- [x] 提高首页背景图片亮度
+- [x] 为第二、三部分使用新的背景图片
+- [x] 将“战略纵深，破浪布局”英文改为“What We Do”
+- [x] 更新Services页面为“What We Do”页面
+- [x] 添加“投行服務”(Investment Banking Services)子部分
+- [x] 添加“負債管理與重組”详细内容
+- [x] 添加“全球市場投資諮詢”详细内容
+- [x] 添加“資本市場方案”详细内容

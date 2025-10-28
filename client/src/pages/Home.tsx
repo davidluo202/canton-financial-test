@@ -7,8 +7,6 @@ import { Link } from "wouter";
 export default function Home() {
   const { language } = useLanguage();
 
-
-
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -24,7 +22,8 @@ export default function Home() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-purple-900/50 to-slate-900/60"></div>
+        {/* Reduced opacity for brighter background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           {/* Company Name Image - switches based on language */}
           <div className="mb-8 flex justify-center">
@@ -38,7 +37,7 @@ export default function Home() {
             />
           </div>
           <p className="text-2xl md:text-3xl mb-8 font-light">
-            {language === "zh" ? "專業，潛力和合作夥伴" : "Professional, Potential and Partners"}
+            {language === "zh" ? "專業，潛力和合作夥伴" : "Profession, Potential and Partnership"}
           </p>
           <p className="text-lg md:text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
             {language === "zh" 
@@ -46,37 +45,21 @@ export default function Home() {
               : "Canton Mutual Financial Limited is a boutique investment bank registered in Hong Kong, regulated by the SFC, holding licenses 1, 4, and 9, providing highly customized financial services and products to clients."
             }
           </p>
-          <div className="mt-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
-            </h2>
-            <p className="text-lg max-w-2xl mx-auto mb-8">
-              {language === "zh"
-                ? "了解我們的公司背景、價值觀和領導團隊，探索誠港金融的專業實力與企業文化。"
-                : "Learn about our company background, values and leadership team, and explore Canton Financial's professional strength and corporate culture."
-              }
-            </p>
-            <Link href="/about">
-              <Button size="lg" className="bg-white/20 hover:bg-white/30 text-white border-2 border-white">
-                {language === "zh" ? "了解更多" : "Learn More"}
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
       {/* About Section */}
       <section
         id="about"
-        className="relative h-screen flex items-center justify-center bg-gradient-to-br from-slate-700 via-gray-800 to-slate-900 text-white"
+        className="relative h-screen flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070')",
+          backgroundImage: "url('/central-night.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundBlendMode: "overlay",
+          backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/90 via-gray-800/90 to-slate-900/90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/85 via-gray-800/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
@@ -98,18 +81,18 @@ export default function Home() {
       {/* Services Section */}
       <section
         id="services"
-        className="relative h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-slate-900 text-white"
+        className="relative h-screen flex items-center justify-center text-white"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2064')",
+          backgroundImage: "url('/contact-bg.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundBlendMode: "overlay",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/85 via-blue-900/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "战略纵深，破浪布局" : "Strategic Depth"}
+            {language === "zh" ? "战略纵深，破浪布局" : "What We Do"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
@@ -160,7 +143,7 @@ export default function Home() {
         id="career"
         className="relative h-screen flex items-center justify-center bg-gradient-to-br from-blue-800 via-indigo-900 to-slate-900 text-white"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundBlendMode: "overlay",
@@ -188,20 +171,20 @@ export default function Home() {
       {/* Contact Section */}
       <section
         id="contact"
-        className="relative h-screen flex items-center justify-center bg-gradient-to-br from-pink-900 via-rose-800 to-slate-900 text-white"
+        className="relative h-screen flex items-center justify-center bg-gradient-to-br from-pink-800 via-rose-900 to-slate-900 text-white"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=2070')",
+          backgroundImage: "url('https://images.unsplash.com/photo-1423666639041-f56000c27a9a?q=80&w=2074')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundBlendMode: "overlay",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-900/85 via-rose-800/85 to-slate-900/85"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-800/85 via-rose-900/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "四海志士，垂詢見教" : "Contact"}
           </h2>
-          <p className="text-xl max-w-3xl mx-auto mb-12 leading-relaxed">
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-12">
             {language === "zh"
               ? "欢迎各界志士仁人垂询指教。我们期待与您携手合作，共同探讨金融服务的无限可能，开创互利共赢的美好未来。"
               : "Welcome inquiries from all aspiring individuals. We look forward to working with you to explore the infinite possibilities of financial services and create a mutually beneficial future."

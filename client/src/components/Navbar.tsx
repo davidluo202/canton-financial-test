@@ -11,7 +11,7 @@ export default function Navbar() {
 
   const menuItems = [
     { zh: "总览格局，锤穹之势", en: "About Us", path: "/about" },
-    { zh: "战略纵深，破浪布局", en: "Strategic Depth", path: "/services" },
+    { zh: "战略纵深，破浪布局", en: "What We Do", path: "/services" },
     { zh: "承纲执樞，龙骧虎步", en: "Leadership Excellence", path: "/leadership" },
     { zh: "求贤若渴，群英并举", en: "Talent Recruitment", path: "/career" },
     { zh: "四海志士，垂詢見教", en: "Contact", path: "/contact" },
