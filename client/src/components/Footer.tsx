@@ -51,7 +51,7 @@ export default function Footer() {
           </DialogHeader>
           <div className="prose prose-sm max-w-none">
             {language === "zh" ? (
-              <div className="space-y-4 text-gray-700 leading-relaxed">
+              <div className="space-y-4 text-gray-900 leading-relaxed">
                 <p>
                   <strong>免責聲明：</strong>誠港金融股份有限公司（下稱「本公司」）為香港證券及期貨事務監察委員會（SFC）認可的持牌法團（牌照編號：BSU667），獲發第1類（證券交易）、第4類（就證券提供意見）及第9類（資產管理）牌照。
                 </p>
@@ -69,7 +69,7 @@ export default function Footer() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4 text-gray-700 leading-relaxed">
+              <div className="space-y-4 text-gray-900 leading-relaxed">
                 <p>
                   <strong>Disclaimer</strong>
                 </p>
