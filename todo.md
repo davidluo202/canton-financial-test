@@ -67,3 +67,14 @@
 - [x] 添加“負債管理與重組”详细内容
 - [x] 添加“全球市場投資諮詢”详细内容
 - [x] 添加“資本市場方案”详细内容
+
+## 新增功能需求 - FICC与股票业务
+- [x] 添加"FICC 與股票業務"(FICC and Equity)子部分到What We Do页面
+- [x] 实现左右滑动展示组件展现7个业务板块
+- [x] 添加"精誠經紀之務"(Elite Brokerage Coverage)板块
+- [x] 添加"股票現貨與執行方案"(Cash Equities & Execution Solutions)板块
+- [x] 添加"衍生品"(Derivatives)板块
+- [x] 添加"全球信用"(Global Credit)板块
+- [x] 添加"利率產品"(Interest Rate Products)板块
+- [x] 添加"抵押及結構化產品"(Mortgage & Structured Products)板块
+- [x] 添加"回購"(Repo)板块

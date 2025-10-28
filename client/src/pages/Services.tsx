@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ServiceCarousel from "@/components/ServiceCarousel";
 
 export default function Services() {
   const { language } = useLanguage();
@@ -145,12 +146,86 @@ export default function Services() {
             </div>
           </section>
 
-          {/* Placeholder for additional sub-sections */}
+          {/* Section 2: FICC and Equity - FICC 與股票業務 */}
+          <section id="ficc-equity" className="mb-20">
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+                {language === "zh" ? "FICC 與股票業務" : "FICC and Equity"}
+              </h2>
+              
+              {/* Chinese-only introduction */}
+              {language === "zh" && (
+                <div className="text-center mb-12">
+                  <p className="text-lg text-gray-700 italic leading-relaxed">
+                    以智慧控險，以精準擇勢，與客共謀資本市場之利達。
+                  </p>
+                </div>
+              )}
+
+              {/* Seven Service Blocks in Carousel */}
+              <ServiceCarousel
+                language={language}
+                slides={[
+                  {
+                    titleZh: "精誠經紀之務",
+                    titleEn: "Elite Brokerage Coverage",
+                    contentZh: "我司精通債券、貨幣、大宗及股票諸市場，\n為合資格客戶提供迅捷通達與精準執行。\n\n銷售與交易團隊歷練深厚，\n善以多年代理商、銀行及貨幣經紀之網絡，\n爭取優價與充裕流動性。\n\n融人之智與智能數據之明，\n進獻獨到洞見、行情情報與策略設計，\n助客戶審機擇勢，控險制勝。",
+                    contentEn: "We provide elite brokerage coverage across fixed income, currencies, commodities (FICC), and equities, delivering seamless market access and execution tailored to qualified clients. Our seasoned sales and trading professionals leverage long-standing relationships with global dealers, banks, and money market brokers to secure competitive pricing and liquidity across diverse markets. By combining human expertise with AI-driven analytics, we offer differentiated insights, market intelligence, and trade ideas that help clients capture opportunities and manage risk with precision.",
+                    color: "bg-gradient-to-br from-blue-50 to-indigo-100"
+                  },
+                  {
+                    titleZh: "股票現貨與執行方案",
+                    titleEn: "Cash Equities & Execution Solutions",
+                    contentZh: "我司提供全方位現貨股票服務：\n大宗交易、程式交易、電子執行等吖備。\n\n以智能路徑、低時延科技，\n銜接亞歐美深厚之流動池，\n務求最佳執行。\n\n按組合之需與監管之度量身定制策略，\n以透明高效，貫串交易全鏈。",
+                    contentEn: "Our platform offers comprehensive cash equities services solutions, including block trading, program trading, and electronic execution. We deliver best-execution solutions through smart order routing, low-latency technology, and access to deep pools of liquidity in Asia, Europe, and the United States. With a client-centric approach, we provide customized execution strategies aligned with portfolio objectives, regulatory requirements, and market conditions, ensuring transparency and efficiency throughout the entire trade cycle.",
+                    color: "bg-gradient-to-br from-purple-50 to-pink-100"
+                  },
+                  {
+                    titleZh: "衍生品",
+                    titleEn: "Derivatives",
+                    contentZh: "所涉範圍包括：期權、互換、期貨、結構化產品。\n\n我司為客戶設計避險、增利與風險轉移之策，\n融量化模型與即時行情而為判斷，\n助投資者控波動、優資本、拓資產敖口。\n\n無論基礎工具或定制複合結構，\n我司皆精於執行與策謀。",
+                    contentEn: "We offer a full spectrum of derivative solutions across FICC and equities, including options, swaps, futures, and structured products. Our team designs innovative hedging, yield-enhancement, and risk-transfer strategies tailored to client portfolios. By integrating robust quantitative models with real-time market data, we help qualified investors manage volatility, optimize capital efficiency, and gain exposure to targeted asset classes. From plain-vanilla instruments to bespoke structured derivatives, CMFinancial provides both execution expertise and advisory depth to support dynamic investment strategies.",
+                    color: "bg-gradient-to-br from-green-50 to-teal-100"
+                  },
+                  {
+                    titleZh: "全球信用",
+                    titleEn: "Global Credit",
+                    contentZh: "覆蓋投資級、高收益、新興市場與離岸人民幣債券，\n供流動性、定價透明與交易策略於一體。\n\n憑深研信用與深厚代理商網絡，\n助客戶尋相對價值，控信用暴露，\n優化初級與次級市場之回報。",
+                    contentEn: "We provide comprehensive coverage across the global credit spectrum, spanning investment-grade, high-yield, emerging market, and offshore RMB bonds. Our team delivers liquidity, pricing transparency, and bespoke trade ideas tailored to client mandates. Leveraging long-standing dealer relationships and deep credit research, we assist qualified investors in identifying relative-value opportunities, managing credit exposure, and optimizing portfolio performance across both primary and secondary markets.",
+                    color: "bg-gradient-to-br from-amber-50 to-orange-100"
+                  },
+                  {
+                    titleZh: "利率產品",
+                    titleEn: "Interest Rate Products",
+                    contentZh: "提供主權債、利率互換、期貨\n及利率掛鉤結構之方案。\n\n洞察收益曲線與政策之變化，\n精準執行、策略予謀，\n無論避險、久期管理或戰術布局，\n皆以量化輔行市情，契合投資人之需。",
+                    contentEn: "Our interest rate products desk offers access to sovereign bonds, swaps, futures, and structured rate-linked solutions. We help clients navigate shifting yield curves, policy changes, and global macroeconomic trends through precise execution and strategic advisory. Whether for hedging, duration management, or tactical positioning, CMFinancial combines market insight with quantitative modeling to deliver customized strategies that address the evolving needs of qualified investors.",
+                    color: "bg-gradient-to-br from-rose-50 to-red-100"
+                  },
+                  {
+                    titleZh: "抵押及結構化產品",
+                    titleEn: "Mortgage & Structured Products",
+                    contentZh: "涵蓋 MBS、ABS 與結構信用工具。\n\n我司平台貫通全球資金與多元資產，\n以收益、信用、流動三者平衡為要，\n賦客戶以分散現金流與韌性組合。\n\n亦可協助客戶創構專屬投資載體，\n契合其特定偏好。",
+                    contentEn: "We offer specialized expertise in mortgage-backed securities, asset-backed securities, and structured credit solutions. Our platform connects global investors with opportunities in securitized products across both traditional and alternative asset classes. By tailoring structures that balance yield, credit risk, and liquidity considerations, we enable clients to access diversified cash flows and enhance portfolio resilience. Our advisory team also assists in originating and structuring bespoke vehicles that align with specific investor requirements.",
+                    color: "bg-gradient-to-br from-cyan-50 to-blue-100"
+                  },
+                  {
+                    titleZh: "回購",
+                    titleEn: "Repo",
+                    contentZh: "提供高效融資與質押管理方案，\n優化資產負債運用與資金成本。\n\n連通境內外深厚流動，\n支持國債、信用債與結構票據之回購業務。\n\n重靈活安全與對手風控，\n確保清算順暢、融通無虞。",
+                    contentEn: "Our repo desk provides efficient financing and collateral management solutions, enabling clients to optimize balance sheet usage and funding costs. With access to deep liquidity pools in both onshore and offshore markets, we deliver customized repo and reverse repo transactions across government bonds, credit products, and structured notes. CMFinancial emphasizes flexibility, transparency, and robust counterparty risk management to ensure smooth settlement and secure financing solutions for qualified clients.",
+                    color: "bg-gradient-to-br from-violet-50 to-purple-100"
+                  }
+                ]}
+              />
+            </div>
+          </section>
+
+          {/* Placeholder for third sub-section */}
           <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
             <p className="text-lg text-gray-600">
               {language === "zh" 
-                ? "更多服务内容即将推出，敬请期待..."
-                : "More services coming soon..."
+                ? "第三个子部分内容即将推出，敬请期待..."
+                : "Third sub-section coming soon..."
               }
             </p>
           </div>
