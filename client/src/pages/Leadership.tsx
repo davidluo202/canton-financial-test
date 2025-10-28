@@ -37,7 +37,7 @@ export default function Leadership() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen flex flex-col bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarborevening.jpg)' }}>
       <Navbar />
       
       <div className="flex-1 pt-20">
@@ -60,7 +60,7 @@ export default function Leadership() {
         <div className="container py-16">
           {/* Introduction Section */}
           <section className="mb-20">
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
               <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
                 {language === "zh" ? (
                   <>
@@ -87,7 +87,7 @@ export default function Leadership() {
               {pillars.map((pillar, index) => (
                 <div
                   key={index}
-                  className="group relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
+                  className="group relative bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300"
                 >
                   {/* Gradient Header */}
                   <div className={`h-2 bg-gradient-to-r ${pillar.color}`}></div>

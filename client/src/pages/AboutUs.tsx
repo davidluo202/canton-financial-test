@@ -6,7 +6,7 @@ export default function AboutUs() {
   const { language } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarbor.jpg)' }}>
       <Navbar />
       
       <div className="pt-24 pb-16">
@@ -26,7 +26,7 @@ export default function AboutUs() {
 
           {/* Section 1: Overview - 略陳梗概 */}
           <section id="overview" className="mb-20">
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
                 {language === "zh" ? "略陳梗概" : "Overview"}
               </h2>
@@ -68,7 +68,7 @@ export default function AboutUs() {
 
             <div className="grid md:grid-cols-3 gap-8">
               {/* Value 1: Profession */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-blue-600 mb-2">
                     {language === "zh" ? "專精立業" : "Profession"}
@@ -93,7 +93,7 @@ export default function AboutUs() {
               </div>
 
               {/* Value 2: Potential */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-purple-600 mb-2">
                     {language === "zh" ? "潛能傲世" : "Potential"}
@@ -118,7 +118,7 @@ export default function AboutUs() {
               </div>
 
               {/* Value 3: Partnership */}
-              <div className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
+              <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 hover:shadow-xl transition-shadow">
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold text-green-600 mb-2">
                     {language === "zh" ? "同道致遠" : "Partnership"}

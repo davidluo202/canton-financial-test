@@ -108,3 +108,9 @@
 ## 新增功能需求 - 高管照片
 - [x] 添加Jack Mou的职业照片到简介卡片
 - [x] 添加Xintao Luo的职业照片到简介卡片
+
+## 新增功能需求 - 二级页面背景图片
+- [x] About Us页面添加VictoriaHarbor.jpg作为背景
+- [x] What We Do页面添加VH1.jpg作为背景
+- [x] Thought Leadership页面添加VictoriaHarborevening.jpg作为背景
+- [x] 调整各页面卡片背景透明度，增强背景图片可见度

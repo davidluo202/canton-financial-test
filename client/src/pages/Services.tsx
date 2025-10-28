@@ -7,7 +7,7 @@ export default function Services() {
   const { language } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50">
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VH1.jpg)' }}>
       <Navbar />
       
       <div className="pt-24 pb-16">
@@ -27,7 +27,7 @@ export default function Services() {
 
           {/* Section 1: Investment Banking Services - 投行服務 */}
           <section id="investment-banking" className="mb-20">
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
               <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
                 {language === "zh" ? "投行服務" : "Investment Banking Services"}
               </h2>
@@ -148,7 +148,7 @@ export default function Services() {
 
           {/* Section 2: FICC and Equity - FICC 與股票業務 */}
           <section id="ficc-equity" className="mb-20">
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12">
+            <div className="bg-white/85 backdrop-blur-sm rounded-2xl shadow-lg p-8 md:p-12">
               <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
                 {language === "zh" ? "FICC 與股票業務" : "FICC and Equity"}
               </h2>
