@@ -62,7 +62,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/85 via-gray-800/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "总览格局，锤穹之势" : "About Us"}
+            {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
@@ -122,7 +122,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/85 via-gray-700/85 to-slate-900/85"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            {language === "zh" ? "承纲执樞，龙骧虎步" : "Leadership Excellence"}
+            {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"

@@ -89,3 +89,11 @@
 - [x] 添加四个核心板块：觀遠(Vision)、創變(Innovation)、立信(Credibility)、致效(Impact)
 - [x] 添加总结部分
 - [x] 更新导航栏中的英文标题
+
+## 新增功能需求 - 首页和联系页面更新
+- [x] 修改首页英文版：About US → About CMF
+- [x] 修改首页英文版：Leadership Excellence → Thought Leadership
+- [x] Career页面添加建筑照片插图
+- [x] Career页面添加招聘邮箱HR@cmfinancial.com
+- [x] Contact页面添加建筑照片插图
+- [x] Contact页面添加完整公司联系信息（地址、电话、传真、邮箱、网站、营业时间）
