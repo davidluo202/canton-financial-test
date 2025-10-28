@@ -131,3 +131,8 @@
 - [x] 将About CMF区块背景图替换为VictoriaHarbor.jpg
 - [x] 将What We Do区块背景图替换为VH1.jpg
 - [x] 将Thought Leadership区块背景图替换为VictoriaHarborevening.jpg
+
+## 新增功能需求 - 背景图显示优化
+- [x] 首页除第一张外的其他区块背景图增加亮度和清晰度
+- [x] Leadership二级页面标题区域增加透明度，显示背景图
+- [x] About Us二级页面使用VictoriaHarbor.jpg替换黑色背景

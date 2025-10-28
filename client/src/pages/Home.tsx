@@ -59,7 +59,7 @@ export default function Home() {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/70 via-gray-800/70 to-slate-900/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 via-gray-800/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
@@ -89,7 +89,7 @@ export default function Home() {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/70 via-blue-900/70 to-slate-900/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "战略纵深，破浪布局" : "What We Do"}
@@ -119,7 +119,7 @@ export default function Home() {
           backgroundBlendMode: "overlay",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-800/70 via-gray-700/70 to-slate-900/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-800/40 via-gray-700/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
             {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}

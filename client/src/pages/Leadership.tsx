@@ -42,8 +42,8 @@ export default function Leadership() {
       
       <div className="flex-1 pt-20">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-indigo-900 via-purple-900 to-blue-900 text-white py-16">
-          <div className="absolute inset-0 bg-black/20"></div>
+        <div className="relative bg-gradient-to-r from-indigo-900/60 via-purple-900/60 to-blue-900/60 text-white py-16">
+          <div className="absolute inset-0 bg-black/10"></div>
           <div className="container relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold text-center mb-4">
               {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}
