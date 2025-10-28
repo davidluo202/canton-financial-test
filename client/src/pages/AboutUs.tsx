@@ -11,7 +11,7 @@ export default function AboutUs() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarbor.jpg)' }}>
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/中环夜景图.jpg)' }}>
       <Navbar />
       
       <div className="pt-20 pb-12">

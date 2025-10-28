@@ -28,7 +28,7 @@ export default function Home() {
           {/* Company Name Image - switches based on language */}
           <div className="mb-8 flex justify-center">
             {language === "zh" ? (
-              <h1 className="text-5xl md:text-7xl font-bold text-white" style={{ fontFamily: '楷体, KaiTi, STKaiti, serif' }}>
+              <h1 className="text-5xl md:text-7xl font-bold text-white" style={{ fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' }}>
                 誠港金融股份有限公司
               </h1>
             ) : (
@@ -65,7 +65,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 via-gray-800/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
             {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
@@ -95,7 +95,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
             {language === "zh" ? "战略纵深，破浪布局" : "What We Do"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
@@ -125,7 +125,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-slate-800/40 via-gray-700/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
             {language === "zh" ? "承纲执樞，龙骧虎步" : "Thought Leadership"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
@@ -155,7 +155,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-blue-800/70 via-indigo-900/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
             {language === "zh" ? "求贤若渴，群英并举" : "Talent Recruitment"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
@@ -185,7 +185,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-gradient-to-br from-pink-800/70 via-rose-900/70 to-slate-900/70"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-8">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
             {language === "zh" ? "四海志士，垂詢見教" : "Contact"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-12">
