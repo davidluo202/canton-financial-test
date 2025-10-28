@@ -78,3 +78,8 @@
 - [x] 添加"利率產品"(Interest Rate Products)板块
 - [x] 添加"抵押及結構化產品"(Mortgage & Structured Products)板块
 - [x] 添加"回購"(Repo)板块
+
+## 新增功能需求 - 资产与财富管理
+- [x] 添加"資產與財富管理"(Asset and Wealth Management)子部分到What We Do页面
+- [x] 添加中英文注解内容
+- [x] 完善资产与财富管理的详细描述

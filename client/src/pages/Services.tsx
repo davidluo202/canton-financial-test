@@ -220,15 +220,62 @@ export default function Services() {
             </div>
           </section>
 
-          {/* Placeholder for third sub-section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 text-center">
-            <p className="text-lg text-gray-600">
-              {language === "zh" 
-                ? "第三个子部分内容即将推出，敬请期待..."
-                : "Third sub-section coming soon..."
-              }
-            </p>
-          </div>
+          {/* Section 3: Asset and Wealth Management - 資產與財富管理 */}
+          <section id="asset-wealth" className="mb-20">
+            <div className="bg-gradient-to-br from-slate-50 to-blue-50 rounded-2xl shadow-lg p-8 md:p-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+                {language === "zh" ? "資產與財富管理" : "Asset and Wealth Management"}
+              </h2>
+              
+              {/* Introduction */}
+              <div className="text-center mb-12">
+                <p className="text-lg text-gray-700 italic leading-relaxed">
+                  {language === "zh" 
+                    ? "財有常增，富可長傳；與君共築百年之業。"
+                    : "Building enduring wealth and lasting legacies through disciplined strategies and personalized advisory."
+                  }
+                </p>
+              </div>
+
+              {/* Main Content */}
+              <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed space-y-6">
+                {language === "zh" ? (
+                  <>
+                    <p>
+                      於誠港金融，資管與財富之業，在於守其本、興其財；以紀律為綱，以創新為翼，以專誠之諮詢，成客戶之鴻圖。我司融機構所長與客本位之旨，審衡表現、風險與永續三者之度，度身制策，使資產既可增益，亦得長固。
+                    </p>
+                    <p>
+                      我司與高資產人士、家族辦公室及機構投資者長相與同行，渠可得廣布多元之投資組合：涵固定收益、股票、結構化產品、另類投資，暨專屬基金載體。憑離岸人民幣之優勢、動態配置之術、量化研析之明，於市場之興替間，捕機遇而秉韌性。
+                    </p>
+                    <p>
+                      吾等之平台，重透明而審慎，重利益之同軌，重全球之互聯。無論全權委託之管理，抑或顧問式之專項委任，皆以客之志為心，或守富而傳世，或增益以躍進，或取息以恆續。
+                    </p>
+                    <p>
+                      立身於風控與合規之基，誠港金融願為可信賴之伴：以世界為局，以本地為鑑，惠今人，及來者。
+                    </p>
+                    <p className="text-center font-semibold text-xl mt-8 text-blue-900">
+                      財有常增，富可長傳；與君共築百年之業。
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      At CMFinancial, our Asset and Wealth Management business is dedicated to helping clients preserve and grow their capital through disciplined strategies, innovative products, and personalized advisory. We combine institutional expertise with a client-focused approach to deliver solutions that balance performance, risk, and long-term sustainability.
+                    </p>
+                    <p>
+                      We partner with high-net-worth individuals, family offices, and institutional investors, offering access to diversified portfolios across fixed income, equities, structured products, alternative investments, and bespoke fund structures. Leveraging our capabilities in offshore RMB markets, dynamic allocation models, and quantitative research, we provide investment strategies designed to capture opportunities while navigating market cycles with resilience.
+                    </p>
+                    <p>
+                      Our wealth management platform emphasizes transparency, alignment of interests, and global connectivity. From discretionary portfolio management to tailored advisory mandates, we empower clients to achieve their unique financial objectives, whether that means wealth preservation, capital appreciation, income generation, or legacy planning.
+                    </p>
+                    <p>
+                      With a strong foundation in risk management and compliance, CMFinancial is positioned as a trusted partner, bridging global markets with local expertise and delivering long-term value for our clients and their next generations.
+                    </p>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
         </div>
       </div>
 
