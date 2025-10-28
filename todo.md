@@ -97,3 +97,14 @@
 - [x] Career页面添加招聘邮箱HR@cmfinancial.com
 - [x] Contact页面添加建筑照片插图
 - [x] Contact页面添加完整公司联系信息（地址、电话、传真、邮箱、网站、营业时间）
+
+## 新增功能需求 - 高管简介
+- [x] 在About Us页面的Leadership部分添加两位高管简介
+- [x] 添加创始人兼董事长牟致雪（Jack Mou）的中文简介
+- [x] 添加行政总裁兼CEO羅新濤（Xintao Luo）的中文简介
+- [x] 添加创始人兼董事长牟致雪（Jack Mou）的英文简介
+- [x] 添加行政总裁兼CEO羅新濤（Xintao Luo）的英文简介
+
+## 新增功能需求 - 高管照片
+- [x] 添加Jack Mou的职业照片到简介卡片
+- [x] 添加Xintao Luo的职业照片到简介卡片
