@@ -43,15 +43,15 @@ export default function Footer() {
 
       {/* Disclaimer Dialog */}
       <Dialog open={showDisclaimer} onOpenChange={setShowDisclaimer}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto bg-slate-900 text-white border-slate-700">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold">
+            <DialogTitle className="text-2xl font-bold text-white">
               {language === "zh" ? "免責聲明" : "Disclaimer"}
             </DialogTitle>
           </DialogHeader>
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm max-w-none prose-invert">
             {language === "zh" ? (
-              <div className="space-y-4 text-gray-900 leading-relaxed">
+              <div className="space-y-4 text-gray-100 leading-relaxed">
                 <p>
                   <strong>免責聲明：</strong>誠港金融股份有限公司（下稱「本公司」）為香港證券及期貨事務監察委員會（SFC）認可的持牌法團（牌照編號：BSU667），獲發第1類（證券交易）、第4類（就證券提供意見）及第9類（資產管理）牌照。
                 </p>
@@ -69,7 +69,7 @@ export default function Footer() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4 text-gray-900 leading-relaxed">
+              <div className="space-y-4 text-gray-100 leading-relaxed">
                 <p>
                   <strong>Disclaimer</strong>
                 </p>
