@@ -31,7 +31,7 @@ export default function Home() {
               <img
                 src="/company-name-white-inverted.png"
                 alt="誠港金融股份有限公司"
-                className="h-20 md:h-24 w-auto"
+                className="h-30 md:h-36 w-auto"
                 style={{ 
                   filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.5))"
                 }}
