@@ -28,9 +28,14 @@ export default function Home() {
           {/* Company Name Image - switches based on language */}
           <div className="mb-8 flex justify-center">
             {language === "zh" ? (
-              <h1 className="text-5xl md:text-7xl font-bold text-white" style={{ fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' }}>
-                誠港金融股份有限公司
-              </h1>
+              <img
+                src="/logo-chinese.png"
+                alt="誠港金融股份有限公司"
+                className="h-24 md:h-28 w-auto"
+                style={{ 
+                  filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))"
+                }}
+              />
             ) : (
               <img
                 src="/CANTONMUTUALFINANCIALLIMITED.png"
