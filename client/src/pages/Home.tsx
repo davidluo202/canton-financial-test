@@ -29,11 +29,11 @@ export default function Home() {
           <div className="mb-8 flex justify-center">
             {language === "zh" ? (
               <img
-                src="/logo-chinese.png"
+                src="/company-name-white-inverted.png"
                 alt="誠港金融股份有限公司"
-                className="h-24 md:h-28 w-auto"
+                className="h-20 md:h-24 w-auto"
                 style={{ 
-                  filter: "drop-shadow(0 0 10px rgba(255,255,255,0.5))"
+                  filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.5))"
                 }}
               />
             ) : (
