@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 
 export default function AboutUs() {
   const { language } = useLanguage();
@@ -268,6 +269,7 @@ With an Executive MBA graduate from Cornell University, and a FINRA-licensed, FR
       </div>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import { Mail } from "lucide-react";
 
 export default function Career() {
@@ -106,6 +107,7 @@ export default function Career() {
       </div>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import ServiceCarousel from "@/components/ServiceCarousel";
 
 export default function Services() {
@@ -285,6 +286,7 @@ export default function Services() {
       </div>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

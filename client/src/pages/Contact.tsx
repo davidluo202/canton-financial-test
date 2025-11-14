@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import { MapPin, Phone, FileText, Mail, Globe, Clock } from "lucide-react";
 
 export default function Contact() {
@@ -165,6 +166,7 @@ export default function Contact() {
       </div>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

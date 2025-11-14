@@ -1,10 +1,16 @@
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 
 export default function Home() {
+  // The userAuth hooks provides authentication state
+  // To implement login/logout functionality, simply call logout() or redirect to getLoginUrl()
+  let { user, loading, error, isAuthenticated, logout } = useAuth();
+
   const { language } = useLanguage();
 
   return (
@@ -211,6 +217,7 @@ export default function Home() {
       </section>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }

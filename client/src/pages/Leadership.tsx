@@ -2,6 +2,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AIChatbot from "@/components/AIChatbot";
 
 export default function Leadership() {
   const { language } = useLanguage();
@@ -134,6 +135,7 @@ export default function Leadership() {
       </div>
 
       <Footer />
+      <AIChatbot />
     </div>
   );
 }
