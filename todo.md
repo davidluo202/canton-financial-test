@@ -213,3 +213,11 @@
 - [x] 更新AI Chatbot知识库中的传真号码为 "+852 2561 7028"
 - [x] 验证Contact页面中的联系信息正确
 - [x] 测试验证修正结果
+
+## Bug修复 - 公司地址和网站错误
+- [x] 搜索所有文件中的错误地址信息
+- [x] 更新AI Chatbot知识库中的地址为"香港上環德辅道中308號2304-05室"
+- [x] 更新AI Chatbot知识库中的英文地址为"Units 2304-5, 23/F, 308 Central Des Voeux, No. 308 Des Voeux Road Central, Hong Kong"
+- [x] 验证网站URL为"www.cmfinancial.com"
+- [x] 验证Contact页面中的地址信息正确
+- [x] 测试验证所有联系信息正确

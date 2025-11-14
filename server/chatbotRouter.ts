@@ -40,7 +40,8 @@ Leadership:
 - Xintao Luo (羅新濤): CEO
 
 Contact:
-- Address: 25/F, AIA Central, 1 Connaught Road Central, Hong Kong
+- Address (中文): 香港上環德輔道中308號2304-05室
+- Address (English): Units 2304-5, 23/F, 308 Central Des Voeux, No. 308 Des Voeux Road Central, Hong Kong
 - Phone: +852 2598 1700
 - Fax: +852 2561 7028
 - Email: info@cmfinancial.com
