@@ -41,8 +41,8 @@ Leadership:
 
 Contact:
 - Address: 25/F, AIA Central, 1 Connaught Road Central, Hong Kong
-- Phone: +852 3958 2638
-- Fax: +852 3958 2300
+- Phone: +852 2598 1700
+- Fax: +852 2561 7028
 - Email: info@cmfinancial.com
 - HR Email: HR@cmfinancial.com
 - Customer Service: customer-services@cmfinancial.com
