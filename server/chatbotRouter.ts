@@ -3,22 +3,27 @@ import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { saveChatLog, getChatLogsForToday } from "./db";
 
-// 网站内容知识库
+// 网站知识库
 const WEBSITE_KNOWLEDGE = `
-Canton Mutual Financial Limited (誠港金融股份有限公司) is a boutique investment bank registered in Hong Kong.
+Company Name: Canton Mutual Financial Limited (誠港金融股份有限公司)
 
-Company Information:
-- Licensed by Securities and Futures Commission (SFC) of Hong Kong
+SFC License Information:
+Canton Mutual Financial Limited is licensed by the Securities and Futures Commission of Hong Kong (SFC).
 - Central Number: BSU667
-- Licenses: Type 1 (Dealing in Securities), Type 4 (Advising on Securities), Type 9 (Asset Management)
+- Licensed Types: Type 1 (Dealing in Securities), Type 4 (Advising on Securities), Type 9 (Asset Management)
+
+Core Values:
+- Profession (專精立業): Professional excellence and expertise
+- Potential (潛能傲世): Unlocking potential and maximizing capabilities  
+- Partnership (同道致遠): Building lasting partnerships for mutual success
 
 Services:
-1. Investment Banking Services:
-   - Liability Management & Restructuring
+1. Investment Banking Services
+   - Debt Management & Restructuring
    - Global Market Investment Advisory
    - Capital Market Solutions
 
-2. FICC and Equity:
+2. FICC and Equity
    - Elite Brokerage Coverage
    - Cash Equities & Execution Solutions
    - Derivatives
@@ -27,13 +32,7 @@ Services:
    - Mortgage & Structured Products
    - Repo
 
-3. Asset and Wealth Management:
-   - Comprehensive asset and wealth management services
-
-Core Values:
-- Profession (專精立業): Professional excellence
-- Potential (潛能傲世): Unlocking potential
-- Partnership (同道致遠): Long-term partnerships
+3. Asset and Wealth Management
 
 Leadership:
 - Jack Mou (牟致雪): Founder and Chairman
@@ -52,9 +51,6 @@ Contact:
 
 Regulatory Information:
 Canton Mutual Financial Limited provides services and is regulated as a licensed corporation recognized by the Securities and Futures Commission of Hong Kong (Central No.: BSU667).
-
-Disclaimer:
-Investment involves risks. The value of securities, futures, or other assets may rise and fall, and investors may lose all their invested capital. The information provided is for general information only and does not constitute investment advice.
 `;
 
 export const chatbotRouter = router({
@@ -64,6 +60,7 @@ export const chatbotRouter = router({
       z.object({
         message: z.string(),
         language: z.enum(["zh", "en"]),
+        preferredLanguage: z.enum(["auto", "zh", "en"]).optional(),
         conversationHistory: z.array(
           z.object({
             role: z.enum(["user", "assistant"]),
@@ -73,7 +70,7 @@ export const chatbotRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const { message, language, conversationHistory = [] } = input;
+      const { message, language, preferredLanguage = "auto", conversationHistory = [] } = input;
 
       try {
         // 智能检测用户问题的语言
@@ -83,10 +80,13 @@ export const chatbotRouter = router({
           return hasChinese ? 'zh' : 'en';
         };
 
-        const detectedLanguage = detectLanguage(message);
+        // 确定回复语言：如果用户手动选择了语言，使用选择的语言；否则自动检测
+        const responseLanguage = preferredLanguage === "auto" 
+          ? detectLanguage(message) 
+          : preferredLanguage;
 
         // 构建系统提示词
-        const systemPrompt = detectedLanguage === "zh"
+        const systemPrompt = responseLanguage === "zh"
           ? `你是誠港金融股份有限公司（Canton Mutual Financial Limited）的AI客服助手。你的任務是：
 
 1. 回答有關公司服務、業務和聯繫方式的問題
@@ -135,7 +135,7 @@ Important rules:
         });
 
         const assistantMessage = response.choices[0]?.message?.content || (
-          detectedLanguage === "zh"
+          responseLanguage === "zh"
             ? "抱歉，我遇到了一些技術問題。請稍後再試，或直接聯繫我們的客戶服務團隊：customer-services@cmfinancial.com"
             : "Sorry, I encountered a technical issue. Please try again later or contact our customer service team directly: customer-services@cmfinancial.com"
         );
@@ -144,7 +144,7 @@ Important rules:
         await saveChatLog({
           userMessage: message,
           assistantMessage,
-          language: detectedLanguage,
+          language: responseLanguage,
         });
 
         return {
@@ -153,7 +153,11 @@ Important rules:
       } catch (error) {
         console.error("Chatbot error:", error);
         
-        const fallbackMessage = detectedLanguage === "zh"
+        const responseLanguage = preferredLanguage === "auto" 
+          ? (language === "zh" ? "zh" : "en")
+          : preferredLanguage;
+        
+        const fallbackMessage = responseLanguage === "zh"
           ? "這個問題我目前無法解答，我還需要努力學習，請給我一些時間哦"
           : "I cannot answer this question right now. I need to study harder, so please give me some time!";
 
@@ -162,9 +166,4 @@ Important rules:
         };
       }
     }),
-
-  // 获取今日对话记录（用于邮件发送）
-  getTodayLogs: publicProcedure.query(async () => {
-    return await getChatLogsForToday();
-  }),
 });
