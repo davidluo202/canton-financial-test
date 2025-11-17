@@ -76,8 +76,17 @@ export const chatbotRouter = router({
       const { message, language, conversationHistory = [] } = input;
 
       try {
+        // 智能检测用户问题的语言
+        const detectLanguage = (text: string): 'zh' | 'en' => {
+          // 检测是否包含中文字符（简体或繁体）
+          const hasChinese = /[\u4e00-\u9fff\u3400-\u4dbf]/.test(text);
+          return hasChinese ? 'zh' : 'en';
+        };
+
+        const detectedLanguage = detectLanguage(message);
+
         // 构建系统提示词
-        const systemPrompt = language === "zh"
+        const systemPrompt = detectedLanguage === "zh"
           ? `你是誠港金融股份有限公司（Canton Mutual Financial Limited）的AI客服助手。你的任務是：
 
 1. 回答有關公司服務、業務和聯繫方式的問題
@@ -88,7 +97,7 @@ export const chatbotRouter = router({
 ${WEBSITE_KNOWLEDGE}
 
 重要規則：
-- 使用繁體中文回答
+- **必須使用繁體中文回答**（即使用戶使用簡體中文提問）
 - 保持專業、友好的語氣
 - 如果問題超出你的知識範圍，請誠實告知並建議聯繫客戶服務團隊
 - 不要提供具體的投資建議，只提供一般性資訊
@@ -126,7 +135,7 @@ Important rules:
         });
 
         const assistantMessage = response.choices[0]?.message?.content || (
-          language === "zh"
+          detectedLanguage === "zh"
             ? "抱歉，我遇到了一些技術問題。請稍後再試，或直接聯繫我們的客戶服務團隊：customer-services@cmfinancial.com"
             : "Sorry, I encountered a technical issue. Please try again later or contact our customer service team directly: customer-services@cmfinancial.com"
         );
@@ -135,7 +144,7 @@ Important rules:
         await saveChatLog({
           userMessage: message,
           assistantMessage,
-          language,
+          language: detectedLanguage,
         });
 
         return {
@@ -144,7 +153,7 @@ Important rules:
       } catch (error) {
         console.error("Chatbot error:", error);
         
-        const fallbackMessage = language === "zh"
+        const fallbackMessage = detectedLanguage === "zh"
           ? "這個問題我目前無法解答，我還需要努力學習，請給我一些時間哦"
           : "I cannot answer this question right now. I need to study harder, so please give me some time!";
 
