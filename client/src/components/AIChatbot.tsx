@@ -20,6 +20,26 @@ export default function AIChatbot() {
   const [preferredLanguage, setPreferredLanguage] = useState<'auto' | 'zh' | 'en'>('auto');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // 快捷问题建议
+  const quickQuestions = [
+    {
+      zh: "你們的服務範圍是什麼？",
+      en: "What services do you offer?"
+    },
+    {
+      zh: "如何聯繫你們？",
+      en: "How can I contact you?"
+    },
+    {
+      zh: "你們有哪些牌照資質？",
+      en: "What licenses do you hold?"
+    },
+    {
+      zh: "辦公地址在哪裡？",
+      en: "Where is your office located?"
+    }
+  ];
+
   // 使用tRPC mutation
   const chatMutation = trpc.chatbot.chat.useMutation();
 
@@ -218,6 +238,80 @@ export default function AIChatbot() {
                 </div>
               </div>
             )}
+            
+            {/* 快捷问题建议 - 只在有欢迎消息时显示 */}
+            {messages.length === 1 && messages[0].role === "assistant" && (
+              <div className="space-y-2">
+                <p className="text-xs text-gray-500 text-center">
+                  {preferredLanguage === 'en' || (preferredLanguage === 'auto' && language === 'en')
+                    ? "Quick questions:"
+                    : "常見問題："}
+                </p>
+                <div className="grid grid-cols-1 gap-2">
+                  {quickQuestions.map((q, index) => {
+                    const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
+                    const questionText = displayLang === 'zh' ? q.zh : q.en;
+                    return (
+                      <button
+                        key={index}
+                        onClick={async () => {
+                          if (chatMutation.isPending) return;
+                          
+                          // 创建用户消息
+                          const userMessage: Message = {
+                            id: Date.now().toString(),
+                            role: "user",
+                            content: questionText,
+                            timestamp: new Date(),
+                          };
+
+                          setMessages((prev) => [...prev, userMessage]);
+
+                          try {
+                            const result = await chatMutation.mutateAsync({
+                              message: questionText,
+                              language: language,
+                              preferredLanguage: preferredLanguage,
+                              conversationHistory: messages.map(m => ({
+                                role: m.role,
+                                content: m.content,
+                              })),
+                            });
+
+                            const assistantMessage: Message = {
+                              id: (Date.now() + 1).toString(),
+                              role: "assistant",
+                              content: result.response,
+                              timestamp: new Date(),
+                            };
+
+                            setMessages((prev) => [...prev, assistantMessage]);
+                          } catch (error) {
+                            console.error("Chatbot error:", error);
+                            const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
+                            const errorMessage: Message = {
+                              id: (Date.now() + 1).toString(),
+                              role: "assistant",
+                              content:
+                                displayLang === "zh"
+                                  ? "抱歉，我遇到了一些技術問題。請稍後再試，或直接聯繫我們的客戶服務團隊：customer-services@cmfinancial.com"
+                                  : "Sorry, I encountered a technical issue. Please try again later or contact our customer service team directly: customer-services@cmfinancial.com",
+                              timestamp: new Date(),
+                            };
+                            setMessages((prev) => [...prev, errorMessage]);
+                          }
+                        }}
+                        disabled={chatMutation.isPending}
+                        className="bg-white hover:bg-blue-50 text-gray-700 text-sm p-3 rounded-lg border border-gray-200 transition-colors text-left disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {questionText}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
             <div ref={messagesEndRef} />
           </div>
 
