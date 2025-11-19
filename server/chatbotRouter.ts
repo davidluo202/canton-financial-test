@@ -147,8 +147,49 @@ Important rules:
           language: responseLanguage,
         });
 
+        // 生成上下文相关的后续问题
+        const followUpQuestionsPrompt = responseLanguage === "zh"
+          ? `基于上下文对话，生成3个用户可能感兴趣的后续问题。这些问题应该：
+1. 与当前话题相关
+2. 帮助用户深入了解
+3. 简洁明了，每个不超过20个字
+
+请只返回3个问题，每行一个，不要编号或其他格式。`
+          : `Based on the conversation context, generate 3 follow-up questions that users might be interested in. These questions should:
+1. Be related to the current topic
+2. Help users learn more
+3. Be concise, no more than 15 words each
+
+Return only 3 questions, one per line, without numbering or other formatting.`;
+
+        let followUpQuestions: string[] = [];
+        try {
+          const followUpResponse = await invokeLLM({
+            messages: [
+              { role: "system" as const, content: systemPrompt },
+              ...conversationHistory.slice(-5).map(msg => ({
+                role: msg.role as "user" | "assistant",
+                content: msg.content,
+              })),
+              { role: "user" as const, content: message },
+              { role: "assistant" as const, content: assistantMessage },
+              { role: "user" as const, content: followUpQuestionsPrompt },
+            ],
+          });
+
+          const questionsText = followUpResponse.choices[0]?.message?.content || "";
+          followUpQuestions = questionsText
+            .split("\n")
+            .map(q => q.trim())
+            .filter(q => q.length > 0 && q.length < 100)
+            .slice(0, 3);
+        } catch (error) {
+          console.error("Failed to generate follow-up questions:", error);
+        }
+
         return {
           response: assistantMessage,
+          followUpQuestions,
         };
       } catch (error) {
         console.error("Chatbot error:", error);

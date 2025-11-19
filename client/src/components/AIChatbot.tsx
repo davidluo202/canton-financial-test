@@ -18,6 +18,7 @@ export default function AIChatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [preferredLanguage, setPreferredLanguage] = useState<'auto' | 'zh' | 'en'>('auto');
+  const [followUpQuestions, setFollowUpQuestions] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // 快捷问题建议
@@ -51,22 +52,24 @@ export default function AIChatbot() {
     scrollToBottom();
   }, [messages]);
 
-  // 初始欢迎消息
+  // 打开Chatbot时自动检测页面语言并设置偏好语言
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
+      // 自动设置为页面语言
+      setPreferredLanguage(language);
+      
       const welcomeMessage: Message = {
         id: Date.now().toString(),
         role: "assistant",
         content:
-          displayLang === "zh"
-            ? "您好！我是誠港金融的AI助手。我可以幫助您了解我們的服務、投資相關問題，或查詢香港證監會（SFC）、香港證券及投資學會（HKSI）等權威機構的資訊。請問有什麼可以幫到您？"
+          language === "zh"
+            ? "您好！我是誠港金融的AI助手。我可以幮助您了解我們的服務、投資相關問題，或查詢香港證監會（SFC）、香港證券及投資學會（HKSI）等權威機構的資訊。請問有什麼可以幫到您？"
             : "Hello! I'm Canton Mutual Financial's AI assistant. I can help you learn about our services, investment-related questions, or search information from authoritative sources like SFC and HKSI. How may I assist you today?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
     }
-  }, [isOpen, language, preferredLanguage]);
+  }, [isOpen, language]);
 
   const handleSend = async () => {
     if (!input.trim() || chatMutation.isPending) return;
@@ -100,6 +103,13 @@ export default function AIChatbot() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      // 更新后续问题
+      if (result.followUpQuestions && result.followUpQuestions.length > 0) {
+        setFollowUpQuestions(result.followUpQuestions);
+      } else {
+        setFollowUpQuestions([]);
+      }
     } catch (error) {
       console.error("Chatbot error:", error);
       const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
@@ -239,23 +249,27 @@ export default function AIChatbot() {
               </div>
             )}
             
-            {/* 快捷问题建议 - 只在有欢迎消息时显示 */}
-            {messages.length === 1 && messages[0].role === "assistant" && (
+            {/* 快捷问题建议 - 显示初始问题或动态后续问题 */}
+            {(messages.length === 1 && messages[0].role === "assistant") || (followUpQuestions.length > 0 && messages.length > 1 && messages[messages.length - 1].role === "assistant") ? (
               <div className="space-y-2">
                 <p className="text-xs text-gray-500 text-center">
                   {preferredLanguage === 'en' || (preferredLanguage === 'auto' && language === 'en')
-                    ? "Quick questions:"
-                    : "常見問題："}
+                    ? (messages.length === 1 ? "Quick questions:" : "You might also want to ask:")
+                    : (messages.length === 1 ? "常見問題：" : "您可能還想問：")}
                 </p>
                 <div className="grid grid-cols-1 gap-2">
-                  {quickQuestions.map((q, index) => {
+                  {(followUpQuestions.length > 0 && messages.length > 1 ? followUpQuestions : quickQuestions.map(q => {
                     const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
-                    const questionText = displayLang === 'zh' ? q.zh : q.en;
+                    return displayLang === 'zh' ? q.zh : q.en;
+                  })).map((questionText, index) => {
                     return (
                       <button
                         key={index}
                         onClick={async () => {
                           if (chatMutation.isPending) return;
+                          
+                          // 清除后续问题
+                          setFollowUpQuestions([]);
                           
                           // 创建用户消息
                           const userMessage: Message = {
@@ -286,6 +300,11 @@ export default function AIChatbot() {
                             };
 
                             setMessages((prev) => [...prev, assistantMessage]);
+                            
+                            // 更新后续问题
+                            if (result.followUpQuestions && result.followUpQuestions.length > 0) {
+                              setFollowUpQuestions(result.followUpQuestions);
+                            }
                           } catch (error) {
                             console.error("Chatbot error:", error);
                             const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
@@ -310,7 +329,7 @@ export default function AIChatbot() {
                   })}
                 </div>
               </div>
-            )}
+            ) : null}
             
             <div ref={messagesEndRef} />
           </div>
