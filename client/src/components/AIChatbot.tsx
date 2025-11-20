@@ -64,7 +64,7 @@ export default function AIChatbot() {
         content:
           language === "zh"
             ? "您好！我是誠港金融的AI助手。我可以幮助您了解我們的服務、投資相關問題，或查詢香港證監會（SFC）、香港證券及投資學會（HKSI）等權威機構的資訊。請問有什麼可以幫到您？"
-            : "Hello! I'm Canton Mutual Financial's AI assistant. I can help you learn about our services, investment-related questions, or search information from authoritative sources like SFC and HKSI. How may I assist you today?",
+            : "Hello! I am the AI assistant of CMFinancial. I can help you understand our services, answer investment-related questions, or provide information from authoritative organizations such as the Hong Kong Securities and Futures Commission (SFC) and the Hong Kong Securities and Investment Institute (HKSI). How can I assist you today?",
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
