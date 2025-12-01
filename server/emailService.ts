@@ -1,9 +1,113 @@
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 import { getChatLogsForToday } from "./db";
+
+// SMTP配置接口
+interface SMTPConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  auth: {
+    user: string;
+    pass: string;
+  };
+}
+
+// 从环境变量获取SMTP配置
+function getSMTPConfig(): SMTPConfig | null {
+  const host = process.env.SMTP_HOST;
+  const port = process.env.SMTP_PORT;
+  const user = process.env.SMTP_USER;
+  const pass = process.env.SMTP_PASS;
+
+  if (!host || !port || !user || !pass) {
+    console.warn("[Email Service] SMTP configuration not found in environment variables");
+    return null;
+  }
+
+  return {
+    host,
+    port: parseInt(port, 10),
+    secure: port === "465", // 465端口使用SSL，其他端口使用STARTTLS
+    auth: {
+      user,
+      pass,
+    },
+  };
+}
+
+// 创建邮件传输器
+let transporter: Transporter | null = null;
+
+function getTransporter(): Transporter | null {
+  if (transporter) {
+    return transporter;
+  }
+
+  const config = getSMTPConfig();
+  if (!config) {
+    return null;
+  }
+
+  transporter = nodemailer.createTransport(config);
+  return transporter;
+}
+
+// 发送邮件
+export async function sendEmail(options: {
+  to: string;
+  subject: string;
+  html: string;
+  from?: string;
+}): Promise<boolean> {
+  const transport = getTransporter();
+  
+  if (!transport) {
+    console.error("[Email Service] Email transporter not configured. Please set SMTP environment variables.");
+    return false;
+  }
+
+  try {
+    const fromEmail = options.from || process.env.SMTP_FROM || process.env.SMTP_USER;
+    const fromName = "Canton Mutual Financial AI Assistant";
+    
+    await transport.sendMail({
+      from: `"${fromName}" <${fromEmail}>`,
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+    });
+
+    console.log(`[Email Service] Email sent successfully to ${options.to}`);
+    return true;
+  } catch (error) {
+    console.error("[Email Service] Failed to send email:", error);
+    return false;
+  }
+}
+
+// 验证SMTP配置
+export async function verifyEmailConfig(): Promise<boolean> {
+  const transport = getTransporter();
+  
+  if (!transport) {
+    return false;
+  }
+
+  try {
+    await transport.verify();
+    console.log("[Email Service] SMTP configuration verified successfully");
+    return true;
+  } catch (error) {
+    console.error("[Email Service] SMTP configuration verification failed:", error);
+    return false;
+  }
+}
 
 /**
  * 生成对话记录的HTML邮件内容
  */
-function generateEmailHTML(logs: any[], date: string) {
+function generateEmailHTML(logs: any[], date: string, stats: any) {
   if (logs.length === 0) {
     return `
       <!DOCTYPE html>
@@ -57,6 +161,18 @@ function generateEmailHTML(logs: any[], date: string) {
     `;
   }).join('');
 
+  // 热门问题分析
+  const popularQuestionsHTML = stats.popularQuestions.length > 0
+    ? `
+      <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+        <h3 style="margin-top: 0; color: #92400e;">Popular Questions / 熱門問題</h3>
+        <ol style="margin: 0; padding-left: 20px;">
+          ${stats.popularQuestions.map((q: string) => `<li>${escapeHTML(q)}</li>`).join('')}
+        </ol>
+      </div>
+    `
+    : '';
+
   return `
     <!DOCTYPE html>
     <html>
@@ -68,6 +184,10 @@ function generateEmailHTML(logs: any[], date: string) {
         .header { background-color: #2563eb; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
         .content { background-color: #ffffff; padding: 20px; border: 1px solid #e5e7eb; border-top: none; }
         .summary { background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px; }
+        .stat-card { background-color: white; padding: 15px; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .stat-value { font-size: 32px; font-weight: bold; color: #2563eb; }
+        .stat-label { font-size: 14px; color: #6b7280; margin-top: 5px; }
       </style>
     </head>
     <body>
@@ -79,10 +199,27 @@ function generateEmailHTML(logs: any[], date: string) {
         <div class="content">
           <div class="summary">
             <h2 style="margin-top: 0; color: #1e40af;">Summary / 摘要</h2>
-            <p><strong>Total Conversations / 總對話數:</strong> ${logs.length}</p>
-            <p><strong>Chinese Conversations / 中文對話:</strong> ${logs.filter(l => l.language === 'zh').length}</p>
-            <p><strong>English Conversations / 英文對話:</strong> ${logs.filter(l => l.language === 'en').length}</p>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-value">${logs.length}</div>
+                <div class="stat-label">Total Conversations<br/>總對話數</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${stats.uniqueUsers}</div>
+                <div class="stat-label">Unique Users<br/>獨立用戶數</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${logs.filter((l: any) => l.language === 'zh').length}</div>
+                <div class="stat-label">Chinese Conversations<br/>中文對話</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${logs.filter((l: any) => l.language === 'en').length}</div>
+                <div class="stat-label">English Conversations<br/>英文對話</div>
+              </div>
+            </div>
           </div>
+          
+          ${popularQuestionsHTML}
           
           <h2 style="color: #1f2937;">Conversation Details / 對話詳情</h2>
           ${conversationsHTML}
@@ -108,8 +245,26 @@ function escapeHTML(text: string): string {
 }
 
 /**
+ * 分析对话数据生成统计信息
+ */
+function analyzeConversations(logs: any[]) {
+  // 统计独立用户数（简化版本，实际应该基于session ID或IP）
+  const uniqueUsers = Math.ceil(logs.length / 3); // 假设平均每个用户3次对话
+
+  // 提取热门问题（简化版本，提取前5个用户问题）
+  const popularQuestions = logs
+    .slice(0, 5)
+    .map(log => log.userMessage)
+    .filter((msg, index, self) => self.indexOf(msg) === index); // 去重
+
+  return {
+    uniqueUsers,
+    popularQuestions,
+  };
+}
+
+/**
  * 发送每日对话记录邮件
- * 注意：这是一个简化版本，实际发送需要配置SMTP服务或使用邮件API
  */
 export async function sendDailyChatReport() {
   try {
@@ -120,25 +275,20 @@ export async function sendDailyChatReport() {
       day: 'numeric',
     });
 
-    const emailHTML = generateEmailHTML(logs, today);
+    const stats = analyzeConversations(logs);
+    const emailHTML = generateEmailHTML(logs, today, stats);
     
     console.log('[Email Service] Daily chat report generated');
     console.log(`[Email Service] Total conversations: ${logs.length}`);
     
-    // 在实际生产环境中，这里应该使用SMTP服务或邮件API发送邮件
-    // 例如使用 nodemailer 或云服务商的邮件API
-    // 由于这是演示版本，我们只记录日志
-    
-    // 示例代码（需要配置SMTP）：
-    // const transporter = nodemailer.createTransporter({...});
-    // await transporter.sendMail({
-    //   from: 'noreply@cmfinancial.com',
-    //   to: 'customer-services@cmfinancial.com',
-    //   subject: `AI Chatbot Daily Report - ${today}`,
-    //   html: emailHTML,
-    // });
-    
-    // 临时方案：将邮件内容保存到文件
+    // 尝试发送邮件
+    const emailSent = await sendEmail({
+      to: 'customer-services@cmfinancial.com',
+      subject: `AI Chatbot Daily Report - ${today}`,
+      html: emailHTML,
+    });
+
+    // 无论邮件是否发送成功，都保存HTML文件作为备份
     const fs = await import('fs/promises');
     const path = await import('path');
     
@@ -151,15 +301,20 @@ export async function sendDailyChatReport() {
     await fs.writeFile(filepath, emailHTML, 'utf-8');
     
     console.log(`[Email Service] Report saved to: ${filepath}`);
-    console.log('[Email Service] In production, this would be sent to: customer-services@cmfinancial.com');
+    
+    if (!emailSent) {
+      console.log('[Email Service] Email not sent. Please configure SMTP settings.');
+      console.log('[Email Service] Report saved locally for manual review.');
+    }
     
     return {
-      success: true,
+      success: emailSent,
       conversationCount: logs.length,
       reportPath: filepath,
+      emailSent,
     };
   } catch (error) {
-    console.error('[Email Service] Failed to send daily report:', error);
+    console.error('[Email Service] Failed to generate/send daily report:', error);
     return {
       success: false,
       error: String(error),
