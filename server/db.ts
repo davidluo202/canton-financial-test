@@ -188,3 +188,45 @@ export async function getRatingForChatLog(chatLogId: number) {
     return null;
   }
 }
+
+export async function getChatLogsForDateRange(startDate: Date, endDate: Date) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat logs: database not available");
+    return [];
+  }
+
+  try {
+    const logs = await db.select().from(chatLogs);
+    
+    // Filter logs within date range
+    return logs.filter(log => {
+      const logDate = new Date(log.createdAt);
+      return logDate >= startDate && logDate <= endDate;
+    });
+  } catch (error) {
+    console.error("[Database] Failed to get chat logs for date range:", error);
+    return [];
+  }
+}
+
+export async function getChatRatingsForDateRange(startDate: Date, endDate: Date) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat ratings: database not available");
+    return [];
+  }
+
+  try {
+    const ratings = await db.select().from(chatRatings);
+    
+    // Filter ratings within date range
+    return ratings.filter(rating => {
+      const ratingDate = new Date(rating.createdAt);
+      return ratingDate >= startDate && ratingDate <= endDate;
+    });
+  } catch (error) {
+    console.error("[Database] Failed to get chat ratings for date range:", error);
+    return [];
+  }
+}
