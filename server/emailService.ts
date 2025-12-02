@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
-import { getChatLogsForToday } from "./db";
+import { getChatLogsForToday, getChatRatingsForToday } from "./db";
 
 // SMTP配置接口
 interface SMTPConfig {
@@ -217,6 +217,26 @@ function generateEmailHTML(logs: any[], date: string, stats: any) {
                 <div class="stat-label">English Conversations<br/>英文對話</div>
               </div>
             </div>
+            
+            <h3 style="margin-top: 30px; color: #1e40af;">User Satisfaction / 用戶滿意度</h3>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-value" style="color: #10b981;">👍 ${stats.ratings.positive}</div>
+                <div class="stat-label">Positive Ratings<br/>滿意評分</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" style="color: #ef4444;">👎 ${stats.ratings.negative}</div>
+                <div class="stat-label">Negative Ratings<br/>不滿意評分</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value">${stats.ratings.total}</div>
+                <div class="stat-label">Total Ratings<br/>總評分數</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" style="color: ${stats.ratings.satisfactionRate >= 70 ? '#10b981' : stats.ratings.satisfactionRate >= 50 ? '#f59e0b' : '#ef4444'};">${stats.ratings.satisfactionRate}%</div>
+                <div class="stat-label">Satisfaction Rate<br/>滿意度</div>
+              </div>
+            </div>
           </div>
           
           ${popularQuestionsHTML}
@@ -247,7 +267,7 @@ function escapeHTML(text: string): string {
 /**
  * 分析对话数据生成统计信息
  */
-function analyzeConversations(logs: any[]) {
+async function analyzeConversations(logs: any[]) {
   // 统计独立用户数（简化版本，实际应该基于session ID或IP）
   const uniqueUsers = Math.ceil(logs.length / 3); // 假设平均每个用户3次对话
 
@@ -257,9 +277,22 @@ function analyzeConversations(logs: any[]) {
     .map(log => log.userMessage)
     .filter((msg, index, self) => self.indexOf(msg) === index); // 去重
 
+  // 获取今日的评分数据
+  const ratings = await getChatRatingsForToday();
+  const positiveRatings = ratings.filter(r => r.rating === "positive").length;
+  const negativeRatings = ratings.filter(r => r.rating === "negative").length;
+  const totalRatings = ratings.length;
+  const satisfactionRate = totalRatings > 0 ? Math.round((positiveRatings / totalRatings) * 100) : 0;
+
   return {
     uniqueUsers,
     popularQuestions,
+    ratings: {
+      positive: positiveRatings,
+      negative: negativeRatings,
+      total: totalRatings,
+      satisfactionRate,
+    },
   };
 }
 
@@ -275,7 +308,7 @@ export async function sendDailyChatReport() {
       day: 'numeric',
     });
 
-    const stats = analyzeConversations(logs);
+    const stats = await analyzeConversations(logs);
     const emailHTML = generateEmailHTML(logs, today, stats);
     
     console.log('[Email Service] Daily chat report generated');

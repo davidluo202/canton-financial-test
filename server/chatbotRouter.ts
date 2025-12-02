@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
-import { saveChatLog, getChatLogsForToday } from "./db";
+import { saveChatLog, getChatLogsForToday, saveChatRating, getRatingForChatLog } from "./db";
 
 // 网站知识库
 const WEBSITE_KNOWLEDGE = `
@@ -54,6 +54,42 @@ Canton Mutual Financial Limited provides services and is regulated as a licensed
 `;
 
 export const chatbotRouter = router({
+  // Submit rating for a chat conversation
+  submitRating: publicProcedure
+    .input(z.object({
+      chatLogId: z.number(),
+      rating: z.enum(["positive", "negative"]),
+    }))
+    .mutation(async ({ input }) => {
+      try {
+        // Check if rating already exists
+        const existingRating = await getRatingForChatLog(input.chatLogId);
+        if (existingRating) {
+          return {
+            success: false,
+            message: "Rating already submitted for this conversation",
+          };
+        }
+
+        // Save the rating
+        await saveChatRating({
+          chatLogId: input.chatLogId,
+          rating: input.rating,
+        });
+
+        return {
+          success: true,
+          message: "Thank you for your feedback!",
+        };
+      } catch (error) {
+        console.error("[Chatbot] Error submitting rating:", error);
+        return {
+          success: false,
+          message: "Failed to submit rating",
+        };
+      }
+    }),
+
   // 处理聊天消息
   chat: publicProcedure
     .input(
@@ -140,12 +176,15 @@ Important rules:
             : "Sorry, I encountered a technical issue. Please try again later or contact our customer service team directly: customer-services@cmfinancial.com"
         );
 
-        // 保存对话记录
-        await saveChatLog({
+        // 保存对话记录并获取ID
+        const chatLogResult = await saveChatLog({
           userMessage: message,
           assistantMessage,
           language: responseLanguage,
         });
+        
+        // 获取刚插入的记录ID
+        const chatLogId = chatLogResult?.[0]?.insertId || null;
 
         // 生成上下文相关的后续问题
         const followUpQuestionsPrompt = responseLanguage === "zh"
@@ -190,6 +229,7 @@ Return only 3 questions, one per line, without numbering or other formatting.`;
         return {
           response: assistantMessage,
           followUpQuestions,
+          chatLogId,
         };
       } catch (error) {
         console.error("Chatbot error:", error);

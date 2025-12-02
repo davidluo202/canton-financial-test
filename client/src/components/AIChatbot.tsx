@@ -10,6 +10,8 @@ interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  chatLogId?: number | null;
+  rating?: "positive" | "negative" | null;
 }
 
 export default function AIChatbot() {
@@ -43,6 +45,7 @@ export default function AIChatbot() {
 
   // 使用tRPC mutation
   const chatMutation = trpc.chatbot.chat.useMutation();
+  const ratingMutation = trpc.chatbot.submitRating.useMutation();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,6 +103,8 @@ export default function AIChatbot() {
         role: "assistant",
         content: result.response,
         timestamp: new Date(),
+        chatLogId: result.chatLogId,
+        rating: null,
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -123,6 +128,29 @@ export default function AIChatbot() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+    }
+  };
+
+  const handleRating = async (messageId: string, rating: "positive" | "negative") => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message || !message.chatLogId || message.rating) {
+      return; // 已经评分过或没有chatLogId
+    }
+
+    try {
+      const result = await ratingMutation.mutateAsync({
+        chatLogId: message.chatLogId,
+        rating: rating,
+      });
+
+      if (result.success) {
+        // 更新消息的评分状态
+        setMessages(prev => prev.map(m => 
+          m.id === messageId ? { ...m, rating } : m
+        ));
+      }
+    } catch (error) {
+      console.error("Failed to submit rating:", error);
     }
   };
 
@@ -223,21 +251,56 @@ export default function AIChatbot() {
                   <p className="text-sm whitespace-pre-wrap break-words">
                     {message.content}
                   </p>
-                  <p
-                    className={`text-xs mt-1 ${
-                      message.role === "user"
-                        ? "text-blue-100"
-                        : "text-gray-400"
-                    }`}
-                  >
-                    {message.timestamp.toLocaleTimeString(
-                      language === "zh" ? "zh-HK" : "en-US",
-                      {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      }
+                  <div className="flex items-center justify-between mt-2">
+                    <p
+                      className={`text-xs ${
+                        message.role === "user"
+                          ? "text-blue-100"
+                          : "text-gray-400"
+                      }`}
+                    >
+                      {message.timestamp.toLocaleTimeString(
+                        language === "zh" ? "zh-HK" : "en-US",
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </p>
+                    {/* 评分按钮 - 只显示在AI回复上 */}
+                    {message.role === "assistant" && message.chatLogId && (
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleRating(message.id, "positive")}
+                          disabled={!!message.rating || ratingMutation.isPending}
+                          className={`text-lg transition-all ${
+                            message.rating === "positive"
+                              ? "text-green-600 scale-110"
+                              : message.rating
+                              ? "text-gray-300 cursor-not-allowed"
+                              : "text-gray-400 hover:text-green-600 hover:scale-110 cursor-pointer"
+                          }`}
+                          title={language === "zh" ? "满意" : "Helpful"}
+                        >
+                          👍
+                        </button>
+                        <button
+                          onClick={() => handleRating(message.id, "negative")}
+                          disabled={!!message.rating || ratingMutation.isPending}
+                          className={`text-lg transition-all ${
+                            message.rating === "negative"
+                              ? "text-red-600 scale-110"
+                              : message.rating
+                              ? "text-gray-300 cursor-not-allowed"
+                              : "text-gray-400 hover:text-red-600 hover:scale-110 cursor-pointer"
+                          }`}
+                          title={language === "zh" ? "不满意" : "Not helpful"}
+                        >
+                          👎
+                        </button>
+                      </div>
                     )}
-                  </p>
+                  </div>
                 </div>
               </div>
             ))}

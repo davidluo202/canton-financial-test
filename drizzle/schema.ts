@@ -36,3 +36,14 @@ export const chatLogs = mysqlTable("chatLogs", {
 
 export type ChatLog = typeof chatLogs.$inferSelect;
 export type InsertChatLog = typeof chatLogs.$inferInsert;
+
+// Chat ratings table for satisfaction feedback
+export const chatRatings = mysqlTable("chatRatings", {
+  id: int("id").autoincrement().primaryKey(),
+  chatLogId: int("chatLogId").notNull(), // Reference to chatLogs.id
+  rating: mysqlEnum("rating", ["positive", "negative"]).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ChatRating = typeof chatRatings.$inferSelect;
+export type InsertChatRating = typeof chatRatings.$inferInsert;

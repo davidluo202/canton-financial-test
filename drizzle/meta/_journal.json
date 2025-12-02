@@ -15,6 +15,13 @@
       "when": 1763092615136,
       "tag": "0001_omniscient_crystal",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1764639821385,
+      "tag": "0002_ambitious_unus",
+      "breakpoints": true
     }
   ]
 }

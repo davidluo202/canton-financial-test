@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, chatLogs, InsertChatLog } from "../drizzle/schema";
+import { InsertUser, users, chatLogs, InsertChatLog, chatRatings, InsertChatRating } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -94,13 +94,15 @@ export async function saveChatLog(log: Omit<InsertChatLog, "id" | "createdAt">) 
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot save chat log: database not available");
-    return;
+    return null;
   }
 
   try {
-    await db.insert(chatLogs).values(log);
+    const result = await db.insert(chatLogs).values(log);
+    return result;
   } catch (error) {
     console.error("[Database] Failed to save chat log:", error);
+    return null;
   }
 }
 
@@ -126,5 +128,63 @@ export async function getChatLogsForToday() {
   } catch (error) {
     console.error("[Database] Failed to get chat logs:", error);
     return [];
+  }
+}
+
+// Chat rating functions
+export async function saveChatRating(rating: Omit<InsertChatRating, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot save chat rating: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db.insert(chatRatings).values(rating);
+    return result;
+  } catch (error) {
+    console.error("[Database] Failed to save chat rating:", error);
+    return null;
+  }
+}
+
+export async function getChatRatingsForToday() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get chat ratings: database not available");
+    return [];
+  }
+
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const ratings = await db.select().from(chatRatings);
+    
+    // Filter ratings from today
+    return ratings.filter(rating => {
+      const ratingDate = new Date(rating.createdAt);
+      ratingDate.setHours(0, 0, 0, 0);
+      return ratingDate.getTime() === today.getTime();
+    });
+  } catch (error) {
+    console.error("[Database] Failed to get chat ratings:", error);
+    return [];
+  }
+}
+
+export async function getRatingForChatLog(chatLogId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get rating: database not available");
+    return null;
+  }
+
+  try {
+    const result = await db.select().from(chatRatings).where(eq(chatRatings.chatLogId, chatLogId)).limit(1);
+    return result.length > 0 ? result[0] : null;
+  } catch (error) {
+    console.error("[Database] Failed to get rating:", error);
+    return null;
   }
 }
