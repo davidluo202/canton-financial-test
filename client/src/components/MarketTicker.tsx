@@ -63,6 +63,11 @@ export default function MarketTicker() {
     return "";
   };
 
+  // 如果没有数据，不显示组件（避免空白栏）
+  if (marketData.length === 0) {
+    return null;
+  }
+
   return (
     <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white py-0.5 overflow-hidden">
       <div className="ticker-wrapper">
