@@ -1,0 +1,90 @@
+{
+  "^DJI": {
+    "name": "道琼斯指数 (Dow Jones)",
+    "symbol": "^DJI",
+    "price": 48114.26,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "^IXIC": {
+    "name": "纳斯达克综合指数 (NASDAQ)",
+    "symbol": "^IXIC",
+    "price": 23111.46,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "^GSPC": {
+    "name": "标普500指数 (S&P 500)",
+    "symbol": "^GSPC",
+    "price": 6800.26,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "000001.SS": {
+    "name": "上证综合指数 (Shanghai Composite)",
+    "symbol": "000001.SS",
+    "price": 3824.81,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "CNY"
+  },
+  "^HSI": {
+    "name": "恒生指数 (Hang Seng Index)",
+    "symbol": "^HSI",
+    "price": 25291.4,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "HKD"
+  },
+  "CNY=X": {
+    "name": "美元/人民币 (USD/CNY)",
+    "symbol": "CNY=X",
+    "price": 7.0435,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "CNY"
+  },
+  "EURUSD=X": {
+    "name": "欧元/美元 (EUR/USD)",
+    "symbol": "EURUSD=X",
+    "price": 1.1738,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "JPY=X": {
+    "name": "美元/日元 (USD/JPY)",
+    "symbol": "JPY=X",
+    "price": 154.997,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "JPY"
+  },
+  "GBPUSD=X": {
+    "name": "英镑/美元 (GBP/USD)",
+    "symbol": "GBPUSD=X",
+    "price": 1.3406,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "GC=F": {
+    "name": "黄金期货 (Gold Futures)",
+    "symbol": "GC=F",
+    "price": 4353.4,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  },
+  "SI=F": {
+    "name": "白银期货 (Silver Futures)",
+    "symbol": "SI=F",
+    "price": 66.015,
+    "change": 0,
+    "changePercent": 0,
+    "currency": "USD"
+  }
+}

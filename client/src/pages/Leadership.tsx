@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
+import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
 import AIChatbot from "@/components/AIChatbot";
 
@@ -45,6 +46,7 @@ export default function Leadership() {
   return (
     <div className="min-h-screen flex flex-col bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VictoriaHarborevening.jpg)' }}>
       <Navbar />
+      <MarketTicker />
       
       <div className="flex-1 pt-20">
         {/* Hero Section */}

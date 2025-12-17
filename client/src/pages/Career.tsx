@@ -1,6 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
+import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
 import AIChatbot from "@/components/AIChatbot";
 import { Mail } from "lucide-react";
@@ -15,6 +16,7 @@ export default function Career() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white">
       <Navbar />
+      <MarketTicker />
       
       <div className="flex-1 pt-20">
         {/* Hero Section */}

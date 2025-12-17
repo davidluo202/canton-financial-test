@@ -1,6 +1,8 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
+import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
 import AIChatbot from "@/components/AIChatbot";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -16,6 +18,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <MarketTicker />
 
       {/* Hero Section with User's Background Image */}
       <section
