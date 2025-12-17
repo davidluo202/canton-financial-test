@@ -418,3 +418,9 @@
 - [ ] 测试邮件报告功能
 - [ ] 生成AWS部署包
 - [ ] 编写完整的部署文档
+## Bug修复 - 更新市场行情栏 fallback数据
+- [x] 获取最新的货币汇率数据（USD/CNY, EUR/USD, USD/JPY, GBP/USD）
+- [x] 获取最新的贵金属价格数据（黄金、白银）
+- [x] 更新marketRouter.ts中的fallback数据
+- [x] 测试验证数据更新
+- [ ] 保存检查点
