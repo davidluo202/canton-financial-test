@@ -64,7 +64,7 @@ export default function MarketTicker() {
   };
 
   return (
-    <div className="bg-slate-900 text-white py-2 overflow-hidden relative">
+    <div className="fixed top-20 left-0 right-0 z-40 bg-slate-900 text-white py-2 overflow-hidden">
       <div className="ticker-wrapper">
         <div className="ticker-content">
           {/* 渲染两次数据以实现无缝循环滚动 */}

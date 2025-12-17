@@ -23,7 +23,7 @@ export default function Home() {
       {/* Hero Section with User's Background Image */}
       <section
         id="hero"
-        className="relative h-screen flex items-center justify-center text-white pt-20"
+        className="relative h-screen flex items-center justify-center text-white pt-28"
         style={{
           backgroundImage: "url('/HomePagebackground.jpg')",
           backgroundSize: "cover",

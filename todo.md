@@ -306,3 +306,10 @@
 - [x] 集成到所有页面的Navbar下方（Home/AboutUs/Services/Leadership/Career/Contact）
 - [x] 支持中英文双语显示
 - [x] 测试行情数据更新和显示效果
+
+## Bug修复 - 市场行情栏未显示
+- [x] 检查浏览器控制台错误
+- [x] 验证MarketTicker组件是否正确加载
+- [x] 检查API调用是否成功
+- [x] 修复显示问题（添加fixed定位和top偏移）
+- [x] 测试验证修复
