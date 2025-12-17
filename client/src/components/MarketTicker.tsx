@@ -108,9 +108,10 @@ export default function MarketTicker() {
     if (type === "forex") {
       return price.toFixed(4);
     } else if (type === "commodity") {
-      return price.toFixed(2);
+      return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     } else {
-      return price.toFixed(2);
+      // 股票指数：使用千位分隔符，保疙2位小数
+      return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
   };
 

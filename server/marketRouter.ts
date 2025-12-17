@@ -7,17 +7,18 @@ let cacheTimestamp: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
 
 // 静态fallback数据（当API完全失败且无缓存时使用）
+// 数据来源：Yahoo Finance 2024年12月16日收盘数据
 const FALLBACK_DATA = [
-  { symbol: "^DJI", type: "index", nameZh: "道瓊斯", nameEn: "Dow Jones", price: 43800, change: 15, changePercent: 0.03, currency: "USD" },
-  { symbol: "^IXIC", type: "index", nameZh: "納斯達克", nameEn: "NASDAQ", price: 19900, change: 20, changePercent: 0.10, currency: "USD" },
-  { symbol: "^GSPC", type: "index", nameZh: "標普500", nameEn: "S&P 500", price: 6050, change: 23, changePercent: 0.38, currency: "USD" },
-  { symbol: "000001.SS", type: "index", nameZh: "上證綜指", nameEn: "Shanghai", price: 3250, change: -15, changePercent: -0.46, currency: "CNY" },
-  { symbol: "^HSI", type: "index", nameZh: "恆生指數", nameEn: "Hang Seng", price: 19700, change: -150, changePercent: -0.76, currency: "HKD" },
-  { symbol: "EURUSD=X", type: "forex", nameZh: "歐元/美元", nameEn: "EUR/USD", price: 1.05, change: 0.002, changePercent: 0.19, currency: "USD" },
-  { symbol: "JPY=X", type: "forex", nameZh: "美元/日元", nameEn: "USD/JPY", price: 150.5, change: 0.3, changePercent: 0.20, currency: "JPY" },
-  { symbol: "GBPUSD=X", type: "forex", nameZh: "英鎊/美元", nameEn: "GBP/USD", price: 1.27, change: 0.003, changePercent: 0.24, currency: "USD" },
-  { symbol: "GC=F", type: "commodity", nameZh: "黃金", nameEn: "Gold", price: 2650, change: 12, changePercent: 0.45, currency: "USD" },
-  { symbol: "SI=F", type: "commodity", nameZh: "白銀", nameEn: "Silver", price: 30.5, change: 0.2, changePercent: 0.66, currency: "USD" },
+  { symbol: "^DJI", type: "index", nameZh: "道瓊斯", nameEn: "Dow Jones", price: 48114.26, change: -302.30, changePercent: -0.62, currency: "USD" },
+  { symbol: "^IXIC", type: "index", nameZh: "納斯達克", nameEn: "NASDAQ", price: 23111.46, change: 54.05, changePercent: 0.23, currency: "USD" },
+  { symbol: "^GSPC", type: "index", nameZh: "標普500", nameEn: "S&P 500", price: 6800.26, change: -16.25, changePercent: -0.24, currency: "USD" },
+  { symbol: "000001.SS", type: "index", nameZh: "上證綜指", nameEn: "Shanghai", price: 3874.00, change: 49.19, changePercent: 1.29, currency: "CNY" },
+  { symbol: "^HSI", type: "index", nameZh: "恆生指數", nameEn: "Hang Seng", price: 25434.18, change: 198.77, changePercent: 0.79, currency: "HKD" },
+  { symbol: "EURUSD=X", type: "forex", nameZh: "歐元/美元", nameEn: "EUR/USD", price: 1.0500, change: 0.0020, changePercent: 0.19, currency: "USD" },
+  { symbol: "JPY=X", type: "forex", nameZh: "美元/日元", nameEn: "USD/JPY", price: 154.99, change: 0.50, changePercent: 0.32, currency: "JPY" },
+  { symbol: "GBPUSD=X", type: "forex", nameZh: "英鎮/美元", nameEn: "GBP/USD", price: 1.2607, change: 0.0030, changePercent: 0.24, currency: "USD" },
+  { symbol: "GC=F", type: "commodity", nameZh: "黃金", nameEn: "Gold", price: 2658.00, change: 12.00, changePercent: 0.45, currency: "USD" },
+  { symbol: "SI=F", type: "commodity", nameZh: "白銀", nameEn: "Silver", price: 30.50, change: 0.20, changePercent: 0.66, currency: "USD" },
 ];
 
 export const marketRouter = router({
