@@ -407,3 +407,14 @@
 - [x] 更新fallback数据为准确的真实值（基于2024-12-16收盘数据）
 - [x] 修复价格格式化问题（使用toLocaleString显示千位分隔符）
 - [x] 测试验证数据准确性
+
+## 新功能 - AI Chatbot对话记录每日邮件报告
+- [x] 设计邮件报告系统架构（数据存储+业务逻辑+定时任务）
+- [x] 实现Chatbot对话记录保存到数据库（已存在chatLogs表和saveChatLog功能）
+- [x] 创建对话记录统计和打包功能（generateDailyReportExcel + generateStatisticsSummary）
+- [x] 实现邮件发送功能（sendDailyReportEmail → customer-services@cmfinancial.com）
+- [x] 设置定时任务（每天下午６点执行）- 已创建scheduler.ts，使用node-cron实现
+- [x] 创建IT部署指南和检查清单 - 已创建DEPLOYMENT_GUIDE.md
+- [ ] 测试邮件报告功能
+- [ ] 生成AWS部署包
+- [ ] 编写完整的部署文档

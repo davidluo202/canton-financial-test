@@ -1,5 +1,5 @@
 import cron from "node-cron";
-import { sendDailyChatReport } from "./emailService";
+import { executeDailyReportTask } from "./emailReportService";
 
 /**
  * 初始化定时任务调度器
@@ -15,12 +15,8 @@ export function initScheduler() {
   cron.schedule(dailyReportSchedule, async () => {
     console.log("[Scheduler] Running daily chat report task...");
     try {
-      const result = await sendDailyChatReport();
-      if (result.success) {
-        console.log(`[Scheduler] Daily report sent successfully. Conversations: ${result.conversationCount}`);
-      } else {
-        console.error("[Scheduler] Failed to send daily report:", result.error);
-      }
+      await executeDailyReportTask();
+      console.log("[Scheduler] Daily report sent successfully");
     } catch (error) {
       console.error("[Scheduler] Error in daily report task:", error);
     }
@@ -35,7 +31,22 @@ export function initScheduler() {
 /**
  * 手动触发每日报告（用于测试）
  */
-export async function triggerDailyReportManually() {
-  console.log("[Scheduler] Manually triggering daily report...");
-  return await sendDailyChatReport();
+export async function triggerDailyReportManually(): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  try {
+    console.log("[Scheduler] Manually triggering daily report...");
+    await executeDailyReportTask();
+    return {
+      success: true,
+      message: '每日報告已成功生成並發送',
+    };
+  } catch (error) {
+    console.error("[Scheduler] Manual trigger failed:", error);
+    return {
+      success: false,
+      message: `報告生成失敗: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
 }
