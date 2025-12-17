@@ -38,9 +38,9 @@ export default function MarketTicker() {
     }
   }, []);
 
-  // 获取市场数据
+  // 获取市场数据（每5分钟刷新，减少API调用频率）
   const { data, isLoading } = trpc.market.getMarketData.useQuery(undefined, {
-    refetchInterval: 60000, // 每60秒刷新一次
+    refetchInterval: 5 * 60 * 1000, // 每5分钟刷新一次
     refetchOnWindowFocus: false,
   });
 

@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-12-17T00:32:20.160019",
+  "source": "Yahoo Finance Data API (Manus Built-in)",
+  "success_count": 5,
+  "total_count": 5,
+  "data": [
+    {
+      "symbol": "^DJI",
+      "price": 48114.26,
+      "previousClose": 0,
+      "change": 0,
+      "changePercent": 0,
+      "currency": "USD"
+    },
+    {
+      "symbol": "^IXIC",
+      "price": 23111.46,
+      "previousClose": 0,
+      "change": 0,
+      "changePercent": 0,
+      "currency": "USD"
+    },
+    {
+      "symbol": "^GSPC",
+      "price": 6800.26,
+      "previousClose": 0,
+      "change": 0,
+      "changePercent": 0,
+      "currency": "USD"
+    },
+    {
+      "symbol": "^HSI",
+      "price": 25236.26,
+      "previousClose": 0,
+      "change": 0,
+      "changePercent": 0,
+      "currency": "HKD"
+    },
+    {
+      "symbol": "000001.SS",
+      "price": 3827.512,
+      "previousClose": 0,
+      "change": 0,
+      "changePercent": 0,
+      "currency": "CNY"
+    }
+  ]
+}

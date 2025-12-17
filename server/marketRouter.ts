@@ -1,12 +1,23 @@
 import { publicProcedure, router } from "./_core/trpc";
 import { callDataApi } from "./_core/dataApi";
 
+// 服务端缓存
+let marketDataCache: any = null;
+let cacheTimestamp: number = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存
+
 export const marketRouter = router({
   /**
    * 获取实时市场数据
    * 包括股票指数、外汇汇率和贵金属价格
    */
   getMarketData: publicProcedure.query(async () => {
+    // 检查缓存是否有效
+    const now = Date.now();
+    if (marketDataCache && (now - cacheTimestamp) < CACHE_DURATION) {
+      console.log('[MarketData] 返回缓存数据');
+      return marketDataCache;
+    }
     // 定义所有需要获取的市场数据符号
     const symbols = [
       // 股票指数
@@ -74,6 +85,23 @@ export const marketRouter = router({
     const data = await Promise.all(promises);
     
     // 过滤掉失败的请求
-    return data.filter((item) => item !== null);
+    const validData = data.filter((item) => item !== null);
+    
+    // 只有当获取到有效数据时才更新缓存
+    if (validData.length > 0) {
+      marketDataCache = validData;
+      cacheTimestamp = Date.now();
+      console.log(`[MarketData] 缓存已更新，获取到 ${validData.length} 条数据`);
+    } else {
+      console.log('[MarketData] 未获取到有效数据，保持旧缓存');
+    }
+    
+    // 如果没有新数据但有缓存，返回缓存
+    if (validData.length === 0 && marketDataCache) {
+      console.log('[MarketData] API失败，返回旧缓存数据');
+      return marketDataCache;
+    }
+    
+    return validData;
   }),
 });
