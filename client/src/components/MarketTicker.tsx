@@ -62,13 +62,28 @@ export default function MarketTicker() {
     }
   }, [data]);
 
-  // 如果没有数据且正在加载，显示加载状态
+  // 如果没有数据且正在加载，显示骨架屏
   if (marketData.length === 0 && isLoading) {
     return (
       <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
-        <div className="flex items-center justify-center py-0.5">
-          <div className="px-3 text-[10px] text-slate-300 animate-pulse">
-            {language === 'zh' ? '正在加載市場數據...' : 'Loading market data...'}
+        <div className="flex items-center py-0.5 px-3">
+          {/* 时间戳骨架 */}
+          <div className="w-20 h-3 bg-slate-700/50 rounded animate-pulse mr-3"></div>
+          
+          {/* 数据项骨架（模拟5个数据项） */}
+          <div className="flex gap-4">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center gap-1.5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }}>
+                {/* 名称 */}
+                <div className="w-12 h-3 bg-slate-700/50 rounded"></div>
+                {/* 价格 */}
+                <div className="w-16 h-3 bg-slate-600/50 rounded"></div>
+                {/* 涨跌 */}
+                <div className="w-20 h-2.5 bg-slate-700/50 rounded"></div>
+                {/* 分隔符 */}
+                <div className="w-px h-3 bg-slate-600/30"></div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
