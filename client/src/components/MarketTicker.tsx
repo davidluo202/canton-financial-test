@@ -138,7 +138,7 @@ export default function MarketTicker() {
       const diffMins = Math.floor(diffMs / 60000);
       
       if (diffMins < 1) {
-        return language === 'zh' ? '剚剚更新' : 'Just now';
+        return language === 'zh' ? '即時更新' : 'Just now';
       } else if (diffMins < 60) {
         return language === 'zh' ? `${diffMins}分鐘前更新` : `Updated ${diffMins}m ago`;
       } else {
