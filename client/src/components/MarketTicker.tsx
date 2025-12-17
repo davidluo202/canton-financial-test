@@ -64,28 +64,28 @@ export default function MarketTicker() {
   };
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 bg-slate-900 text-white py-2 overflow-hidden">
+    <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white py-0.5 overflow-hidden">
       <div className="ticker-wrapper">
         <div className="ticker-content">
           {/* 渲染两次数据以实现无缝循环滚动 */}
           {[...marketData, ...marketData].map((item, index) => (
             <div
               key={`${item.symbol}-${index}`}
-              className="ticker-item inline-flex items-center px-6 whitespace-nowrap"
+              className="ticker-item inline-flex items-center px-3 whitespace-nowrap"
             >
-              <span className="font-semibold text-sm mr-2">
+              <span className="font-semibold text-xs mr-1.5">
                 {language === "zh" ? item.nameZh : item.nameEn}
               </span>
-              <span className="text-sm mr-2">
+              <span className="text-xs mr-1.5">
                 {formatPrice(item.price, item.type)}
               </span>
-              <span className={`text-xs font-medium ${getChangeColor(item.change)}`}>
+              <span className={`text-[10px] font-medium ${getChangeColor(item.change)}`}>
                 {getChangeSymbol(item.change)}
                 {item.change.toFixed(2)} (
                 {getChangeSymbol(item.changePercent)}
                 {item.changePercent.toFixed(2)}%)
               </span>
-              <span className="mx-4 text-slate-600">|</span>
+              <span className="mx-2 text-slate-400 text-xs">|</span>
             </div>
           ))}
         </div>
