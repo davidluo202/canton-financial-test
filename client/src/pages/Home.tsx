@@ -77,7 +77,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/40 via-gray-800/40 to-slate-900/40"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-8" style={language === "zh" ? { fontFamily: 'FZYaoTi, 姚体, STYaoTi, serif' } : {}}>
-            {language === "zh" ? "总览格局，锤穹之势" : "About CMF"}
+            {language === "zh" ? "總覽格局，錘穹之勢" : "About CMF"}
           </h2>
           <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-8">
             {language === "zh"
