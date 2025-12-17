@@ -13,9 +13,30 @@ interface MarketData {
   currency: string;
 }
 
+const CACHE_KEY = 'market_ticker_data';
+const CACHE_TIMESTAMP_KEY = 'market_ticker_timestamp';
+
 export default function MarketTicker() {
   const { language } = useLanguage();
   const [marketData, setMarketData] = useState<MarketData[]>([]);
+  const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
+
+  // 从localStorage加载缓存数据
+  useEffect(() => {
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      const cachedTimestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
+      
+      if (cachedData) {
+        setMarketData(JSON.parse(cachedData));
+      }
+      if (cachedTimestamp) {
+        setLastUpdateTime(cachedTimestamp);
+      }
+    } catch (error) {
+      console.error('Failed to load cached market data:', error);
+    }
+  }, []);
 
   // 获取市场数据
   const { data, isLoading } = trpc.market.getMarketData.useQuery(undefined, {
@@ -23,20 +44,27 @@ export default function MarketTicker() {
     refetchOnWindowFocus: false,
   });
 
+  // 当获取到新数据时，更新state和localStorage缓存
   useEffect(() => {
-    if (data) {
+    if (data && Array.isArray(data) && data.length > 0) {
+      const timestamp = new Date().toISOString();
+      
       setMarketData(data as MarketData[]);
+      setLastUpdateTime(timestamp);
+      
+      // 保存到localStorage
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
+      } catch (error) {
+        console.error('Failed to cache market data:', error);
+      }
     }
   }, [data]);
 
-  if (isLoading || marketData.length === 0) {
-    return (
-      <div className="bg-slate-900 text-white py-2 overflow-hidden">
-        <div className="text-center text-sm text-slate-400">
-          {language === "zh" ? "載入市場數據..." : "Loading market data..."}
-        </div>
-      </div>
-    );
+  // 如果没有数据（包括缓存），不显示组件
+  if (marketData.length === 0) {
+    return null;
   }
 
   // 格式化价格显示
@@ -63,15 +91,47 @@ export default function MarketTicker() {
     return "";
   };
 
+  // 格式化时间显示
+  const formatUpdateTime = () => {
+    if (!lastUpdateTime) return '';
+    
+    try {
+      const updateDate = new Date(lastUpdateTime);
+      const now = new Date();
+      const diffMs = now.getTime() - updateDate.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      
+      if (diffMins < 1) {
+        return language === 'zh' ? '剚剚更新' : 'Just now';
+      } else if (diffMins < 60) {
+        return language === 'zh' ? `${diffMins}分鐘前更新` : `Updated ${diffMins}m ago`;
+      } else {
+        const diffHours = Math.floor(diffMins / 60);
+        return language === 'zh' ? `${diffHours}小時前更新` : `Updated ${diffHours}h ago`;
+      }
+    } catch (error) {
+      return '';
+    }
+  };
+
   // 如果没有数据，不显示组件（避免空白栏）
   if (marketData.length === 0) {
     return null;
   }
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white py-0.5 overflow-hidden">
-      <div className="ticker-wrapper">
-        <div className="ticker-content">
+    <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
+      <div className="flex items-center">
+        {/* 时间戳显示 */}
+        {lastUpdateTime && (
+          <div className="px-3 py-0.5 text-[10px] text-slate-300 whitespace-nowrap border-r border-slate-700">
+            {formatUpdateTime()}
+          </div>
+        )}
+        
+        {/* 滚动行情条 */}
+        <div className="flex-1 ticker-wrapper">
+          <div className="ticker-content py-0.5">
           {/* 渲染两次数据以实现无缝循环滚动 */}
           {[...marketData, ...marketData].map((item, index) => (
             <div
@@ -93,6 +153,7 @@ export default function MarketTicker() {
               <span className="mx-2 text-slate-400 text-xs">|</span>
             </div>
           ))}
+          </div>
         </div>
       </div>
 
