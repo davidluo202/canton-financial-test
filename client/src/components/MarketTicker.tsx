@@ -62,9 +62,30 @@ export default function MarketTicker() {
     }
   }, [data]);
 
-  // 如果没有数据（包括缓存），不显示组件
+  // 如果没有数据且正在加载，显示加载状态
+  if (marketData.length === 0 && isLoading) {
+    return (
+      <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
+        <div className="flex items-center justify-center py-0.5">
+          <div className="px-3 text-[10px] text-slate-300 animate-pulse">
+            {language === 'zh' ? '正在加載市場數據...' : 'Loading market data...'}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+  // 如果没有数据且不在加载中（API失败且无缓存），显示提示信息
   if (marketData.length === 0) {
-    return null;
+    return (
+      <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
+        <div className="flex items-center justify-center py-0.5">
+          <div className="px-3 text-[10px] text-slate-300">
+            {language === 'zh' ? '市場數據暫時不可用' : 'Market data temporarily unavailable'}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // 格式化价格显示
@@ -114,10 +135,7 @@ export default function MarketTicker() {
     }
   };
 
-  // 如果没有数据，不显示组件（避免空白栏）
-  if (marketData.length === 0) {
-    return null;
-  }
+
 
   return (
     <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
