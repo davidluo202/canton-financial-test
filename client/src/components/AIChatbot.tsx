@@ -74,6 +74,28 @@ export default function AIChatbot() {
     }
   }, [isOpen, language]);
 
+  // 当语言切换时更新欢迎词（包括网站语言切换和对话框内语言切换）
+  useEffect(() => {
+    if (isOpen && messages.length > 0 && messages[0].role === "assistant") {
+      // 确定当前显示语言
+      const displayLang = preferredLanguage === 'auto' ? language : preferredLanguage;
+      
+      // 更新第一条欢迎消息
+      const updatedWelcomeMessage: Message = {
+        ...messages[0],
+        content:
+          displayLang === "zh"
+            ? "您好！我是誠港金融的AI助手。我可以幮助您了解我們的服務、投資相關問題，或查詢香港證監會（SFC）、香港證券及投資學會（HKSI）等權威機構的資訊。請問有什麼可以幫到您？"
+            : "Hello! I am the AI assistant of CMFinancial. I can help you understand our services, answer investment-related questions, or provide information from authoritative organizations such as the Hong Kong Securities and Futures Commission (SFC) and the Hong Kong Securities and Investment Institute (HKSI). How can I assist you today?",
+      };
+      
+      setMessages(prevMessages => [
+        updatedWelcomeMessage,
+        ...prevMessages.slice(1)
+      ]);
+    }
+  }, [language, preferredLanguage, isOpen]);
+
   const handleSend = async () => {
     if (!input.trim() || chatMutation.isPending) return;
 
