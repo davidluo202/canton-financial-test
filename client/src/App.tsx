@@ -13,6 +13,7 @@ import Career from "./pages/Career";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Console from "./pages/Console";
+import NewsPage from "./pages/NewsPage";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -26,6 +27,7 @@ function Router() {
       <Route path={"/contact"} component={Contact} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/console"} component={Console} />
+      <Route path={"/news"} component={NewsPage} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
