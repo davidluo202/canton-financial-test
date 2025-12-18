@@ -5,22 +5,47 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Loader2, Plus, Trash2, Edit2, X } from "lucide-react";
-import { useLocation } from "wouter";
+import { Loader2, Plus, Trash2, Edit2, X, LogOut } from "lucide-react";
+import ConsoleLogin from "@/components/ConsoleLogin";
 
 export default function Console() {
-  const [, setLocation] = useLocation();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [date, setDate] = useState("");
   const [content, setContent] = useState("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editDate, setEditDate] = useState("");
   const [editContent, setEditContent] = useState("");
 
-  // 获取当前用户
-  const { data: user, isLoading: userLoading } = trpc.auth.me.useQuery();
+  // 检查登录状态
+  useEffect(() => {
+    const checkAuth = () => {
+      const auth = localStorage.getItem("consoleAuth");
+      const authTime = localStorage.getItem("consoleAuthTime");
+      
+      if (auth === "true" && authTime) {
+        // 检查会话是否过期（24小时）
+        const elapsed = Date.now() - parseInt(authTime);
+        const maxAge = 24 * 60 * 60 * 1000; // 24小时
+        
+        if (elapsed < maxAge) {
+          setIsAuthenticated(true);
+        } else {
+          // 会话过期，清除登录状态
+          localStorage.removeItem("consoleAuth");
+          localStorage.removeItem("consoleAuthTime");
+          setIsAuthenticated(false);
+        }
+      }
+    };
+    
+    checkAuth();
+  }, []);
 
-  // 获取所有新闻
-  const { data: newsList, isLoading: newsLoading, refetch } = trpc.news.getAll.useQuery();
+  // 获取所有新闻（仅在已登录时）
+  const { data: newsList, isLoading: newsLoading, refetch } = trpc.news.getAll.useQuery(
+    undefined,
+    { enabled: isAuthenticated }
+  );
 
   // 创建新闻
   const createNews = trpc.news.create.useMutation({
@@ -60,13 +85,16 @@ export default function Console() {
     },
   });
 
-  // 检查用户权限
-  useEffect(() => {
-    if (!userLoading && (!user || user.role !== "admin")) {
-      toast.error("您没有权限访问此页面");
-      setLocation("/");
-    }
-  }, [user, userLoading, setLocation]);
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("consoleAuth");
+    localStorage.removeItem("consoleAuthTime");
+    setIsAuthenticated(false);
+    toast.success("已退出登录");
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,28 +148,31 @@ export default function Console() {
     setEditContent("");
   };
 
-  if (userLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!user || user.role !== "admin") {
-    return null;
+  // 如果未登录，显示登录页面
+  if (!isAuthenticated) {
+    return <ConsoleLogin onLoginSuccess={handleLoginSuccess} />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 py-12 px-4">
       <div className="container max-w-6xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
-            新闻稿管理后台
-          </h1>
-          <p className="text-slate-600 dark:text-slate-400">
-            管理公司动态和新闻发布
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+              新闻稿管理后台
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400">
+              管理公司动态和新闻发布
+            </p>
+          </div>
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            退出登录
+          </Button>
         </div>
 
         {/* 创建新闻表单 */}
