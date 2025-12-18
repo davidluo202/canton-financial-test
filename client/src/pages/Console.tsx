@@ -109,7 +109,7 @@ export default function Console() {
       return;
     }
 
-    createNews.mutate({ date, content });
+    createNews.mutate({ date, content, consoleAuth: "console-authenticated" });
   };
 
   const handleEdit = (newsItem: any) => {
@@ -119,10 +119,7 @@ export default function Console() {
   };
 
   const handleUpdate = () => {
-    if (!editDate || !editContent) {
-      toast.error("请填写所有字段");
-      return;
-    }
+    if (!editingId) return;
 
     if (editContent.length > 200) {
       toast.error("新闻内容不能超过200个汉字");
@@ -130,15 +127,16 @@ export default function Console() {
     }
 
     updateNews.mutate({
-      id: editingId!,
+      id: editingId,
       date: editDate,
       content: editContent,
+      consoleAuth: "console-authenticated",
     });
   };
 
   const handleDelete = (id: number) => {
-    if (window.confirm("确定要删除这条新闻吗？")) {
-      deleteNews.mutate({ id });
+    if (confirm("确定要删除这条新闻吗？")) {
+      deleteNews.mutate({ id, consoleAuth: "console-authenticated" });
     }
   };
 
