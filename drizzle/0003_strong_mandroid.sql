@@ -1,0 +1,8 @@
+CREATE TABLE `news` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`date` timestamp NOT NULL,
+	`content` varchar(600) NOT NULL,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `news_id` PRIMARY KEY(`id`)
+);

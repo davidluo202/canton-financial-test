@@ -47,3 +47,15 @@ export const chatRatings = mysqlTable("chatRatings", {
 
 export type ChatRating = typeof chatRatings.$inferSelect;
 export type InsertChatRating = typeof chatRatings.$inferInsert;
+
+// News table for company announcements
+export const news = mysqlTable("news", {
+  id: int("id").autoincrement().primaryKey(),
+  date: timestamp("date").notNull(),
+  content: varchar("content", { length: 600 }).notNull(), // 200 Chinese characters = ~600 bytes
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type News = typeof news.$inferSelect;
+export type InsertNews = typeof news.$inferInsert;

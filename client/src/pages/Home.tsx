@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
 import AIChatbot from "@/components/AIChatbot";
+import NewsPopover from "@/components/NewsPopover";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 
@@ -19,6 +20,7 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar />
       <MarketTicker />
+      <NewsPopover />
 
       {/* Hero Section with User's Background Image */}
       <section
