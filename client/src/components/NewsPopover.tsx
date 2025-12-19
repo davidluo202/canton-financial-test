@@ -43,10 +43,10 @@ export default function NewsPopover() {
       {/* Trigger Button */}
       <button
         onClick={handleClick}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-8 md:py-16 text-sm md:text-base font-medium rounded-r-lg shadow-lg transition-all duration-200 writing-mode-vertical-rl"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-1.5 py-8 md:py-16 text-sm md:text-base font-medium rounded-r-lg shadow-lg transition-all duration-200"
         style={{ writingMode: "vertical-rl" }}
       >
-        {language === "zh" ? "新聞稿" : "News"}
+        {language === "zh" ? "新聞及公司動態" : "News"}
       </button>
 
       {/* Desktop Popover */}
