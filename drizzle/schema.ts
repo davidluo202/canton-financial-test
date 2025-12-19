@@ -47,12 +47,14 @@ export const chatRatings = mysqlTable("chatRatings", {
 
 export type ChatRating = typeof chatRatings.$inferSelect;
 export type InsertChatRating = typeof chatRatings.$inferInsert;
-
 // News table for company announcements
 export const news = mysqlTable("news", {
   id: int("id").autoincrement().primaryKey(),
   date: timestamp("date").notNull(),
-  content: varchar("content", { length: 600 }).notNull(), // 200 Chinese characters = ~600 bytes
+  content: varchar("content", { length: 300 }).notNull(), // 扩展到300字
+  image1: text("image1"), // 第一张图片URL
+  image2: text("image2"), // 第二张图片URL
+  image3: text("image3"), // 第三张图片URL
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

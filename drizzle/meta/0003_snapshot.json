@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "e60e2a1e-56b3-4c16-bc3c-347cdfc6b7f3",
+  "id": "8ce08b23-89a6-4715-98af-5364a75506ac",
   "prevId": "57bb1578-1fa8-4c11-a941-a674ebb440b7",
   "tables": {
     "chatLogs": {
@@ -122,9 +122,30 @@
         },
         "content": {
           "name": "content",
-          "type": "varchar(600)",
+          "type": "varchar(300)",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "image1": {
+          "name": "image1",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "image2": {
+          "name": "image2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "image3": {
+          "name": "image3",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "createdAt": {

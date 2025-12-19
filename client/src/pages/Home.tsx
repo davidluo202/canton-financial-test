@@ -20,7 +20,6 @@ export default function Home() {
     <div className="min-h-screen">
       <Navbar />
       <MarketTicker />
-      <NewsPopover />
 
       {/* Hero Section with User's Background Image */}
       <section
@@ -223,6 +222,7 @@ export default function Home() {
 
       <Footer />
       <AIChatbot />
+      <NewsPopover />
     </div>
   );
 }

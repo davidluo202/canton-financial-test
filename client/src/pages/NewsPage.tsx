@@ -1,129 +1,83 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
-import { Loader2, ChevronDown, ChevronUp, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
 
 export default function NewsPage() {
-  const [, setLocation] = useLocation();
-  const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
   const { language } = useLanguage();
-  
-  // 获取所有新闻
-  const { data: newsList, isLoading } = trpc.news.getAll.useQuery();
-
-  const labels = {
-    zh_TW: "新聞稿",
-    zh_CN: "新闻稿",
-    en: "News",
-  };
-
-  const noNewsLabels = {
-    zh_TW: "暫無新聞",
-    zh_CN: "暂无新闻",
-    en: "No news available",
-  };
-
-  const backLabels = {
-    zh_TW: "返回首頁",
-    zh_CN: "返回首页",
-    en: "Back to Home",
-  };
+  const [, setLocation] = useLocation();
+  const { data: newsList = [] } = trpc.news.getAll.useQuery();
+  const [expandedIds, setExpandedIds] = useState<number[]>([]);
 
   const toggleExpand = (id: number) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
-    } else {
-      newExpanded.add(id);
-    }
-    setExpandedItems(newExpanded);
+    setExpandedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
   };
 
-  const truncateContent = (content: string, maxLength: number = 50) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + "...";
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + "...";
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* 顶部导航栏 */}
-      <div className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border z-10">
-        <div className="container flex items-center justify-between py-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setLocation("/")}
-            className="gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {language === "zh" ? backLabels.zh_TW : backLabels.en}
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white shadow-sm sticky top-0 z-10">
+        <div className="container py-4 flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => setLocation("/")}>
+            <ChevronLeft className="h-6 w-6" />
           </Button>
-          <h1 className="text-xl font-bold">
-            {language === "zh" ? labels.zh_TW : labels.en}
+          <h1 className="text-2xl font-bold">
+            {language === "zh" ? "公司動態" : "Company News"}
           </h1>
-          <div className="w-20" /> {/* 占位保持居中 */}
         </div>
       </div>
 
-      {/* 新闻内容 */}
       <div className="container py-6">
-        {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-10 w-10 animate-spin text-primary" />
-          </div>
-        ) : !newsList || newsList.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground text-lg">
-            {language === "zh" ? noNewsLabels.zh_TW : noNewsLabels.en}
+        {newsList.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">
+              {language === "zh" ? "暫無新聞" : "No news available"}
+            </p>
           </div>
         ) : (
-          <div className="space-y-6 max-w-3xl mx-auto">
-            {/* 显示前3条新闻 */}
-            {newsList.slice(0, 3).map((newsItem, index) => {
-              const isExpanded = expandedItems.has(newsItem.id);
-              const shouldTruncate = newsItem.content.length > 50;
+          <div className="space-y-4">
+            {newsList.map((item) => {
+              const isExpanded = expandedIds.includes(item.id);
+              const displayContent = isExpanded ? item.content : truncateText(item.content, 100);
 
               return (
-                <div
-                  key={newsItem.id}
-                  className="bg-card border border-border rounded-lg p-6 shadow-sm"
-                >
-                  <div className="space-y-3">
-                    <div className="text-base font-bold text-primary">
-                      {new Date(newsItem.date).toLocaleDateString(
-                        language === "en" ? "en-US" : "zh-CN",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
+                <div key={item.id} className="bg-white rounded-lg shadow-md p-4">
+                  <p className="text-sm font-semibold text-gray-700 mb-2">
+                    {new Date(item.date).toLocaleDateString(language === "zh" ? "zh-CN" : "en-US")}
+                  </p>
+                  <p className="text-gray-800 leading-relaxed mb-3">{displayContent}</p>
+
+                  {item.content.length > 100 && (
+                    <Button variant="ghost" size="sm" onClick={() => toggleExpand(item.id)} className="w-full justify-center gap-2">
+                      {isExpanded ? (
+                        <>
+                          <ChevronUp className="h-4 w-4" />
+                          {language === "zh" ? "收起" : "Collapse"}
+                        </>
+                      ) : (
+                        <>
+                          <ChevronDown className="h-4 w-4" />
+                          {language === "zh" ? "展開" : "Expand"}
+                        </>
                       )}
+                    </Button>
+                  )}
+
+                  {isExpanded && (item.image1 || item.image2 || item.image3) && (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
+                      {item.image1 && <img src={item.image1} alt="News image 1" className="w-full h-40 object-cover rounded" />}
+                      {item.image2 && <img src={item.image2} alt="News image 2" className="w-full h-40 object-cover rounded" />}
+                      {item.image3 && <img src={item.image3} alt="News image 3" className="w-full h-40 object-cover rounded col-span-2" />}
                     </div>
-                    <div className="text-base text-foreground leading-relaxed">
-                      {isExpanded || !shouldTruncate
-                        ? newsItem.content
-                        : truncateContent(newsItem.content)}
-                    </div>
-                    {shouldTruncate && (
-                      <button
-                        onClick={() => toggleExpand(newsItem.id)}
-                        className="text-sm text-primary flex items-center gap-1.5 mt-2 hover:underline"
-                      >
-                        {isExpanded ? (
-                          <>
-                            <ChevronUp className="h-4 w-4" />
-                            收起
-                          </>
-                        ) : (
-                          <>
-                            <ChevronDown className="h-4 w-4" />
-                            展开阅读
-                          </>
-                        )}
-                      </button>
-                    )}
-                  </div>
+                  )}
                 </div>
               );
             })}

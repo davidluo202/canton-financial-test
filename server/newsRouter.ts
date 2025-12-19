@@ -1,142 +1,132 @@
+import { router, publicProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
-import { news, InsertNews } from "../drizzle/schema";
-import { eq, desc } from "drizzle-orm";
+import { news } from "../drizzle/schema";
+import { desc, eq } from "drizzle-orm";
+
+// Console authentication token (simple implementation)
+const CONSOLE_AUTH_TOKEN = "console_admin_session";
+
+
 
 export const newsRouter = router({
-  /**
-   * 获取所有新闻（按日期倒序）
-   * 公开访问，用于首页弹窗展示
-   */
+  // Get all news (public, no auth required)
   getAll: publicProcedure.query(async () => {
     const db = await getDb();
-    if (!db) {
-      throw new Error("Database not available");
-    }
-
-    try {
-      const allNews = await db
-        .select()
-        .from(news)
-        .orderBy(desc(news.date));
-      
-      return allNews;
-    } catch (error) {
-      console.error("[News] Failed to get all news:", error);
-      throw new Error("Failed to fetch news");
-    }
+    if (!db) return [];
+    const allNews = await db.select().from(news).orderBy(desc(news.date));
+    return allNews;
   }),
 
-  /**
-   * 创建新闻
-   * 需要管理员权限（通过consoleAuth验证）
-   */
+  // Create news (requires console auth)
   create: publicProcedure
     .input(
       z.object({
-        date: z.string().or(z.date()),
-        content: z.string().max(200, "新闻内容不能超过200个汉字"),
-        consoleAuth: z.string().optional(), // Console登录令牌
+        date: z.string(),
+        content: z.string().max(300),
+        image1: z.string().optional(),
+        image2: z.string().optional(),
+        image3: z.string().optional(),
+        consoleAuth: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      // 验证Console登录令牌（简单验证，生产环境应使用更安全的方式）
-      if (input.consoleAuth !== "console-authenticated") {
-        throw new Error("Unauthorized: Admin access required");
+      // Check console authentication
+      if (input.consoleAuth !== CONSOLE_AUTH_TOKEN) {
+        throw new Error("Unauthorized: Invalid console authentication");
       }
 
       const db = await getDb();
-      if (!db) {
-        throw new Error("Database not available");
-      }
+      if (!db) throw new Error("Database not available");
+      
+      const result = await db.insert(news).values({
+        date: new Date(input.date),
+        content: input.content,
+        image1: input.image1 || null,
+        image2: input.image2 || null,
+        image3: input.image3 || null,
+      });
 
-      try {
-        const newsData: InsertNews = {
-          date: typeof input.date === "string" ? new Date(input.date) : input.date,
-          content: input.content,
-        };
-
-        const result = await db.insert(news).values(newsData);
-        return { success: true, id: result[0].insertId };
-      } catch (error) {
-        console.error("[News] Failed to create news:", error);
-        throw new Error("Failed to create news");
-      }
+      return { success: true, id: result[0].insertId };
     }),
 
-  /**
-   * 更新新闻
-   * 需要管理员权限（通过consoleAuth验证）
-   */
+  // Update news (requires console auth)
   update: publicProcedure
     .input(
       z.object({
         id: z.number(),
-        date: z.string().or(z.date()).optional(),
-        content: z.string().max(200, "新闻内容不能超过200个汉字").optional(),
-        consoleAuth: z.string().optional(), // Console登录令牌
+        date: z.string(),
+        content: z.string().max(300),
+        image1: z.string().optional(),
+        image2: z.string().optional(),
+        image3: z.string().optional(),
+        consoleAuth: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      // 验证Console登录令牌
-      if (input.consoleAuth !== "console-authenticated") {
-        throw new Error("Unauthorized: Admin access required");
+      // Check console authentication
+      if (input.consoleAuth !== CONSOLE_AUTH_TOKEN) {
+        throw new Error("Unauthorized: Invalid console authentication");
       }
 
       const db = await getDb();
-      if (!db) {
-        throw new Error("Database not available");
-      }
+      if (!db) throw new Error("Database not available");
+      
+      await db
+        .update(news)
+        .set({
+          date: new Date(input.date),
+          content: input.content,
+          image1: input.image1 || null,
+          image2: input.image2 || null,
+          image3: input.image3 || null,
+        })
+        .where(eq(news.id, input.id));
 
-      try {
-        const updateData: Partial<InsertNews> = {};
-        
-        if (input.date) {
-          updateData.date = typeof input.date === "string" ? new Date(input.date) : input.date;
-        }
-        if (input.content) {
-          updateData.content = input.content;
-        }
-
-        await db
-          .update(news)
-          .set(updateData)
-          .where(eq(news.id, input.id));
-
-        return { success: true };
-      } catch (error) {
-        console.error("[News] Failed to update news:", error);
-        throw new Error("Failed to update news");
-      }
+      return { success: true };
     }),
 
-  /**
-   * 删除新闻
-   * 需要管理员权限（通过consoleAuth验证）
-   */
+  // Delete news (requires console auth)
   delete: publicProcedure
-    .input(z.object({ 
-      id: z.number(),
-      consoleAuth: z.string().optional(), // Console登录令牌
-    }))
+    .input(
+      z.object({
+        id: z.number(),
+        consoleAuth: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
-      // 验证Console登录令牌
-      if (input.consoleAuth !== "console-authenticated") {
-        throw new Error("Unauthorized: Admin access required");
+      // Check console authentication
+      if (input.consoleAuth !== CONSOLE_AUTH_TOKEN) {
+        throw new Error("Unauthorized: Invalid console authentication");
       }
 
       const db = await getDb();
-      if (!db) {
-        throw new Error("Database not available");
+      if (!db) throw new Error("Database not available");
+      
+      await db.delete(news).where(eq(news.id, input.id));
+      return { success: true };
+    }),
+
+  // Upload image to S3 (simplified - returns data URL for now)
+  uploadImage: publicProcedure
+    .input(
+      z.object({
+        fileName: z.string(),
+        fileData: z.string(), // base64 encoded
+        consoleAuth: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      // Check console authentication
+      if (input.consoleAuth !== CONSOLE_AUTH_TOKEN) {
+        throw new Error("Unauthorized: Invalid console authentication");
       }
 
-      try {
-        await db.delete(news).where(eq(news.id, input.id));
-        return { success: true };
-      } catch (error) {
-        console.error("[News] Failed to delete news:", error);
-        throw new Error("Failed to delete news");
-      }
+      // For now, return the data URL directly
+      // In production, this should upload to S3
+      const ext = input.fileName.split(".").pop();
+      const dataUrl = `data:image/${ext};base64,${input.fileData}`;
+
+      return { success: true, url: dataUrl };
     }),
 });

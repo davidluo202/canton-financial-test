@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE news \nMODIFY COLUMN content VARCHAR(300) NOT NULL,\nADD COLUMN image1 TEXT AFTER content,\nADD COLUMN image2 TEXT AFTER image1,\nADD COLUMN image3 TEXT AFTER image2;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 2uixhWXF4JwUSvL.root --database aBduUFPeCEgc59L7hf5bC5 --execute ALTER TABLE news \nMODIFY COLUMN content VARCHAR(300) NOT NULL,\nADD COLUMN image1 TEXT AFTER content,\nADD COLUMN image2 TEXT AFTER image1,\nADD COLUMN image3 TEXT AFTER image2;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'image1' in 'news'"
+  ]
+}
