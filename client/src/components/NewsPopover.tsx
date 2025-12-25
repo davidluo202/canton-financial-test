@@ -43,8 +43,11 @@ export default function NewsPopover() {
       {/* Trigger Button */}
       <button
         onClick={handleClick}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-0.5 py-8 md:py-16 text-sm md:text-base font-medium rounded-r-lg shadow-lg transition-all duration-200"
-        style={{ writingMode: "vertical-rl" }}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-3 text-sm font-medium transition-all duration-200"
+        style={{ 
+          writingMode: "vertical-rl",
+          borderRadius: "4px"
+        }}
       >
         {language === "zh" ? "新聞及公司動態" : "News"}
       </button>
