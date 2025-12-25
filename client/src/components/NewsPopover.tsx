@@ -43,7 +43,7 @@ export default function NewsPopover() {
       {/* Trigger Button */}
       <button
         onClick={handleClick}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-3 text-sm font-medium transition-all duration-200"
+        className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-3 text-sm font-medium transition-all duration-200 animate-pulse-subtle"
         style={{ 
           writingMode: "vertical-rl",
           borderRadius: "4px"
