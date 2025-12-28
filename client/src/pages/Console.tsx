@@ -5,10 +5,77 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { compressImageToDataURL } from "@/lib/imageCompression";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  rectSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical, X, Upload } from "lucide-react";
 
 const CONSOLE_AUTH_TOKEN = "console_admin_session";
 const ADMIN_USERNAME = "admin";
 const ADMIN_PASSWORD = "Cmf25617028%";
+
+// Sortable Image Item Component
+function SortableImageItem({ id, imageUrl, onRemove }: { id: string; imageUrl: string; onRemove: () => void }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="relative group bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors"
+    >
+      <img
+        src={imageUrl}
+        alt="Preview"
+        className="w-full h-32 object-cover rounded-lg"
+      />
+      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+        <button
+          type="button"
+          {...attributes}
+          {...listeners}
+          className="p-2 bg-white rounded-full hover:bg-gray-100 cursor-grab active:cursor-grabbing"
+        >
+          <GripVertical className="h-5 w-5 text-gray-700" />
+        </button>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="p-2 bg-white rounded-full hover:bg-red-100"
+        >
+          <X className="h-5 w-5 text-red-600" />
+        </button>
+      </div>
+    </div>
+  );
+}
 
 export default function Console() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -18,15 +85,7 @@ export default function Console() {
   // News form state
   const [date, setDate] = useState("");
   const [content, setContent] = useState("");
-  const [image1, setImage1] = useState("");
-  const [image2, setImage2] = useState("");
-  const [image3, setImage3] = useState("");
-  const [image4, setImage4] = useState("");
-  const [image5, setImage5] = useState("");
-  const [image6, setImage6] = useState("");
-  const [image7, setImage7] = useState("");
-  const [image8, setImage8] = useState("");
-  const [image9, setImage9] = useState("");
+  const [images, setImages] = useState<string[]>([]);
   
   // Editing state
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -35,7 +94,14 @@ export default function Console() {
   const createNews = trpc.news.create.useMutation();
   const updateNews = trpc.news.update.useMutation();
   const deleteNews = trpc.news.delete.useMutation();
-  const uploadImage = trpc.news.uploadImage.useMutation();
+
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Check authentication on mount
   useEffect(() => {
@@ -62,27 +128,59 @@ export default function Console() {
     toast.success("已退出登錄");
   };
 
-  const handleImageUpload = async (file: File, imageNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) => {
+  // Handle single image upload
+  const handleImageUpload = async (file: File) => {
+    if (images.length >= 9) {
+      toast.error("最多只能上傳9張圖片");
+      return;
+    }
+
     try {
-      // 压缩图片到300KB以下
       const compressedDataURL = await compressImageToDataURL(file, 300);
-      
-      // 直接使用压缩后的Data URL（无需上传到服务器）
-      if (imageNumber === 1) setImage1(compressedDataURL);
-      if (imageNumber === 2) setImage2(compressedDataURL);
-      if (imageNumber === 3) setImage3(compressedDataURL);
-      if (imageNumber === 4) setImage4(compressedDataURL);
-      if (imageNumber === 5) setImage5(compressedDataURL);
-      if (imageNumber === 6) setImage6(compressedDataURL);
-      if (imageNumber === 7) setImage7(compressedDataURL);
-      if (imageNumber === 8) setImage8(compressedDataURL);
-      if (imageNumber === 9) setImage9(compressedDataURL);
-      
-      toast.success(`圖片 ${imageNumber} 上傳成功（已壓縮）`);
+      setImages([...images, compressedDataURL]);
+      toast.success(`圖片上傳成功（已壓縮）`);
     } catch (error) {
       console.error("圖片上傳失敗：", error);
       toast.error("圖片上傳失敗");
     }
+  };
+
+  // Handle batch image upload
+  const handleBatchUpload = async (files: FileList) => {
+    const remainingSlots = 9 - images.length;
+    if (files.length > remainingSlots) {
+      toast.error(`最多還能上傳${remainingSlots}張圖片`);
+      return;
+    }
+
+    const uploadPromises = Array.from(files).map(file => compressImageToDataURL(file, 300));
+    
+    try {
+      const compressedImages = await Promise.all(uploadPromises);
+      setImages([...images, ...compressedImages]);
+      toast.success(`成功上傳${files.length}張圖片（已壓縮）`);
+    } catch (error) {
+      console.error("批量上傳失敗：", error);
+      toast.error("批量上傳失敗");
+    }
+  };
+
+  // Handle drag end
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setImages((items) => {
+        const oldIndex = items.findIndex((_, idx) => `image-${idx}` === active.id);
+        const newIndex = items.findIndex((_, idx) => `image-${idx}` === over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
+  // Remove image
+  const handleRemoveImage = (index: number) => {
+    setImages(images.filter((_, idx) => idx !== index));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -98,21 +196,26 @@ export default function Console() {
       return;
     }
 
+    // Prepare image data (fill empty slots with empty strings)
+    const imageData = {
+      image1: images[0] || "",
+      image2: images[1] || "",
+      image3: images[2] || "",
+      image4: images[3] || "",
+      image5: images[4] || "",
+      image6: images[5] || "",
+      image7: images[6] || "",
+      image8: images[7] || "",
+      image9: images[8] || "",
+    };
+
     try {
       if (editingId) {
         await updateNews.mutateAsync({
           id: editingId,
           date,
           content,
-          image1,
-          image2,
-          image3,
-          image4,
-          image5,
-          image6,
-          image7,
-          image8,
-          image9,
+          ...imageData,
           consoleAuth: CONSOLE_AUTH_TOKEN,
         });
         toast.success("新聞更新成功");
@@ -121,15 +224,7 @@ export default function Console() {
         await createNews.mutateAsync({
           date,
           content,
-          image1,
-          image2,
-          image3,
-          image4,
-          image5,
-          image6,
-          image7,
-          image8,
-          image9,
+          ...imageData,
           consoleAuth: CONSOLE_AUTH_TOKEN,
         });
         toast.success("新聞發布成功");
@@ -138,15 +233,7 @@ export default function Console() {
       // Reset form
       setDate("");
       setContent("");
-      setImage1("");
-      setImage2("");
-      setImage3("");
-      setImage4("");
-      setImage5("");
-      setImage6("");
-      setImage7("");
-      setImage8("");
-      setImage9("");
+      setImages([]);
       refetch();
     } catch (error) {
       toast.error("操作失敗");
@@ -157,15 +244,21 @@ export default function Console() {
     setEditingId(item.id);
     setDate(new Date(item.date).toISOString().split("T")[0]);
     setContent(item.content);
-    setImage1(item.image1 || "");
-    setImage2(item.image2 || "");
-    setImage3(item.image3 || "");
-    setImage4(item.image4 || "");
-    setImage5(item.image5 || "");
-    setImage6(item.image6 || "");
-    setImage7(item.image7 || "");
-    setImage8(item.image8 || "");
-    setImage9(item.image9 || "");
+    
+    // Load images from item
+    const loadedImages = [
+      item.image1,
+      item.image2,
+      item.image3,
+      item.image4,
+      item.image5,
+      item.image6,
+      item.image7,
+      item.image8,
+      item.image9,
+    ].filter(Boolean);
+    
+    setImages(loadedImages);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -188,15 +281,7 @@ export default function Console() {
     setEditingId(null);
     setDate("");
     setContent("");
-    setImage1("");
-    setImage2("");
-    setImage3("");
-    setImage4("");
-    setImage5("");
-    setImage6("");
-    setImage7("");
-    setImage8("");
-    setImage9("");
+    setImages([]);
   };
 
   // Login page
@@ -233,7 +318,7 @@ export default function Console() {
         </div>
       </div>
     );
-  };
+  }
 
   // Console page
   return (
@@ -278,63 +363,84 @@ export default function Console() {
               </p>
             </div>
 
-            {/* Image uploads */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
-                const imageUrl = 
-                  num === 1 ? image1 :
-                  num === 2 ? image2 :
-                  num === 3 ? image3 :
-                  num === 4 ? image4 :
-                  num === 5 ? image5 :
-                  num === 6 ? image6 :
-                  num === 7 ? image7 :
-                  num === 8 ? image8 :
-                  image9;
-                return (
-                  <div key={num}>
-                    <label className="block text-sm font-medium mb-2">
-                      圖片 {num}（可選）
-                    </label>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleImageUpload(file, num as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9);
-                      }}
-                    />
-                    {imageUrl && (
-                      <div className="mt-2">
-                        <img
-                          src={imageUrl}
-                          alt={`Preview ${num}`}
-                          className="w-full h-32 object-cover rounded"
+            {/* Image uploads with drag and drop */}
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                圖片（最多9張，支持拖拽排序）
+              </label>
+              
+              {/* Batch upload button */}
+              <div className="mb-4">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files.length > 0) {
+                      handleBatchUpload(e.target.files);
+                    }
+                  }}
+                  className="hidden"
+                  id="batch-upload"
+                />
+                <label htmlFor="batch-upload">
+                  <Button type="button" variant="outline" className="w-full" asChild>
+                    <span className="flex items-center justify-center gap-2 cursor-pointer">
+                      <Upload className="h-4 w-4" />
+                      批量上傳圖片（{images.length}/9）
+                    </span>
+                  </Button>
+                </label>
+              </div>
+
+              {/* Sortable images grid */}
+              {images.length > 0 && (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={images.map((_, idx) => `image-${idx}`)}
+                    strategy={rectSortingStrategy}
+                  >
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {images.map((img, idx) => (
+                        <SortableImageItem
+                          key={`image-${idx}`}
+                          id={`image-${idx}`}
+                          imageUrl={img}
+                          onRemove={() => handleRemoveImage(idx)}
                         />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          className="mt-1 w-full"
-                          onClick={() => {
-                            if (num === 1) setImage1("");
-                            if (num === 2) setImage2("");
-                            if (num === 3) setImage3("");
-                            if (num === 4) setImage4("");
-                            if (num === 5) setImage5("");
-                            if (num === 6) setImage6("");
-                            if (num === 7) setImage7("");
-                            if (num === 8) setImage8("");
-                            if (num === 9) setImage9("");
-                          }}
-                        >
-                          移除
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+                      ))}
+                    </div>
+                  </SortableContext>
+                </DndContext>
+              )}
+
+              {/* Single image upload */}
+              {images.length < 9 && (
+                <div className="mt-4">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleImageUpload(file);
+                    }}
+                    className="hidden"
+                    id="single-upload"
+                  />
+                  <label htmlFor="single-upload">
+                    <Button type="button" variant="ghost" className="w-full border-2 border-dashed" asChild>
+                      <span className="flex items-center justify-center gap-2 cursor-pointer">
+                        <Upload className="h-4 w-4" />
+                        添加單張圖片
+                      </span>
+                    </Button>
+                  </label>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">

@@ -2,9 +2,14 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLocation } from "wouter";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 export default function NewsPopover() {
   const [isOpen, setIsOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [currentImages, setCurrentImages] = useState<string[]>([]);
   const { language } = useLanguage();
   const [, setLocation] = useLocation();
   const { data: newsList = [] } = trpc.news.getAll.useQuery();
@@ -82,16 +87,22 @@ export default function NewsPopover() {
                   {/* Images */}
                   {(item.image1 || item.image2 || item.image3 || item.image4 || item.image5 || item.image6 || item.image7 || item.image8 || item.image9) && (
                     <div className="mt-3 flex gap-2 flex-wrap">
-                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) =>
-                        img && (
+                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) => {
+                        const images = [item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].filter(Boolean);
+                        return img && (
                           <img
                             key={idx}
                             src={img}
                             alt={`News image ${idx + 1}`}
-                            className="w-32 h-32 object-cover rounded"
+                            className="w-32 h-32 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => {
+                              setCurrentImages(images);
+                              setLightboxIndex(images.indexOf(img));
+                              setLightboxOpen(true);
+                            }}
                           />
-                        )
-                      )}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -100,6 +111,14 @@ export default function NewsPopover() {
           )}
         </div>
       )}
+
+      {/* Lightbox for image preview */}
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        slides={currentImages.map(src => ({ src }))}
+        index={lightboxIndex}
+      />
     </div>
   );
 }

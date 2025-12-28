@@ -487,4 +487,16 @@
 - [x] 更新newsRouter API支持9张图片
 - [x] 测试图片上传和压缩功能
 - [x] 测试图片显示效果
+- [x] 保存检查点
+
+## 新闻管理系统UX优化
+- [x] 安装@dnd-kit拖拽库
+- [x] 实现Console后台图片拖拽排序功能
+- [x] 实现Console后台图片批量上传功能
+- [x] 测试图片拖拽排序
+- [x] 安装yet-another-react-lightbox图片预览库
+- [x] 实现NewsPopover组件图片预览放大功能
+- [x] 实现NewsPage组件图片预览放大功能
+- [x] 测试图片预览放大
+- [x] 测试图片批量上传
 - [ ] 保存检查点

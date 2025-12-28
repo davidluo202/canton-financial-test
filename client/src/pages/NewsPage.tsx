@@ -4,12 +4,17 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
 import { ChevronLeft, ChevronDown, ChevronUp } from "lucide-react";
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 
 export default function NewsPage() {
   const { language } = useLanguage();
   const [, setLocation] = useLocation();
   const { data: newsList = [] } = trpc.news.getAll.useQuery();
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [currentImages, setCurrentImages] = useState<string[]>([]);
 
   const toggleExpand = (id: number) => {
     setExpandedIds((prev) =>
@@ -73,16 +78,22 @@ export default function NewsPage() {
 
                   {isExpanded && (item.image1 || item.image2 || item.image3 || item.image4 || item.image5 || item.image6 || item.image7 || item.image8 || item.image9) && (
                     <div className="mt-3 grid grid-cols-2 gap-2">
-                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) =>
-                        img && (
+                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) => {
+                        const images = [item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].filter(Boolean);
+                        return img && (
                           <img
                             key={idx}
                             src={img}
                             alt={`News image ${idx + 1}`}
-                            className="w-full h-40 object-cover rounded"
+                            className="w-full h-40 object-cover rounded cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => {
+                              setCurrentImages(images);
+                              setLightboxIndex(images.indexOf(img));
+                              setLightboxOpen(true);
+                            }}
                           />
-                        )
-                      )}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -91,6 +102,14 @@ export default function NewsPage() {
           </div>
         )}
       </div>
+
+      {/* Lightbox for image preview */}
+      <Lightbox
+        open={lightboxOpen}
+        close={() => setLightboxOpen(false)}
+        slides={currentImages.map(src => ({ src }))}
+        index={lightboxIndex}
+      />
     </div>
   );
 }
