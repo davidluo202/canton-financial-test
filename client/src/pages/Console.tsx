@@ -40,7 +40,7 @@ function SortableImageItem({ id, imageUrl, onRemove }: { id: string; imageUrl: s
   } = useSortable({ id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: transform ? CSS.Transform.toString(transform) : undefined,
     transition,
     opacity: isDragging ? 0.5 : 1,
   };
@@ -395,27 +395,29 @@ export default function Console() {
 
               {/* Sortable images grid */}
               {images.length > 0 && (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext
-                    items={images.map((_, idx) => `image-${idx}`)}
-                    strategy={rectSortingStrategy}
+                <div className="mb-4">
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
                   >
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                      {images.map((img, idx) => (
-                        <SortableImageItem
-                          key={`image-${idx}`}
-                          id={`image-${idx}`}
-                          imageUrl={img}
-                          onRemove={() => handleRemoveImage(idx)}
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                </DndContext>
+                    <SortableContext
+                      items={images.map((_, idx) => `image-${idx}`)}
+                      strategy={rectSortingStrategy}
+                    >
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {images.map((img, idx) => (
+                          <SortableImageItem
+                            key={`image-${idx}`}
+                            id={`image-${idx}`}
+                            imageUrl={img}
+                            onRemove={() => handleRemoveImage(idx)}
+                          />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
+                </div>
               )}
 
               {/* Single image upload */}
