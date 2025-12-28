@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { compressImageToDataURL } from "@/lib/imageCompression";
 
 const CONSOLE_AUTH_TOKEN = "console_admin_session";
 const ADMIN_USERNAME = "admin";
@@ -20,6 +21,12 @@ export default function Console() {
   const [image1, setImage1] = useState("");
   const [image2, setImage2] = useState("");
   const [image3, setImage3] = useState("");
+  const [image4, setImage4] = useState("");
+  const [image5, setImage5] = useState("");
+  const [image6, setImage6] = useState("");
+  const [image7, setImage7] = useState("");
+  const [image8, setImage8] = useState("");
+  const [image9, setImage9] = useState("");
   
   // Editing state
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -55,28 +62,25 @@ export default function Console() {
     toast.success("已退出登錄");
   };
 
-  const handleImageUpload = async (file: File, imageNumber: 1 | 2 | 3) => {
+  const handleImageUpload = async (file: File, imageNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9) => {
     try {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const base64 = e.target?.result as string;
-        const base64Data = base64.split(",")[1]; // Remove data:image/...;base64, prefix
-
-        const result = await uploadImage.mutateAsync({
-          fileName: file.name,
-          fileData: base64Data,
-          consoleAuth: CONSOLE_AUTH_TOKEN,
-        });
-
-        if (result.success) {
-          if (imageNumber === 1) setImage1(result.url);
-          if (imageNumber === 2) setImage2(result.url);
-          if (imageNumber === 3) setImage3(result.url);
-          toast.success(`圖片 ${imageNumber} 上傳成功`);
-        }
-      };
-      reader.readAsDataURL(file);
+      // 压缩图片到300KB以下
+      const compressedDataURL = await compressImageToDataURL(file, 300);
+      
+      // 直接使用压缩后的Data URL（无需上传到服务器）
+      if (imageNumber === 1) setImage1(compressedDataURL);
+      if (imageNumber === 2) setImage2(compressedDataURL);
+      if (imageNumber === 3) setImage3(compressedDataURL);
+      if (imageNumber === 4) setImage4(compressedDataURL);
+      if (imageNumber === 5) setImage5(compressedDataURL);
+      if (imageNumber === 6) setImage6(compressedDataURL);
+      if (imageNumber === 7) setImage7(compressedDataURL);
+      if (imageNumber === 8) setImage8(compressedDataURL);
+      if (imageNumber === 9) setImage9(compressedDataURL);
+      
+      toast.success(`圖片 ${imageNumber} 上傳成功（已壓縮）`);
     } catch (error) {
+      console.error("圖片上傳失敗：", error);
       toast.error("圖片上傳失敗");
     }
   };
@@ -103,6 +107,12 @@ export default function Console() {
           image1,
           image2,
           image3,
+          image4,
+          image5,
+          image6,
+          image7,
+          image8,
+          image9,
           consoleAuth: CONSOLE_AUTH_TOKEN,
         });
         toast.success("新聞更新成功");
@@ -114,6 +124,12 @@ export default function Console() {
           image1,
           image2,
           image3,
+          image4,
+          image5,
+          image6,
+          image7,
+          image8,
+          image9,
           consoleAuth: CONSOLE_AUTH_TOKEN,
         });
         toast.success("新聞發布成功");
@@ -125,6 +141,12 @@ export default function Console() {
       setImage1("");
       setImage2("");
       setImage3("");
+      setImage4("");
+      setImage5("");
+      setImage6("");
+      setImage7("");
+      setImage8("");
+      setImage9("");
       refetch();
     } catch (error) {
       toast.error("操作失敗");
@@ -138,6 +160,12 @@ export default function Console() {
     setImage1(item.image1 || "");
     setImage2(item.image2 || "");
     setImage3(item.image3 || "");
+    setImage4(item.image4 || "");
+    setImage5(item.image5 || "");
+    setImage6(item.image6 || "");
+    setImage7(item.image7 || "");
+    setImage8(item.image8 || "");
+    setImage9(item.image9 || "");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -163,6 +191,12 @@ export default function Console() {
     setImage1("");
     setImage2("");
     setImage3("");
+    setImage4("");
+    setImage5("");
+    setImage6("");
+    setImage7("");
+    setImage8("");
+    setImage9("");
   };
 
   // Login page
@@ -246,8 +280,17 @@ export default function Console() {
 
             {/* Image uploads */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[1, 2, 3].map((num) => {
-                const imageUrl = num === 1 ? image1 : num === 2 ? image2 : image3;
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => {
+                const imageUrl = 
+                  num === 1 ? image1 :
+                  num === 2 ? image2 :
+                  num === 3 ? image3 :
+                  num === 4 ? image4 :
+                  num === 5 ? image5 :
+                  num === 6 ? image6 :
+                  num === 7 ? image7 :
+                  num === 8 ? image8 :
+                  image9;
                 return (
                   <div key={num}>
                     <label className="block text-sm font-medium mb-2">
@@ -258,7 +301,7 @@ export default function Console() {
                       accept="image/*"
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        if (file) handleImageUpload(file, num as 1 | 2 | 3);
+                        if (file) handleImageUpload(file, num as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9);
                       }}
                     />
                     {imageUrl && (
@@ -277,6 +320,12 @@ export default function Console() {
                             if (num === 1) setImage1("");
                             if (num === 2) setImage2("");
                             if (num === 3) setImage3("");
+                            if (num === 4) setImage4("");
+                            if (num === 5) setImage5("");
+                            if (num === 6) setImage6("");
+                            if (num === 7) setImage7("");
+                            if (num === 8) setImage8("");
+                            if (num === 9) setImage9("");
                           }}
                         >
                           移除
@@ -335,28 +384,17 @@ export default function Console() {
                     </div>
                   </div>
                   <p className="text-gray-800 mb-2">{item.content}</p>
-                  {(item.image1 || item.image2 || item.image3) && (
+                  {(item.image1 || item.image2 || item.image3 || item.image4 || item.image5 || item.image6 || item.image7 || item.image8 || item.image9) && (
                     <div className="flex gap-2 flex-wrap">
-                      {item.image1 && (
-                        <img
-                          src={item.image1}
-                          alt="Image 1"
-                          className="w-24 h-24 object-cover rounded"
-                        />
-                      )}
-                      {item.image2 && (
-                        <img
-                          src={item.image2}
-                          alt="Image 2"
-                          className="w-24 h-24 object-cover rounded"
-                        />
-                      )}
-                      {item.image3 && (
-                        <img
-                          src={item.image3}
-                          alt="Image 3"
-                          className="w-24 h-24 object-cover rounded"
-                        />
+                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) => 
+                        img && (
+                          <img
+                            key={idx}
+                            src={img}
+                            alt={`Image ${idx + 1}`}
+                            className="w-24 h-24 object-cover rounded"
+                          />
+                        )
                       )}
                     </div>
                   )}

@@ -55,6 +55,12 @@ export const news = mysqlTable("news", {
   image1: text("image1"), // 第一张图片URL
   image2: text("image2"), // 第二张图片URL
   image3: text("image3"), // 第三张图片URL
+  image4: text("image4"), // 第四张图片URL
+  image5: text("image5"), // 第五张图片URL
+  image6: text("image6"), // 第六张图片URL
+  image7: text("image7"), // 第七张图片URL
+  image8: text("image8"), // 第八张图片URL
+  image9: text("image9"), // 第九张图片URL
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

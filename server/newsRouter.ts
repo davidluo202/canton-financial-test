@@ -27,6 +27,12 @@ export const newsRouter = router({
         image1: z.string().optional(),
         image2: z.string().optional(),
         image3: z.string().optional(),
+        image4: z.string().optional(),
+        image5: z.string().optional(),
+        image6: z.string().optional(),
+        image7: z.string().optional(),
+        image8: z.string().optional(),
+        image9: z.string().optional(),
         consoleAuth: z.string(),
       })
     )
@@ -45,6 +51,12 @@ export const newsRouter = router({
         image1: input.image1 || null,
         image2: input.image2 || null,
         image3: input.image3 || null,
+        image4: input.image4 || null,
+        image5: input.image5 || null,
+        image6: input.image6 || null,
+        image7: input.image7 || null,
+        image8: input.image8 || null,
+        image9: input.image9 || null,
       });
 
       return { success: true, id: result[0].insertId };
@@ -60,6 +72,12 @@ export const newsRouter = router({
         image1: z.string().optional(),
         image2: z.string().optional(),
         image3: z.string().optional(),
+        image4: z.string().optional(),
+        image5: z.string().optional(),
+        image6: z.string().optional(),
+        image7: z.string().optional(),
+        image8: z.string().optional(),
+        image9: z.string().optional(),
         consoleAuth: z.string(),
       })
     )
@@ -80,6 +98,12 @@ export const newsRouter = router({
           image1: input.image1 || null,
           image2: input.image2 || null,
           image3: input.image3 || null,
+          image4: input.image4 || null,
+          image5: input.image5 || null,
+          image6: input.image6 || null,
+          image7: input.image7 || null,
+          image8: input.image8 || null,
+          image9: input.image9 || null,
         })
         .where(eq(news.id, input.id));
 

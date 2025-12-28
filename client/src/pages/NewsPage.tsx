@@ -71,11 +71,18 @@ export default function NewsPage() {
                     </Button>
                   )}
 
-                  {isExpanded && (item.image1 || item.image2 || item.image3) && (
+                  {isExpanded && (item.image1 || item.image2 || item.image3 || item.image4 || item.image5 || item.image6 || item.image7 || item.image8 || item.image9) && (
                     <div className="mt-3 grid grid-cols-2 gap-2">
-                      {item.image1 && <img src={item.image1} alt="News image 1" className="w-full h-40 object-cover rounded" />}
-                      {item.image2 && <img src={item.image2} alt="News image 2" className="w-full h-40 object-cover rounded" />}
-                      {item.image3 && <img src={item.image3} alt="News image 3" className="w-full h-40 object-cover rounded col-span-2" />}
+                      {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) =>
+                        img && (
+                          <img
+                            key={idx}
+                            src={img}
+                            alt={`News image ${idx + 1}`}
+                            className="w-full h-40 object-cover rounded"
+                          />
+                        )
+                      )}
                     </div>
                   )}
                 </div>
