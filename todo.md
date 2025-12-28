@@ -512,4 +512,10 @@
 - [x] 将图片存储方案从base64改为S3存储
 - [x] 更新Console页面图片上传逻辑
 - [x] 测试图片上传和更新功能
+- [x] 保存检查点
+
+## 修复trpc.upload.uploadImage调用错误
+- [x] 检查uploadRouter定义
+- [x] 修复mutation调用方式
+- [x] 测试图片上传功能
 - [ ] 保存检查点

@@ -94,6 +94,7 @@ export default function Console() {
   const createNews = trpc.news.create.useMutation();
   const updateNews = trpc.news.update.useMutation();
   const deleteNews = trpc.news.delete.useMutation();
+  const uploadImage = trpc.upload.uploadImage.useMutation();
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -139,7 +140,7 @@ export default function Console() {
       const compressedDataURL = await compressImageToDataURL(file, 300);
       
       // Upload to S3
-      const result = await trpc.upload.uploadImage.mutate({
+      const result = await uploadImage.mutateAsync({
         imageData: compressedDataURL,
         consoleAuth: CONSOLE_AUTH_TOKEN,
       });
@@ -167,7 +168,7 @@ export default function Console() {
       
       // Upload to S3
       const uploadPromises = compressedImages.map(dataURL => 
-        trpc.upload.uploadImage.mutate({
+        uploadImage.mutateAsync({
           imageData: dataURL,
           consoleAuth: CONSOLE_AUTH_TOKEN,
         })
