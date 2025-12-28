@@ -131,17 +131,24 @@ export default function Console() {
   // Handle single image upload
   const handleImageUpload = async (file: File) => {
     if (images.length >= 9) {
-      toast.error("最多只能上傳9張圖片");
+      toast.error("最多只能上倳9张图片");
       return;
     }
 
     try {
       const compressedDataURL = await compressImageToDataURL(file, 300);
-      setImages([...images, compressedDataURL]);
-      toast.success(`圖片上傳成功（已壓縮）`);
+      
+      // Upload to S3
+      const result = await trpc.upload.uploadImage.mutate({
+        imageData: compressedDataURL,
+        consoleAuth: CONSOLE_AUTH_TOKEN,
+      });
+      
+      setImages([...images, result.url]);
+      toast.success(`图片上传成功（已压缩）`);
     } catch (error) {
-      console.error("圖片上傳失敗：", error);
-      toast.error("圖片上傳失敗");
+      console.error("图片上传失败：", error);
+      toast.error("图片上传失败");
     }
   };
 
@@ -149,19 +156,31 @@ export default function Console() {
   const handleBatchUpload = async (files: FileList) => {
     const remainingSlots = 9 - images.length;
     if (files.length > remainingSlots) {
-      toast.error(`最多還能上傳${remainingSlots}張圖片`);
+      toast.error(`最多还能上传${remainingSlots}张图片`);
       return;
     }
 
-    const uploadPromises = Array.from(files).map(file => compressImageToDataURL(file, 300));
-    
     try {
-      const compressedImages = await Promise.all(uploadPromises);
-      setImages([...images, ...compressedImages]);
-      toast.success(`成功上傳${files.length}張圖片（已壓縮）`);
+      // Compress all images first
+      const compressPromises = Array.from(files).map(file => compressImageToDataURL(file, 300));
+      const compressedImages = await Promise.all(compressPromises);
+      
+      // Upload to S3
+      const uploadPromises = compressedImages.map(dataURL => 
+        trpc.upload.uploadImage.mutate({
+          imageData: dataURL,
+          consoleAuth: CONSOLE_AUTH_TOKEN,
+        })
+      );
+      
+      const results = await Promise.all(uploadPromises);
+      const urls = results.map(r => r.url);
+      
+      setImages([...images, ...urls]);
+      toast.success(`成功上传${files.length}张图片（已压缩）`);
     } catch (error) {
-      console.error("批量上傳失敗：", error);
-      toast.error("批量上傳失敗");
+      console.error("批量上传失败：", error);
+      toast.error("批量上传失败");
     }
   };
 
