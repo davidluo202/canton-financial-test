@@ -1,6 +1,6 @@
 import { router, publicProcedure } from "./_core/trpc";
 import { z } from "zod";
-import { storagePut } from "./storage";
+import { storagePut } from "./storage-s3";
 
 export const uploadRouter = router({
   uploadImage: publicProcedure
