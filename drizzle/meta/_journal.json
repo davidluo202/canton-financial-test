@@ -1,40 +1,12 @@
 {
   "version": "7",
-  "dialect": "mysql",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "5",
-      "when": 1763092501952,
-      "tag": "0000_jittery_miek",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1763092615136,
-      "tag": "0001_omniscient_crystal",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1764639821385,
-      "tag": "0002_ambitious_unus",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1766112278236,
-      "tag": "0003_smiling_kingpin",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1766928219924,
-      "tag": "0004_foamy_shadowcat",
+      "version": "7",
+      "when": 1768875661790,
+      "tag": "0000_curved_human_robot",
       "breakpoints": true
     }
   ]

@@ -1,0 +1,14 @@
+node_modules/
+.git/
+*.log
+client/
+server/
+*.ts
+*.tsx
+tsconfig.json
+vite.config.ts
+.vscode/
+.idea/
+*.md
+!AWS_DEPLOYMENT_GUIDE.md
+!ENV_VARIABLES_GUIDE.md

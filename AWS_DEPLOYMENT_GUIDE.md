@@ -3,8 +3,30 @@
 ## 项目概述
 
 **项目名称**：Canton Mutual Financial Limited - 企业官网  
-**技术栈**：React 19 + Node.js + PostgreSQL + S3存储  
+**技术栈**：React 19 + Node.js + **PostgreSQL** + S3存储  
 **部署目标**：AWS云平台（推荐使用AWS Elastic Beanstalk或EC2 + RDS + S3）
+
+> **重要提示**：本项目已从MySQL迁移到PostgreSQL。数据库必须使用PostgreSQL 15.x或更高版本。
+
+---
+
+## 版本更新说明
+
+### v2.0 - PostgreSQL迁移版本（2025-01-20）
+
+**关键变更**：
+- ✅ 数据库从MySQL迁移到PostgreSQL
+- ✅ 使用`serial`替代`AUTO_INCREMENT`
+- ✅ 使用`pgTable`和`pgEnum`替代`mysqlTable`和`mysqlEnum`
+- ✅ 更新Drizzle ORM配置为PostgreSQL方言
+- ✅ 修复`onDuplicateKeyUpdate`为`onConflictDoUpdate`
+- ✅ 添加`postgres`和`pg`依赖包
+- ✅ 生成新的PostgreSQL迁移文件
+
+**已解决的部署问题**：
+- ❌ ~~MySQL AUTO_INCREMENT语法错误~~ → ✅ 使用PostgreSQL serial类型
+- ❌ ~~mysqlTable类型错误~~ → ✅ 使用pgTable
+- ❌ ~~ERR_MODULE_NOT_FOUND: 'vite'~~ → ✅ 生产构建排除dev依赖
 
 ---
 
@@ -21,7 +43,7 @@ Application Load Balancer
     ↓
 Elastic Beanstalk (Node.js应用)
     ↓
-RDS PostgreSQL (数据库)
+RDS PostgreSQL (数据库) ← **必须使用PostgreSQL**
 ```
 
 ### 替代架构（EC2手动部署）
@@ -33,7 +55,7 @@ CloudFront (CDN) ← S3 (静态资源 + 图片存储)
     ↓
 EC2实例 (Node.js应用 + Nginx反向代理)
     ↓
-RDS PostgreSQL (数据库)
+RDS PostgreSQL (数据库) ← **必须使用PostgreSQL**
 ```
 
 ---
@@ -44,7 +66,7 @@ RDS PostgreSQL (数据库)
 
 需要开通以下AWS服务：
 
-1. **RDS PostgreSQL** - 数据库服务
+1. **RDS PostgreSQL** - 数据库服务（**必须是PostgreSQL，不支持MySQL**）
 2. **S3** - 对象存储（图片和静态资源）
 3. **IAM** - 权限管理
 4. **Elastic Beanstalk** 或 **EC2** - 应用服务器
@@ -67,7 +89,7 @@ RDS PostgreSQL (数据库)
 1. 登录AWS控制台，进入RDS服务
 2. 点击"创建数据库"
 3. 选择配置：
-   - **引擎类型**：PostgreSQL
+   - **引擎类型**：PostgreSQL（**必须选择PostgreSQL**）
    - **版本**：15.x或更高
    - **实例类型**：db.t3.micro（测试）或db.t3.small（生产）
    - **存储**：20GB起（可自动扩展）
@@ -92,8 +114,32 @@ CREATE DATABASE canton_financial;
 \q
 
 # 4. 运行数据库迁移（在项目目录）
-export DATABASE_URL="postgresql://<USERNAME>:<PASSWORD>@<RDS_ENDPOINT>:5432/canton_financial"
+export DATABASE_URL="postgresql://<USERNAME>:<PASSWORD>@<RDS_ENDPOINT>:5432/canton_financial?sslmode=require"
 pnpm db:push
+```
+
+> **注意**：DATABASE_URL必须包含`?sslmode=require`以启用SSL连接到RDS。
+
+### 3.3 验证数据库结构
+
+连接到数据库后，验证表已正确创建：
+
+```sql
+-- 查看所有表
+\dt
+
+-- 应该看到以下表：
+-- users, news, chatLogs, chatRatings
+
+-- 查看枚举类型
+\dT
+
+-- 应该看到：
+-- role (user, admin)
+-- rating (positive, negative)
+
+-- 查看news表结构
+\d news
 ```
 
 ---
@@ -104,10 +150,10 @@ pnpm db:push
 
 ```bash
 # 使用AWS CLI创建存储桶
-aws s3 mb s3://canton-financial-assets --region ap-southeast-1
+aws s3 mb s3://canton-financial-images --region ap-southeast-1
 
 # 配置存储桶CORS
-aws s3api put-bucket-cors --bucket canton-financial-assets --cors-configuration file://s3-cors.json
+aws s3api put-bucket-cors --bucket canton-financial-images --cors-configuration file://s3-cors.json
 ```
 
 **s3-cors.json内容**：
@@ -164,40 +210,63 @@ aws s3api put-public-access-block --bucket canton-financial-images --public-acce
 #### 5.1 准备部署包
 
 ```bash
-# 1. 构建生产环境文件
+# 1. 进入项目目录
 cd /path/to/canton-financial-test
+
+# 2. 安装依赖
+pnpm install
+
+# 3. 构建生产环境文件
 pnpm build
 
-# 2. 创建部署包
-zip -r canton-financial-deployment.zip \
+# 4. 创建部署包（排除开发依赖）
+zip -r canton-deployment-postgresql.zip \
   dist/ \
   drizzle/ \
-  node_modules/ \
   package.json \
+  pnpm-lock.yaml \
   .npmrc \
-  Procfile
+  Procfile \
+  -x "node_modules/*"
 
-# 注意：node_modules很大，建议使用.ebignore排除，在EB上重新安装
+# 注意：不包含node_modules，在EB上重新安装以减小包体积
 ```
 
-#### 5.2 创建Elastic Beanstalk应用
+#### 5.2 创建.ebignore文件
 
-1. 登录AWS控制台，进入Elastic Beanstalk
-2. 点击"创建应用程序"
-3. 配置：
-   - **应用程序名称**：canton-financial
-   - **平台**：Node.js 22
-   - **应用程序代码**：上传 `canton-financial-deployment.zip`
-4. 配置环境变量（见第六节）
-5. 点击"创建环境"
+在项目根目录创建`.ebignore`文件：
 
-#### 5.3 配置Procfile
+```
+node_modules/
+.git/
+.env
+*.log
+client/
+server/
+*.ts
+*.tsx
+tsconfig.json
+vite.config.ts
+```
+
+#### 5.3 创建Procfile
 
 在项目根目录创建 `Procfile`：
 
 ```
 web: node dist/index.js
 ```
+
+#### 5.4 创建Elastic Beanstalk应用
+
+1. 登录AWS控制台，进入Elastic Beanstalk
+2. 点击"创建应用程序"
+3. 配置：
+   - **应用程序名称**：canton-financial
+   - **平台**：Node.js 22
+   - **应用程序代码**：上传 `canton-deployment-postgresql.zip`
+4. 配置环境变量（见第六节）
+5. 点击"创建环境"
 
 ### 方案B：使用EC2手动部署
 
@@ -224,6 +293,9 @@ sudo npm install -g pnpm
 
 # 安装Nginx
 sudo yum install -y nginx
+
+# 安装PM2（进程管理器）
+sudo npm install -g pm2
 ```
 
 #### 5.3 部署应用
@@ -234,19 +306,18 @@ sudo mkdir -p /var/www/canton-financial
 sudo chown ec2-user:ec2-user /var/www/canton-financial
 
 # 2. 上传部署包（在本地执行）
-scp -i your-key.pem canton-financial-deployment.zip ec2-user@<EC2_PUBLIC_IP>:/var/www/canton-financial/
+scp -i your-key.pem canton-deployment-postgresql.zip ec2-user@<EC2_PUBLIC_IP>:/var/www/canton-financial/
 
 # 3. 解压并安装依赖（在EC2上执行）
 cd /var/www/canton-financial
-unzip canton-financial-deployment.zip
+unzip canton-deployment-postgresql.zip
 pnpm install --prod
 
 # 4. 配置环境变量
-sudo nano /var/www/canton-financial/.env
+nano .env
 # 粘贴环境变量内容（见第六节）
 
 # 5. 使用PM2管理进程
-sudo npm install -g pm2
 pm2 start dist/index.js --name canton-financial
 pm2 startup
 pm2 save
@@ -295,8 +366,10 @@ sudo systemctl enable nginx
 ### 6.1 数据库配置
 
 ```bash
-DATABASE_URL=postgresql://<USERNAME>:<PASSWORD>@<RDS_ENDPOINT>:5432/canton_financial
+DATABASE_URL=postgresql://<USERNAME>:<PASSWORD>@<RDS_ENDPOINT>:5432/canton_financial?sslmode=require
 ```
+
+> **重要**：必须包含`?sslmode=require`以启用SSL连接。
 
 ### 6.2 AWS S3存储配置
 
@@ -458,11 +531,12 @@ https://yourdomain.com/news      # 新闻页面
 - [ ] 新闻页面图片正常显示
 - [ ] 图片点击放大功能正常
 - [ ] Console后台可以登录
-- [ ] 可以发布新闻（包括图片上传）
+- [ ] 可以发布新闻（包括图片上传到S3）
 - [ ] 可以编辑和删除新闻
 - [ ] 图片拖拽排序功能正常
 - [ ] 批量图片上传功能正常
 - [ ] AI聊天机器人功能正常
+- [ ] 数据库连接正常（PostgreSQL）
 
 ### 10.3 性能测试
 
@@ -504,215 +578,150 @@ Elastic Beanstalk自动将日志发送到CloudWatch。查看方式：
 
 ---
 
-## 十二、备份和灾难恢复
+## 十二、故障排查
 
-### 12.1 数据库备份
+### 12.1 数据库连接失败
 
-```bash
-# 手动创建快照
-aws rds create-db-snapshot \
-  --db-instance-identifier canton-financial-db \
-  --db-snapshot-identifier canton-financial-backup-$(date +%Y%m%d)
-
-# 恢复快照
-aws rds restore-db-instance-from-db-snapshot \
-  --db-instance-identifier canton-financial-db-restored \
-  --db-snapshot-identifier canton-financial-backup-20250101
-```
-
-### 12.2 S3备份
-
-S3数据自动多区域复制，建议启用版本控制：
-
-```bash
-aws s3api put-bucket-versioning \
-  --bucket canton-financial-assets \
-  --versioning-configuration Status=Enabled
-```
-
-### 12.3 应用代码备份
-
-- 使用Git仓库管理代码（GitHub/GitLab/CodeCommit）
-- 定期导出Elastic Beanstalk应用版本
-- 保存环境变量配置文件
-
----
-
-## 十三、安全最佳实践
-
-### 13.1 网络安全
-
-- ✅ RDS仅允许VPC内访问，不对公网开放
-- ✅ 使用安全组限制入站流量
-- ✅ 启用VPC Flow Logs监控网络流量
-- ✅ 使用AWS WAF防护Web攻击
-
-### 13.2 数据安全
-
-- ✅ 启用RDS加密（静态数据）
-- ✅ 使用SSL/TLS连接数据库（传输加密）
-- ✅ 定期轮换数据库密码和API密钥
-- ✅ 使用AWS Secrets Manager管理敏感信息
-
-### 13.3 访问控制
-
-- ✅ 使用IAM角色而非长期访问密钥
-- ✅ 启用MFA（多因素认证）
-- ✅ 遵循最小权限原则
-- ✅ 定期审计IAM权限
-
----
-
-## 十四、常见问题排查
-
-### 14.1 应用无法启动
-
-**症状**：Elastic Beanstalk环境健康状态为"严重"
-
-**排查步骤**：
-
-1. 查看CloudWatch日志：`/aws/elasticbeanstalk/canton-financial/var/log/nodejs/nodejs.log`
-2. 检查环境变量是否完整配置
-3. 验证数据库连接字符串格式
-4. 确认Node.js版本兼容（需要22.x）
-
-### 14.2 数据库连接失败
-
-**症状**：应用日志显示 `ECONNREFUSED` 或 `timeout`
+**症状**：应用无法连接到PostgreSQL数据库
 
 **解决方案**：
+1. 检查DATABASE_URL格式是否正确
+2. 确认包含`?sslmode=require`参数
+3. 验证RDS安全组允许应用服务器访问（端口5432）
+4. 检查数据库用户名和密码是否正确
 
-1. 检查RDS安全组入站规则，允许应用服务器访问5432端口
-2. 验证DATABASE_URL格式：`postgresql://username:password@host:5432/database`
-3. 确认RDS实例状态为"可用"
-4. 测试网络连通性：`telnet <RDS_ENDPOINT> 5432`
-
-### 14.3 图片上传失败
+### 12.2 图片上传失败
 
 **症状**：Console后台上传图片时报错
 
 **解决方案**：
+1. 验证AWS_ACCESS_KEY_ID和AWS_SECRET_ACCESS_KEY是否正确
+2. 检查IAM用户是否有S3写入权限
+3. 确认S3_BUCKET_NAME配置正确
+4. 查看S3存储桶CORS配置
 
-1. 检查S3存储桶CORS配置
-2. 验证IAM用户权限（需要s3:PutObject权限）
-3. 确认BUILT_IN_FORGE_API_KEY和BUILT_IN_FORGE_API_URL配置正确
-4. 查看应用日志中的详细错误信息
+### 12.3 应用启动失败
 
-### 14.4 SSL证书错误
-
-**症状**：浏览器显示"您的连接不是私密连接"
+**症状**：Elastic Beanstalk或PM2启动应用失败
 
 **解决方案**：
+1. 检查`dist/index.js`文件是否存在
+2. 验证所有环境变量是否配置
+3. 查看应用日志：`pm2 logs canton-financial`
+4. 确认Node.js版本为22.x
 
-1. 确认ACM证书状态为"已颁发"
-2. 检查CloudFront或Load Balancer是否正确绑定证书
-3. 验证域名DNS解析是否指向正确的CloudFront/ALB
-4. 等待DNS传播（最多48小时）
+### 12.4 TypeScript错误
 
----
+**症状**：构建时出现TypeScript类型错误
 
-## 十五、成本估算
-
-### 基础配置（小型生产环境）
-
-| 服务 | 配置 | 月费用（USD） |
-|------|------|---------------|
-| EC2 (t3.small) | 2 vCPU, 2GB RAM | $15 |
-| RDS (db.t3.micro) | PostgreSQL | $15 |
-| S3 | 50GB存储 + 传输 | $5 |
-| CloudFront | 100GB传输 | $10 |
-| Route 53 | 1个托管区域 | $0.50 |
-| **总计** | | **$45.50/月** |
-
-### 推荐配置（中型生产环境）
-
-| 服务 | 配置 | 月费用（USD） |
-|------|------|---------------|
-| Elastic Beanstalk (t3.medium) | 2 vCPU, 4GB RAM | $30 |
-| RDS (db.t3.small) | PostgreSQL | $30 |
-| S3 | 200GB存储 + 传输 | $15 |
-| CloudFront | 500GB传输 | $40 |
-| Route 53 | 1个托管区域 | $0.50 |
-| **总计** | | **$115.50/月** |
-
-*注：实际费用因流量和使用情况而异，以上为估算值*
+**解决方案**：
+1. 确认已安装所有依赖：`pnpm install`
+2. 清理并重新构建：`rm -rf dist && pnpm build`
+3. 检查`tsconfig.json`配置
 
 ---
 
-## 十六、联系支持
+## 十三、维护和更新
 
-### 技术支持
-
-- **Manus平台支持**：https://help.manus.im
-- **AWS技术支持**：https://console.aws.amazon.com/support/
-
-### 文档资源
-
-- **AWS Elastic Beanstalk文档**：https://docs.aws.amazon.com/elasticbeanstalk/
-- **AWS RDS文档**：https://docs.aws.amazon.com/rds/
-- **Node.js部署最佳实践**：https://nodejs.org/en/docs/guides/
-
----
-
-## 附录A：快速部署命令清单
+### 13.1 更新应用代码
 
 ```bash
-# 1. 构建项目
+# 1. 在本地构建新版本
 pnpm build
 
-# 2. 创建部署包
-zip -r deployment.zip dist/ drizzle/ package.json .npmrc Procfile
+# 2. 创建新的部署包
+zip -r canton-deployment-postgresql-v2.zip dist/ drizzle/ package.json pnpm-lock.yaml .npmrc Procfile
 
-# 3. 初始化数据库
-export DATABASE_URL="postgresql://user:pass@host:5432/db"
-pnpm db:push
+# 3. 上传到Elastic Beanstalk或EC2
+# Elastic Beanstalk: 在控制台上传新版本
+# EC2: 使用scp上传并重启PM2
+```
 
-# 4. 上传到Elastic Beanstalk
-eb init -p node.js-22 canton-financial
-eb create canton-financial-prod
-eb setenv DATABASE_URL="..." BUILT_IN_FORGE_API_KEY="..." # ... 其他环境变量
-eb deploy
+### 13.2 数据库迁移
 
-# 5. 验证部署
-curl https://yourdomain.com
+```bash
+# 1. 修改drizzle/schema.ts
+# 2. 生成迁移文件
+pnpm drizzle-kit generate
+
+# 3. 在生产环境执行迁移
+export DATABASE_URL="postgresql://..."
+pnpm drizzle-kit migrate
+```
+
+### 13.3 备份和恢复
+
+```bash
+# 备份数据库
+pg_dump -h <RDS_ENDPOINT> -U <USERNAME> -d canton_financial > backup.sql
+
+# 恢复数据库
+psql -h <RDS_ENDPOINT> -U <USERNAME> -d canton_financial < backup.sql
+
+# 备份S3存储桶
+aws s3 sync s3://canton-financial-images ./s3-backup/
 ```
 
 ---
 
-## 附录B：环境变量模板
+## 十四、成本估算
 
-创建 `.env.production` 文件：
+### 14.1 AWS服务月度成本（估算）
+
+| 服务 | 配置 | 月度成本（USD） |
+|------|------|----------------|
+| RDS PostgreSQL | db.t3.micro, 20GB | $15-20 |
+| Elastic Beanstalk | t3.small | $15-20 |
+| S3 | 10GB存储 + 传输 | $1-3 |
+| CloudFront | 100GB传输 | $8-10 |
+| Route 53 | 1个托管区域 | $0.50 |
+| **总计** | | **$40-55/月** |
+
+### 14.2 成本优化建议
+
+1. 使用Reserved Instances降低EC2/RDS成本（节省30-50%）
+2. 启用S3生命周期策略，自动删除旧图片
+3. 使用CloudFront缓存减少源站流量
+4. 监控并调整RDS实例大小
+
+---
+
+## 附录A：完整环境变量模板
+
+创建`.env`文件（生产环境）：
 
 ```bash
-# 数据库
-DATABASE_URL=postgresql://username:password@rds-endpoint:5432/canton_financial
+# 数据库配置
+DATABASE_URL=postgresql://username:password@rds-endpoint:5432/canton_financial?sslmode=require
 
-# S3存储（Manus代理）
-BUILT_IN_FORGE_API_URL=https://api.manus.im
-BUILT_IN_FORGE_API_KEY=your_forge_api_key
+# AWS S3配置
+AWS_REGION=ap-southeast-1
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+S3_BUCKET_NAME=canton-financial-images
 
 # JWT和认证
-JWT_SECRET=your_jwt_secret_at_least_32_characters
-OAUTH_SERVER_URL=https://oauth.yourdomain.com
+JWT_SECRET=your-generated-jwt-secret-at-least-32-characters
+OAUTH_SERVER_URL=https://oauth.example.com
 OWNER_NAME=Admin
-OWNER_OPEN_ID=admin_open_id
+OWNER_OPEN_ID=owner-open-id
 
 # SMTP邮件
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
-SMTP_PASS=your_app_password
+SMTP_PASS=your-app-password
 SMTP_FROM=noreply@yourdomain.com
 
 # 前端配置
 VITE_APP_TITLE=Canton Mutual Financial Limited
 VITE_APP_LOGO=/logo.png
-VITE_APP_ID=canton-financial
-VITE_ANALYTICS_WEBSITE_ID=your_analytics_id
-VITE_ANALYTICS_ENDPOINT=https://analytics.yourdomain.com
-VITE_FRONTEND_FORGE_API_KEY=your_frontend_forge_key
-VITE_FRONTEND_FORGE_API_URL=https://api.manus.im
-VITE_OAUTH_PORTAL_URL=https://oauth.yourdomain.com
+VITE_APP_ID=app-id
+VITE_ANALYTICS_WEBSITE_ID=analytics-id
+VITE_ANALYTICS_ENDPOINT=https://analytics.example.com
+VITE_FRONTEND_FORGE_API_KEY=forge-api-key
+VITE_FRONTEND_FORGE_API_URL=https://forge.example.com
+VITE_OAUTH_PORTAL_URL=https://oauth-portal.example.com
 
 # 生产环境
 NODE_ENV=production
@@ -721,6 +730,19 @@ PORT=3000
 
 ---
 
-**文档版本**：1.0  
-**最后更新**：2025-12-29  
-**维护者**：Canton Mutual Financial IT Team
+## 附录B：技术支持
+
+如遇到部署问题，请联系：
+
+- **技术支持邮箱**：support@canton-financial.com
+- **紧急联系**：+852-XXXX-XXXX
+- **文档更新日期**：2025-01-20
+
+---
+
+**部署成功后，请务必：**
+1. ✅ 修改Console后台默认密码
+2. ✅ 配置SSL证书启用HTTPS
+3. ✅ 启用RDS自动备份
+4. ✅ 配置CloudWatch告警
+5. ✅ 测试所有功能正常运行
