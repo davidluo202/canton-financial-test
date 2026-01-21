@@ -57,9 +57,9 @@ export const newsRouter = router({
         image7: input.image7 || null,
         image8: input.image8 || null,
         image9: input.image9 || null,
-      }).returning();
+      });
 
-      return { success: true, id: result[0]?.id };
+      return { success: true, id: result[0].insertId };
     }),
 
   // Update news (requires console auth)
