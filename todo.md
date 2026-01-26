@@ -577,3 +577,10 @@
 - [x] 验证生产代码不依赖devDependencies
 - [x] 重新构建并测试部署包
 - [x] 创建新的AWS部署包
+
+## 修复Manus平台发布时的Docker构建错误
+- [x] 分析pnpm install失败的原因
+- [x] 检查pnpm-lock.yaml是否与package.json同步
+- [x] 重新生成pnpm-lock.yaml
+- [x] 验证本地pnpm install成功
+- [ ] 重新发布测试
