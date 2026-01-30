@@ -584,3 +584,28 @@
 - [x] 重新生成pnpm-lock.yaml
 - [x] 验证本地pnpm install成功
 - [ ] 重新发布测试
+
+## 解决AWS生产环境的关键问题
+
+### 1. 配置AWS S3存储
+- [x] 创建AWS S3存储配置文档
+- [x] 添加S3环境变量说明（AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_S3_BUCKET, AWS_S3_REGION）
+- [x] 更新server/storage.ts支持AWS S3
+- [x] 测试图片上传功能（需IT同事在AWS环境测试）
+
+### 2. 集成SendGrid邮件服务
+- [x] 添加SendGrid配置支持
+- [x] 创建SendGrid邮件服务配置文档
+- [x] 添加SENDGRID_API_KEY环境变量
+- [x] 更新邮件发送代码使用SendGrid API
+- [x] 测试邮件发送功能（需IT同事在AWS环境测试）
+
+### 3. 修复AI功能缺少API密钥
+- [x] 添加VITE_FRONTEND_FORGE_API_KEY环境变量说明
+- [x] 更新部署文档说明AI功能配置
+- [x] 提供临时解决方案（禁用AI功能或使用用户自己的API密钥）
+
+### 4. 创建数据库初始数据
+- [x] 创建news_data.sql脚本导出现有新闻数据
+- [x] 创建数据库初始化文档
+- [x] 提供psql导入命令示例

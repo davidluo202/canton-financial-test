@@ -1,19 +1,6 @@
 import nodemailer from "nodemailer";
 import type { Transporter } from "nodemailer";
-import sgMail from "@sendgrid/mail";
 import { getChatLogsForToday, getChatRatingsForToday } from "./db";
-
-// Email backend type
-type EmailBackend = 'sendgrid' | 'smtp' | 'none';
-
-// Email configuration
-interface EmailConfig {
-  backend: EmailBackend;
-  from: string;
-  fromName: string;
-}
-
-let emailConfig: EmailConfig | null = null;
 
 // SMTP配置接口
 interface SMTPConfig {
@@ -24,48 +11,6 @@ interface SMTPConfig {
     user: string;
     pass: string;
   };
-}
-
-// 检测并初始化邮件服务
-function getEmailConfig(): EmailConfig {
-  if (emailConfig) return emailConfig;
-
-  const sendgridApiKey = process.env.SENDGRID_API_KEY;
-  const from = process.env.EMAIL_FROM || process.env.SMTP_FROM || process.env.SMTP_USER || '';
-  const fromName = process.env.EMAIL_FROM_NAME || 'Canton Mutual Financial';
-
-  // 优先使用SendGrid
-  if (sendgridApiKey) {
-    sgMail.setApiKey(sendgridApiKey);
-    console.log('[Email Service] Using SendGrid backend');
-    emailConfig = {
-      backend: 'sendgrid',
-      from,
-      fromName,
-    };
-    return emailConfig;
-  }
-
-  // 备用SMTP
-  const smtpConfig = getSMTPConfig();
-  if (smtpConfig) {
-    console.log('[Email Service] Using SMTP backend');
-    emailConfig = {
-      backend: 'smtp',
-      from,
-      fromName,
-    };
-    return emailConfig;
-  }
-
-  // 无邮件服务
-  console.warn('[Email Service] No email service configured. Set SENDGRID_API_KEY or SMTP credentials.');
-  emailConfig = {
-    backend: 'none',
-    from: '',
-    fromName: '',
-  };
-  return emailConfig;
 }
 
 // 从环境变量获取SMTP配置
@@ -108,109 +53,37 @@ function getTransporter(): Transporter | null {
   return transporter;
 }
 
-// 发送邮件接口
-interface SendEmailOptions {
-  to: string | string[];
+// 发送邮件
+export async function sendEmail(options: {
+  to: string;
   subject: string;
-  text?: string;
   html: string;
   from?: string;
-  attachments?: Array<{
-    filename: string;
-    content?: Buffer | string;
-    path?: string;
-    contentType?: string;
-  }>;
-}
-
-// 使用SendGrid发送邮件
-async function sendEmailViaSendGrid(options: SendEmailOptions): Promise<boolean> {
-  const config = getEmailConfig();
-  
-  try {
-    const msg = {
-      to: Array.isArray(options.to) ? options.to : [options.to],
-      from: {
-        email: options.from || config.from,
-        name: config.fromName,
-      },
-      subject: options.subject,
-      text: options.text,
-      html: options.html,
-      attachments: options.attachments?.map(att => ({
-        filename: att.filename,
-        content: att.content ? Buffer.from(att.content).toString('base64') : '',
-        type: att.contentType || 'application/octet-stream',
-        disposition: 'attachment' as const,
-      })).filter(att => att.content),
-    };
-
-    await sgMail.send(msg);
-    console.log(`[Email Service] Email sent via SendGrid to ${options.to}`);
-    return true;
-  } catch (error) {
-    console.error('[Email Service] SendGrid send failed:', error);
-    return false;
-  }
-}
-
-// 使用SMTP发送邮件
-async function sendEmailViaSMTP(options: SendEmailOptions): Promise<boolean> {
-  const config = getEmailConfig();
+}): Promise<boolean> {
   const transport = getTransporter();
   
   if (!transport) {
-    console.error('[Email Service] SMTP transporter not configured');
+    console.error("[Email Service] Email transporter not configured. Please set SMTP environment variables.");
     return false;
   }
 
   try {
-    const fromEmail = options.from || config.from;
+    const fromEmail = options.from || process.env.SMTP_FROM || process.env.SMTP_USER;
+    const fromName = "Canton Mutual Financial AI Assistant";
     
     await transport.sendMail({
-      from: `"${config.fromName}" <${fromEmail}>`,
+      from: `"${fromName}" <${fromEmail}>`,
       to: options.to,
       subject: options.subject,
-      text: options.text,
       html: options.html,
-      attachments: options.attachments,
     });
-    
-    console.log(`[Email Service] Email sent via SMTP to ${options.to}`);
+
+    console.log(`[Email Service] Email sent successfully to ${options.to}`);
     return true;
   } catch (error) {
-    console.error('[Email Service] SMTP send failed:', error);
+    console.error("[Email Service] Failed to send email:", error);
     return false;
   }
-}
-
-// 统一的邮件发送函数
-export async function sendEmail(options: SendEmailOptions): Promise<boolean> {
-  const config = getEmailConfig();
-  
-  if (config.backend === 'none') {
-    console.error('[Email Service] No email service configured');
-    return false;
-  }
-
-  // 尝试使用配置的后端
-  if (config.backend === 'sendgrid') {
-    const success = await sendEmailViaSendGrid(options);
-    if (success) return true;
-    
-    // SendGrid失败，尝试SMTP备用
-    console.warn('[Email Service] SendGrid failed, trying SMTP fallback...');
-    if (getSMTPConfig()) {
-      return sendEmailViaSMTP(options);
-    }
-    return false;
-  }
-
-  if (config.backend === 'smtp') {
-    return sendEmailViaSMTP(options);
-  }
-
-  return false;
 }
 
 // 验证SMTP配置
