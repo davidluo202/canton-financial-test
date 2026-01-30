@@ -38,9 +38,9 @@ export default function MarketTicker() {
     }
   }, []);
 
-  // 获取市场数据（每5分钟刷新，减少API调用频率）
+  // 获取市场数据（每1分钟刷新，提供更实时的数据）
   const { data, isLoading } = trpc.market.getMarketData.useQuery(undefined, {
-    refetchInterval: 5 * 60 * 1000, // 每5分钟刷新一次
+    refetchInterval: 1 * 60 * 1000, // 每1分钟刷新一次
     refetchOnWindowFocus: false,
   });
 
@@ -117,7 +117,7 @@ export default function MarketTicker() {
 
   // 获取涨跌颜色类名 - 国际标准：涨蓝跌红
   const getChangeColor = (change: number) => {
-    if (change > 0) return "text-green-400"; // 涨：绿色/蓝色
+    if (change > 0) return "text-blue-400"; // 涨：蓝色
     if (change < 0) return "text-red-400"; // 跌：红色
     return "text-gray-400"; // 平：灰色
   };
