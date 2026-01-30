@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { initScheduler } from "../scheduler";
 import { serveStatic, setupVite } from "./vite";
+import { MarketDataWebSocketServer } from "./websocket";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -60,6 +61,10 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // 初始化WebSocket服务器
+    const wsServer = new MarketDataWebSocketServer(server);
+    wsServer.initialize();
     
     // 初始化定时任务调度器
     initScheduler();

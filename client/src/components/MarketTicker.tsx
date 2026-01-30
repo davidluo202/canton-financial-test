@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 interface MarketData {
   symbol: string;
@@ -20,6 +21,7 @@ export default function MarketTicker() {
   const { language } = useLanguage();
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
+  const [useWebSocketMode, setUseWebSocketMode] = useState(true);
 
   // 从localStorage加载缓存数据
   useEffect(() => {
@@ -38,79 +40,71 @@ export default function MarketTicker() {
     }
   }, []);
 
-  // 获取市场数据（每1分钟刷新，提供更实时的数据）
-  const { data, isLoading } = trpc.market.getMarketData.useQuery(undefined, {
+  // WebSocket连接
+  const { isConnected: wsConnected, error: wsError } = useWebSocket({
+    url: '/ws/market-data',
+    onMessage: (data) => {
+      if (data && Array.isArray(data) && data.length > 0) {
+        const timestamp = new Date().toISOString();
+        
+        setMarketData(data as MarketData[]);
+        setLastUpdateTime(timestamp);
+        
+        // 保存到localStorage
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+          localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
+        } catch (error) {
+          console.error('Failed to cache market data:', error);
+        }
+      }
+    },
+    onError: (error) => {
+      console.error('[MarketTicker] WebSocket错误，降级到轮询模式');
+      setUseWebSocketMode(false);
+    },
+    onClose: () => {
+      console.log('[MarketTicker] WebSocket连接关闭');
+    },
+    reconnectInterval: 3000,
+    maxReconnectAttempts: 5,
+  });
+
+  // 降级方案：使用tRPC轮询（仅在WebSocket失败时启用）
+  const { data: pollingData } = trpc.market.getMarketData.useQuery(undefined, {
+    enabled: !useWebSocketMode || !wsConnected, // 只有在WebSocket模式关闭或未连接时才启用轮询
     refetchInterval: 1 * 60 * 1000, // 每1分钟刷新一次
     refetchOnWindowFocus: false,
   });
 
-  // 当获取到新数据时，更新state和localStorage缓存
+  // 当轮询获取到新数据时，更新state和localStorage缓存
   useEffect(() => {
-    if (data && Array.isArray(data) && data.length > 0) {
+    if ((!useWebSocketMode || !wsConnected) && pollingData && Array.isArray(pollingData) && pollingData.length > 0) {
       const timestamp = new Date().toISOString();
       
-      setMarketData(data as MarketData[]);
+      setMarketData(pollingData as MarketData[]);
       setLastUpdateTime(timestamp);
       
       // 保存到localStorage
       try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_KEY, JSON.stringify(pollingData));
         localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
       } catch (error) {
         console.error('Failed to cache market data:', error);
       }
     }
-  }, [data]);
-
-  // 如果没有数据且正在加载，显示骨架屏
-  if (marketData.length === 0 && isLoading) {
-    return (
-      <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
-        <div className="flex items-center py-0.5 px-3">
-          {/* 时间戳骨架 */}
-          <div className="w-20 h-3 bg-slate-700/50 rounded animate-pulse mr-3"></div>
-          
-          {/* 数据项骨架（模拟5个数据项） */}
-          <div className="flex gap-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-1.5 animate-pulse" style={{ animationDelay: `${i * 100}ms` }}>
-                {/* 名称 */}
-                <div className="w-12 h-3 bg-slate-700/50 rounded"></div>
-                {/* 价格 */}
-                <div className="w-16 h-3 bg-slate-600/50 rounded"></div>
-                {/* 涨跌 */}
-                <div className="w-20 h-2.5 bg-slate-700/50 rounded"></div>
-                {/* 分隔符 */}
-                <div className="w-px h-3 bg-slate-600/30"></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-  
-  // 如果没有数据且不在加载中（API失败且无缓存），显示提示信息
-  if (marketData.length === 0) {
-    return (
-      <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
-        <div className="flex items-center justify-center py-0.5">
-          <div className="px-3 text-[10px] text-slate-300">
-            {language === 'zh' ? '市場數據暫時不可用' : 'Market data temporarily unavailable'}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, [pollingData, useWebSocketMode, wsConnected]);
 
   // 格式化价格显示
-  const formatPrice = (price: number, type: string) => {
-    if (type === "forex") {
-      return price.toFixed(4);
-    } else if (type === "commodity") {
+  const formatPrice = (price: number, currency: string) => {
+    // 对于外汇汇率，显示更多小数位
+    if (currency === 'CNY' || currency === 'JPY') {
+      return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    } else if (price < 10) {
+      return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+    } else if (price < 100) {
       return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     } else {
-      // 股票指数：使用千位分隔符，保疙2位小数
       return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
   };
@@ -125,88 +119,74 @@ export default function MarketTicker() {
   // 获取涨跌符号
   const getChangeSymbol = (change: number) => {
     if (change > 0) return "+";
+    if (change < 0) return "";
     return "";
   };
 
-  // 格式化时间显示
-  const formatUpdateTime = () => {
-    if (!lastUpdateTime) return '';
-    
-    try {
-      const updateDate = new Date(lastUpdateTime);
-      const now = new Date();
-      const diffMs = now.getTime() - updateDate.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-      
-      if (diffMins < 1) {
-        return language === 'zh' ? '即時更新' : 'Just now';
-      } else if (diffMins < 60) {
-        return language === 'zh' ? `${diffMins}分鐘前更新` : `Updated ${diffMins}m ago`;
-      } else {
-        const diffHours = Math.floor(diffMins / 60);
-        return language === 'zh' ? `${diffHours}小時前更新` : `Updated ${diffHours}h ago`;
-      }
-    } catch (error) {
-      return '';
-    }
+  // 格式化涨跌幅
+  const formatChange = (change: number) => {
+    return Math.abs(change).toFixed(2);
   };
 
+  // 格式化涨跌百分比
+  const formatChangePercent = (changePercent: number) => {
+    return `${getChangeSymbol(changePercent)}${Math.abs(changePercent).toFixed(2)}%`;
+  };
 
+  // 复制数据用于无限滚动
+  const duplicatedData = useMemo(() => {
+    return [...marketData, ...marketData];
+  }, [marketData]);
+
+  if (marketData.length === 0) {
+    return null;
+  }
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 bg-blue-950 text-white overflow-hidden">
-      <div className="flex items-center">
-        {/* 时间戳显示 */}
-        {lastUpdateTime && (
-          <div className="px-3 py-0.5 text-[10px] text-slate-300 whitespace-nowrap border-r border-slate-700">
-            {formatUpdateTime()}
+    <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white py-2 overflow-hidden relative">
+      {/* 连接状态指示器 */}
+      <div className="absolute top-1 right-4 flex items-center gap-2 text-xs">
+        {useWebSocketMode && wsConnected && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-green-400">实时</span>
           </div>
         )}
-        
-        {/* 滚动行情条 */}
-        <div className="flex-1 ticker-wrapper">
-          <div className="ticker-content py-0.5">
-          {/* 渲染两次数据以实现无缝循环滚动 */}
-          {[...marketData, ...marketData].map((item, index) => (
-            <div
-              key={`${item.symbol}-${index}`}
-              className="ticker-item inline-flex items-center px-3 whitespace-nowrap"
-            >
-              <span className="font-semibold text-xs mr-1.5">
-                {language === "zh" ? item.nameZh : item.nameEn}
-              </span>
-              <span className="text-xs mr-1.5">
-                {formatPrice(item.price, item.type)}
-              </span>
-              <span className={`text-[10px] font-medium ${getChangeColor(item.change)}`}>
-                {getChangeSymbol(item.change)}
-                {item.change.toFixed(2)} (
-                {getChangeSymbol(item.changePercent)}
-                {item.changePercent.toFixed(2)}%)
-              </span>
-              <span className="mx-2 text-slate-400 text-xs">|</span>
-            </div>
-          ))}
+        {useWebSocketMode && !wsConnected && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+            <span className="text-yellow-400">重连中</span>
           </div>
-        </div>
+        )}
+        {!useWebSocketMode && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+            <span className="text-gray-400">轮询</span>
+          </div>
+        )}
       </div>
 
+      {/* 滚动容器 */}
+      <div className="flex animate-scroll whitespace-nowrap">
+        {duplicatedData.map((item, index) => (
+          <div
+            key={`${item.symbol}-${index}`}
+            className="inline-flex items-center px-6 border-r border-white/20"
+          >
+            <span className="font-medium mr-2">
+              {language === "zh" ? item.nameZh : item.nameEn}
+            </span>
+            <span className="mr-2">{formatPrice(item.price, item.currency)}</span>
+            <span className={`${getChangeColor(item.change)} font-medium`}>
+              {getChangeSymbol(item.change)}{formatChange(item.change)} ({formatChangePercent(item.changePercent)})
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* CSS动画 */}
       <style>{`
-        .ticker-wrapper {
-          width: 100%;
-          overflow: hidden;
-        }
-
-        .ticker-content {
-          display: inline-flex;
-          animation: scroll-left 60s linear infinite;
-        }
-
-        .ticker-content:hover {
-          animation-play-state: paused;
-        }
-
-        @keyframes scroll-left {
+        @keyframes scroll {
           0% {
             transform: translateX(0);
           }
@@ -214,9 +194,13 @@ export default function MarketTicker() {
             transform: translateX(-50%);
           }
         }
-
-        .ticker-item {
-          flex-shrink: 0;
+        
+        .animate-scroll {
+          animation: scroll 60s linear infinite;
+        }
+        
+        .animate-scroll:hover {
+          animation-play-state: paused;
         }
       `}</style>
     </div>
