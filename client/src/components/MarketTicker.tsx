@@ -143,7 +143,7 @@ export default function MarketTicker() {
   }
 
   return (
-    <div className="bg-gradient-to-r from-slate-800 via-blue-800 to-slate-800 text-white py-3 overflow-hidden relative border-b-2 border-blue-500/30 shadow-lg">
+    <div className="fixed top-20 left-0 right-0 z-40 bg-gradient-to-r from-slate-800 via-blue-800 to-slate-800 text-white py-3 overflow-hidden border-b-2 border-blue-500/30 shadow-lg">
       {/* 连接状态指示器 */}
       <div className="absolute top-1 right-4 flex items-center gap-2 text-xs">
         {useWebSocketMode && wsConnected && (
