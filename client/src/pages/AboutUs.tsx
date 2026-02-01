@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
-import AIChatbot from "@/components/AIChatbot";
+// import AIChatbot from "@/components/AIChatbot";
 
 export default function AboutUs() {
   const { language } = useLanguage();
@@ -271,7 +271,7 @@ With an Executive MBA graduate from Cornell University, and a FINRA-licensed, FR
       </div>
 
       <Footer />
-      <AIChatbot />
+      {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
     </div>
   );
 }

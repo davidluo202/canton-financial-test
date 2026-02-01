@@ -73,7 +73,7 @@ export default function MarketTicker() {
   // 降级方案：使用tRPC轮询（仅在WebSocket失败时启用）
   const { data: pollingData } = trpc.market.getMarketData.useQuery(undefined, {
     enabled: !useWebSocketMode || !wsConnected, // 只有在WebSocket模式关闭或未连接时才启用轮询
-    refetchInterval: 1 * 60 * 1000, // 每1分钟刷新一次
+    refetchInterval: 15 * 60 * 1000, // 每15分钟刷新一次（降低API用量消耗）
     refetchOnWindowFocus: false,
   });
 

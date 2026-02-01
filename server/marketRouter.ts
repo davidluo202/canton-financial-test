@@ -4,7 +4,7 @@ import { callDataApi } from "./_core/dataApi";
 // 服务端缓存
 let marketDataCache: any = null;
 let cacheTimestamp: number = 0;
-const CACHE_DURATION = 1 * 60 * 1000; // 1分钟缓存（从5分钟改为1分钟以提供更实时的数据）
+const CACHE_DURATION = 15 * 60 * 1000; // 15分钟缓存（降低API用量消耗）
 
 // 静态fallback数据（当API完全失败且无缓存时使用）
 // 数据来源：2026年1月29日实时市场数据

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
-import AIChatbot from "@/components/AIChatbot";
+// import AIChatbot from "@/components/AIChatbot";
 
 export default function Leadership() {
   const { language } = useLanguage();
@@ -137,7 +137,7 @@ export default function Leadership() {
       </div>
 
       <Footer />
-      <AIChatbot />
+      {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
     </div>
   );
 }

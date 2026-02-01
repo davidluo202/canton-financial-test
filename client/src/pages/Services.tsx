@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
-import AIChatbot from "@/components/AIChatbot";
+// import AIChatbot from "@/components/AIChatbot";
 import ServiceCarousel from "@/components/ServiceCarousel";
 
 export default function Services() {
@@ -288,7 +288,7 @@ export default function Services() {
       </div>
 
       <Footer />
-      <AIChatbot />
+      {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
     </div>
   );
 }

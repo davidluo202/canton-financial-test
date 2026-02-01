@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
-import AIChatbot from "@/components/AIChatbot";
+// import AIChatbot from "@/components/AIChatbot";
 import { MapPin, Phone, FileText, Mail, Globe, Clock } from "lucide-react";
 
 export default function Contact() {
@@ -168,7 +168,7 @@ export default function Contact() {
       </div>
 
       <Footer />
-      <AIChatbot />
+      {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
     </div>
   );
 }

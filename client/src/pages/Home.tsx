@@ -3,7 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AIChatbot from "@/components/AIChatbot";
+// import AIChatbot from "@/components/AIChatbot"; // 暂停AI聊天机器人以降低API用量消耗
 import NewsPopover from "@/components/NewsPopover";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
@@ -219,7 +219,7 @@ export default function Home() {
       </section>
 
       <Footer />
-      <AIChatbot />
+      {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
       <NewsPopover />
     </div>
   );

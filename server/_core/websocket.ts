@@ -126,10 +126,10 @@ export class MarketDataWebSocketServer {
       });
     });
 
-    // 启动定时更新市场数据（每30秒）
+    // 启动定时更新市场数据（每15分钟 - 降低API用量消耗）
     this.startDataUpdate();
 
-    // 启动心跳检测（每30秒）
+    // 启动心跳检测（每60秒）
     this.startHeartbeat();
 
     console.log('[WebSocket] 市场数据WebSocket服务器已启动，路径: /ws/market-data');
@@ -159,10 +159,10 @@ export class MarketDataWebSocketServer {
     // 立即执行一次
     this.updateMarketData();
 
-    // 每30秒更新一次
+    // 每15分钟更新一次（降低API用量消耗）
     this.updateInterval = setInterval(() => {
       this.updateMarketData();
-    }, 30 * 1000);
+    }, 15 * 60 * 1000); // 15分钟 = 900秒
   }
 
   /**
@@ -257,7 +257,7 @@ export class MarketDataWebSocketServer {
         client.isAlive = false;
         client.ws.ping();
       });
-    }, 30 * 1000);
+    }, 60 * 1000); // 60秒心跳检测
   }
 
   /**

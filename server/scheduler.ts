@@ -7,9 +7,11 @@ import { executeDailyReportTask } from "./emailReportService";
 export function initScheduler() {
   console.log("[Scheduler] Initializing scheduled tasks...");
 
+  // 暂停每日邮件报告以降低API用量消耗
   // 每天早上9点（香港时间）发送每日对话报告
   // Cron表达式: 秒 分 时 日 月 周
   // '0 0 9 * * *' = 每天9:00:00
+  /*
   const dailyReportSchedule = process.env.DAILY_REPORT_CRON || '0 0 9 * * *';
   
   cron.schedule(dailyReportSchedule, async () => {
@@ -25,6 +27,8 @@ export function initScheduler() {
   });
 
   console.log(`[Scheduler] Daily report scheduled at: ${dailyReportSchedule} (Hong Kong Time)`);
+  */
+  console.log("[Scheduler] Daily email report is currently disabled to reduce API usage");
   console.log("[Scheduler] All scheduled tasks initialized successfully");
 }
 
