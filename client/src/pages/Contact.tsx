@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import MarketTicker from "@/components/MarketTicker";
 import Footer from "@/components/Footer";
 // import AIChatbot from "@/components/AIChatbot";
-import { MapPin, Phone, FileText, Mail, Globe, Clock, AlertCircle } from "lucide-react";
+import { MapPin, Phone, FileText, Mail, Globe, Clock } from "lucide-react";
 
 export default function Contact() {
   const { language } = useLanguage();
@@ -80,44 +80,6 @@ export default function Contact() {
                 : "Welcome Inquiries from All Aspiring Individuals"
               }
             </p>
-          </div>
-        </div>
-
-        {/* AI Customer Service Notice */}
-        <div className="container py-6">
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-600 rounded-lg p-6 shadow-md">
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0">
-                <AlertCircle className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {language === "zh" ? "AI客服暂停服务通知" : "AI Customer Service Temporarily Unavailable"}
-                </h3>
-                <p className="text-gray-700 mb-3">
-                  {language === "zh" 
-                    ? "我们的AI智能客服目前正在进行系统优化升级，暂时无法为您服务。请通过以下方式联系我们，我们的专业团队将立即为您提供帮助："
-                    : "Our AI customer service is currently undergoing system optimization and is temporarily unavailable. Please contact us through the following channels, and our professional team will assist you immediately:"
-                  }
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a 
-                    href="tel:+85225981700"
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    <Phone className="h-4 w-4 mr-2" />
-                    {language === "zh" ? "电话：+852 2598 1700" : "Phone: +852 2598 1700"}
-                  </a>
-                  <a 
-                    href="mailto:customer-services@cmfinancial.com"
-                    className="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-                  >
-                    <Mail className="h-4 w-4 mr-2" />
-                    {language === "zh" ? "邮件：customer-services@cmfinancial.com" : "Email: customer-services@cmfinancial.com"}
-                  </a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
