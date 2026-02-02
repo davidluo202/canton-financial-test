@@ -704,4 +704,16 @@
 - [x] 构建生产环境代码（build成功）
 - [x] 生成AWS部署包v2.3-final压缩文件（3.8MB）
 - [x] 设计CI/CD自动化流程文档（方案C，CICD_AUTOMATION_DESIGN.md）
-- [ ] 保存检查点
+- [x] 保存检查点（version: c3009844）
+
+## 根据IT反馈修复部署问题
+
+- [x] 将drizzle schema从PostgreSQL切换回MySQL（已确认代码本身使用MySQL）
+- [x] 更新drizzle.config.ts使用mysql2驱动（已确认正确）
+- [x] 检查server/db.ts中的数据库连接代码（使用drizzle-orm/mysql2）
+- [x] 访问https://staging2.cmfinancial.com识别损坏的页面（网站暂时不可访问）
+- [x] 查看后端日志识别变量错误（发现问题：部署包包含schema.postgres.ts）
+- [x] 修复识别出的所有问题（删除schema.postgres.ts和schema.mysql.ts）
+- [x] 重新构建生产环境代码（build成功）
+- [x] 生成MySQL版本的AWS部署包（canton-deployment-aws-mysql-20260202.zip, 3.8MB）
+- [ ] 保存检查点并交付
