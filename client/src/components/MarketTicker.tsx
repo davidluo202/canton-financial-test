@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { RefreshCw } from "lucide-react";
+import { useWebSocket } from "@/hooks/useWebSocket";
 
 interface MarketData {
   symbol: string;
@@ -21,7 +21,7 @@ export default function MarketTicker() {
   const { language } = useLanguage();
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [useWebSocketMode, setUseWebSocketMode] = useState(true);
 
   // 从localStorage加载缓存数据
   useEffect(() => {
@@ -40,39 +40,60 @@ export default function MarketTicker() {
     }
   }, []);
 
-  // 手动获取市场数据（不自动刷新）
-  const { refetch, isFetching } = trpc.market.getMarketData.useQuery(undefined, {
-    enabled: false, // 禁用自动查询
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  });
-
-  // 手动刷新按钮点击处理
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    try {
-      const result = await refetch();
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+  // WebSocket连接
+  const { isConnected: wsConnected, error: wsError } = useWebSocket({
+    url: '/ws/market-data',
+    onMessage: (data) => {
+      if (data && Array.isArray(data) && data.length > 0) {
         const timestamp = new Date().toISOString();
         
-        setMarketData(result.data as MarketData[]);
+        setMarketData(data as MarketData[]);
         setLastUpdateTime(timestamp);
         
         // 保存到localStorage
         try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(result.data));
+          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
           localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
         } catch (error) {
           console.error('Failed to cache market data:', error);
         }
       }
-    } catch (error) {
-      console.error('Failed to refresh market data:', error);
-    } finally {
-      setIsRefreshing(false);
+    },
+    onError: (error) => {
+      console.error('[MarketTicker] WebSocket错误，降级到轮询模式');
+      setUseWebSocketMode(false);
+    },
+    onClose: () => {
+      console.log('[MarketTicker] WebSocket连接关闭');
+    },
+    reconnectInterval: 3000,
+    maxReconnectAttempts: 5,
+  });
+
+  // 降级方案：使用tRPC轮询（仅在WebSocket失败时启用）
+  const { data: pollingData } = trpc.market.getMarketData.useQuery(undefined, {
+    enabled: !useWebSocketMode || !wsConnected, // 只有在WebSocket模式关闭或未连接时才启用轮询
+    refetchInterval: 15 * 60 * 1000, // 每15分钟刷新一次（降低API用量消耗）
+    refetchOnWindowFocus: false,
+  });
+
+  // 当轮询获取到新数据时，更新state和localStorage缓存
+  useEffect(() => {
+    if ((!useWebSocketMode || !wsConnected) && pollingData && Array.isArray(pollingData) && pollingData.length > 0) {
+      const timestamp = new Date().toISOString();
+      
+      setMarketData(pollingData as MarketData[]);
+      setLastUpdateTime(timestamp);
+      
+      // 保存到localStorage
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(pollingData));
+        localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
+      } catch (error) {
+        console.error('Failed to cache market data:', error);
+      }
     }
-  };
+  }, [pollingData, useWebSocketMode, wsConnected]);
 
   // 格式化价格显示
   const formatPrice = (price: number, currency: string) => {
@@ -112,25 +133,6 @@ export default function MarketTicker() {
     return `${getChangeSymbol(changePercent)}${Math.abs(changePercent).toFixed(2)}%`;
   };
 
-  // 格式化最后更新时间显示
-  const formatLastUpdateTime = () => {
-    if (!lastUpdateTime) return language === "zh" ? "未更新" : "Not updated";
-    
-    const now = new Date();
-    const updateTime = new Date(lastUpdateTime);
-    const diffMs = now.getTime() - updateTime.getTime();
-    const diffMinutes = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMinutes / 60);
-    
-    if (diffMinutes < 1) {
-      return language === "zh" ? "即時更新" : "Just now";
-    } else if (diffMinutes < 60) {
-      return language === "zh" ? `${diffMinutes}分鐘前更新` : `${diffMinutes}min ago`;
-    } else {
-      return language === "zh" ? `${diffHours}小時前更新` : `${diffHours}hr ago`;
-    }
-  };
-
   // 复制数据用于无限滚动
   const duplicatedData = useMemo(() => {
     return [...marketData, ...marketData];
@@ -142,29 +144,30 @@ export default function MarketTicker() {
 
   return (
     <div className="fixed top-20 left-0 right-0 z-40 bg-gradient-to-r from-slate-800 via-blue-800 to-slate-800 text-white py-3 overflow-hidden border-b-2 border-blue-500/30 shadow-lg">
-      {/* 手动刷新按钮 */}
-      <div className="absolute top-1/2 -translate-y-1/2 right-4 flex items-center gap-3">
-        {/* 最后更新时间 */}
-        <span className="text-xs text-gray-300">
-          {formatLastUpdateTime()}
-        </span>
-        
-        {/* 刷新按钮 */}
-        <button
-          onClick={handleRefresh}
-          disabled={isRefreshing || isFetching}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed rounded-md text-xs font-medium transition-colors"
-          title={language === "zh" ? "點擊更新行情數據" : "Click to refresh market data"}
-        >
-          <RefreshCw 
-            className={`w-3.5 h-3.5 ${(isRefreshing || isFetching) ? 'animate-spin' : ''}`} 
-          />
-          <span>{language === "zh" ? "行情更新" : "Refresh"}</span>
-        </button>
+      {/* 连接状态指示器 */}
+      <div className="absolute top-1 right-4 flex items-center gap-2 text-xs">
+        {useWebSocketMode && wsConnected && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-green-400">实时</span>
+          </div>
+        )}
+        {useWebSocketMode && !wsConnected && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+            <span className="text-yellow-400">重连中</span>
+          </div>
+        )}
+        {!useWebSocketMode && (
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+            <span className="text-gray-400">轮询</span>
+          </div>
+        )}
       </div>
 
       {/* 滚动容器 */}
-      <div className="flex animate-scroll whitespace-nowrap pr-48">
+      <div className="flex animate-scroll whitespace-nowrap">
         {duplicatedData.map((item, index) => (
           <div
             key={`${item.symbol}-${index}`}
