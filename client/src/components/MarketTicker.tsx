@@ -152,11 +152,8 @@ export default function MarketTicker() {
         )}
       </div>
 
-      {/* 更新按钮和时间戳 */}
-      <div className="flex items-center gap-2 px-3 py-1 bg-blue-900/50 border-l border-blue-500">
-        <span className="text-[10px] text-blue-200 whitespace-nowrap">
-          {getTimeAgo(lastUpdateTime)}
-        </span>
+      {/* 更新按钮 */}
+      <div className="flex items-center px-3 py-1 bg-blue-900/50 border-l border-blue-500">
         <button
           onClick={handleRefresh}
           disabled={isRefreshing}
