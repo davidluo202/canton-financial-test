@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import MarketTicker from "./components/MarketTicker";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -42,6 +42,9 @@ function Router() {
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
 function App() {
+  const [location] = useLocation();
+  const shouldShowMarketTicker = !location.startsWith('/news');
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -51,7 +54,7 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <MarketTicker />
+            {shouldShowMarketTicker && <MarketTicker />}
             <Router />
           </TooltipProvider>
         </LanguageProvider>
