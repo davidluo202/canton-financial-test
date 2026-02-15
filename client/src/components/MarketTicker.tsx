@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useWebSocket } from "@/hooks/useWebSocket";
+import { RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 interface MarketData {
   symbol: string;
@@ -21,7 +22,7 @@ export default function MarketTicker() {
   const { language } = useLanguage();
   const [marketData, setMarketData] = useState<MarketData[]>([]);
   const [lastUpdateTime, setLastUpdateTime] = useState<string>('');
-  const [useWebSocketMode, setUseWebSocketMode] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // 从localStorage加载缓存数据
   useEffect(() => {
@@ -40,169 +41,134 @@ export default function MarketTicker() {
     }
   }, []);
 
-  // WebSocket连接
-  const { isConnected: wsConnected, error: wsError } = useWebSocket({
-    url: '/ws/market-data',
-    onMessage: (data) => {
-      if (data && Array.isArray(data) && data.length > 0) {
+  // 手动刷新市场数据
+  const { refetch } = trpc.market.getMarketData.useQuery(undefined, {
+    enabled: false, // 禁用自动查询
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      const result = await refetch();
+      
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         const timestamp = new Date().toISOString();
         
-        setMarketData(data as MarketData[]);
+        setMarketData(result.data as MarketData[]);
         setLastUpdateTime(timestamp);
         
         // 保存到localStorage
         try {
-          localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+          localStorage.setItem(CACHE_KEY, JSON.stringify(result.data));
           localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
         } catch (error) {
           console.error('Failed to cache market data:', error);
         }
+        
+        // 显示成功提示
+        toast.success(language === "zh" ? "行情更新成功" : "Market data updated successfully");
+      } else {
+        throw new Error('No data received');
       }
-    },
-    onError: (error) => {
-      console.error('[MarketTicker] WebSocket错误，降级到轮询模式');
-      setUseWebSocketMode(false);
-    },
-    onClose: () => {
-      console.log('[MarketTicker] WebSocket连接关闭');
-    },
-    reconnectInterval: 3000,
-    maxReconnectAttempts: 5,
-  });
-
-  // 降级方案：使用tRPC轮询（仅在WebSocket失败时启用）
-  const { data: pollingData } = trpc.market.getMarketData.useQuery(undefined, {
-    enabled: !useWebSocketMode || !wsConnected, // 只有在WebSocket模式关闭或未连接时才启用轮询
-    refetchInterval: 15 * 60 * 1000, // 每15分钟刷新一次（降低API用量消耗）
-    refetchOnWindowFocus: false,
-  });
-
-  // 当轮询获取到新数据时，更新state和localStorage缓存
-  useEffect(() => {
-    if ((!useWebSocketMode || !wsConnected) && pollingData && Array.isArray(pollingData) && pollingData.length > 0) {
-      const timestamp = new Date().toISOString();
-      
-      setMarketData(pollingData as MarketData[]);
-      setLastUpdateTime(timestamp);
-      
-      // 保存到localStorage
-      try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(pollingData));
-        localStorage.setItem(CACHE_TIMESTAMP_KEY, timestamp);
-      } catch (error) {
-        console.error('Failed to cache market data:', error);
-      }
+    } catch (error) {
+      console.error('Failed to refresh market data:', error);
+      // 显示失败提示
+      toast.error(language === "zh" ? "行情更新失败，请稍后重试" : "Failed to update market data, please try again later");
+    } finally {
+      setIsRefreshing(false);
     }
-  }, [pollingData, useWebSocketMode, wsConnected]);
+  };
 
   // 格式化价格显示
   const formatPrice = (price: number, currency: string) => {
     // 对于外汇汇率，显示更多小数位
-    if (currency === 'CNY' || currency === 'JPY') {
-      return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-    } else if (price < 10) {
-      return price.toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-    } else if (price < 100) {
-      return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (currency === 'CNY' || currency === 'USD' || currency === 'EUR' || currency === 'JPY' || currency === 'GBP') {
+      return price.toFixed(4);
+    }
+    // 对于股票指数和贵金属，显示两位小数并添加千位分隔符
+    return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  // 格式化涨跌幅显示
+  const formatChange = (change: number) => {
+    const sign = change >= 0 ? '+' : '';
+    return `${sign}${change.toFixed(2)}`;
+  };
+
+  const formatChangePercent = (changePercent: number) => {
+    const sign = changePercent >= 0 ? '+' : '';
+    return `${sign}${changePercent.toFixed(2)}%`;
+  };
+
+  // 计算最后更新时间距离现在的时长
+  const getTimeAgo = (timestamp: string) => {
+    if (!timestamp) return '';
+    
+    const now = new Date().getTime();
+    const updateTime = new Date(timestamp).getTime();
+    const diffMs = now - updateTime;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    
+    if (diffMins < 1) {
+      return language === "zh" ? "即時更新" : "Just now";
+    } else if (diffMins < 60) {
+      return language === "zh" ? `${diffMins}分鐘前更新` : `${diffMins} min ago`;
     } else {
-      return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return language === "zh" ? `${diffHours}小時前更新` : `${diffHours} hr ago`;
     }
   };
 
-  // 获取涨跌颜色类名 - 国际标准：涨蓝跌红
-  const getChangeColor = (change: number) => {
-    if (change > 0) return "text-blue-400"; // 涨：蓝色
-    if (change < 0) return "text-red-400"; // 跌：红色
-    return "text-gray-400"; // 平：灰色
-  };
-
-  // 获取涨跌符号
-  const getChangeSymbol = (change: number) => {
-    if (change > 0) return "+";
-    if (change < 0) return "";
-    return "";
-  };
-
-  // 格式化涨跌幅
-  const formatChange = (change: number) => {
-    return Math.abs(change).toFixed(2);
-  };
-
-  // 格式化涨跌百分比
-  const formatChangePercent = (changePercent: number) => {
-    return `${getChangeSymbol(changePercent)}${Math.abs(changePercent).toFixed(2)}%`;
-  };
-
-  // 复制数据用于无限滚动
-  const duplicatedData = useMemo(() => {
-    return [...marketData, ...marketData];
-  }, [marketData]);
-
-  if (marketData.length === 0) {
-    return null;
-  }
+  // 即使没有数据也显示行情条和更新按钮
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 bg-gradient-to-r from-slate-800 via-blue-800 to-slate-800 text-white py-3 overflow-hidden border-b-2 border-blue-500/30 shadow-lg">
-      {/* 连接状态指示器 */}
-      <div className="absolute top-1 right-4 flex items-center gap-2 text-xs">
-        {useWebSocketMode && wsConnected && (
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-400">实时</span>
+    <div className="fixed top-20 left-0 right-0 bg-blue-950 border-b-2 border-blue-500 shadow-md z-40 flex items-center">
+      {/* 滚动行情区域 */}
+      <div className="flex-1 overflow-hidden py-0.5">
+        {marketData && marketData.length > 0 ? (
+          <div className="flex animate-scroll">
+            {/* 复制两遍数据以实现无缝滚动 */}
+            {[...marketData, ...marketData].map((item, index) => {
+            const isPositive = item.change >= 0;
+            const colorClass = isPositive ? 'text-blue-400' : 'text-red-400';
+            const name = language === "zh" ? item.nameZh : item.nameEn;
+            
+            return (
+              <div key={`${item.symbol}-${index}`} className={`flex items-center mx-2 whitespace-nowrap ${colorClass}`}>
+                <span className="font-semibold text-xs">{name}</span>
+                <span className="ml-1.5 text-[10px]">{formatPrice(item.price, item.currency)}</span>
+                <span className="ml-1 text-[10px]">{formatChange(item.change)}</span>
+                <span className="ml-0.5 text-[10px]">({formatChangePercent(item.changePercent)})</span>
+              </div>
+              );
+            })}
           </div>
-        )}
-        {useWebSocketMode && !wsConnected && (
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-            <span className="text-yellow-400">重连中</span>
-          </div>
-        )}
-        {!useWebSocketMode && (
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-            <span className="text-gray-400">轮询</span>
+        ) : (
+          <div className="flex items-center justify-center text-blue-200 text-xs">
+            {language === "zh" ? "点击右侧按钮更新市场行情" : "Click the button to update market data"}
           </div>
         )}
       </div>
 
-      {/* 滚动容器 */}
-      <div className="flex animate-scroll whitespace-nowrap">
-        {duplicatedData.map((item, index) => (
-          <div
-            key={`${item.symbol}-${index}`}
-            className="inline-flex items-center px-6 border-r border-white/20"
-          >
-            <span className="font-medium mr-2">
-              {language === "zh" ? item.nameZh : item.nameEn}
-            </span>
-            <span className="mr-2">{formatPrice(item.price, item.currency)}</span>
-            <span className={`${getChangeColor(item.change)} font-medium`}>
-              {getChangeSymbol(item.change)}{formatChange(item.change)} ({formatChangePercent(item.changePercent)})
-            </span>
-          </div>
-        ))}
+      {/* 更新按钮和时间戳 */}
+      <div className="flex items-center gap-2 px-3 py-1 bg-blue-900/50 border-l border-blue-500">
+        <span className="text-[10px] text-blue-200 whitespace-nowrap">
+          {getTimeAgo(lastUpdateTime)}
+        </span>
+        <button
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="flex items-center gap-1 px-2 py-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white text-xs rounded transition-colors"
+          title={language === "zh" ? "更新行情" : "Refresh market data"}
+        >
+          <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+          <span className="whitespace-nowrap">
+            {language === "zh" ? "行情更新" : "Refresh"}
+          </span>
+        </button>
       </div>
-
-      {/* CSS动画 */}
-      <style>{`
-        @keyframes scroll {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        .animate-scroll {
-          animation: scroll 60s linear infinite;
-        }
-        
-        .animate-scroll:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
     </div>
   );
 }

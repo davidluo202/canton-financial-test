@@ -705,3 +705,24 @@
 - [x] 生成AWS部署包v2.3-final压缩文件（3.8MB）
 - [x] 设计CI/CD自动化流程文档（方案C，CICD_AUTOMATION_DESIGN.md）
 - [ ] 保存检查点
+
+## v2.6 修复用户反馈的问题（2026-02-12）
+
+- [x] 修复Services和Leadership页面（中英文版）顶部仍被行情条遮挡的问题（pt-24改为pt-32）
+- [x] 将"行情更新"按钮与滚动行情分离，避免重叠（按钮放在右侧独立区域）
+- [x] 添加行情更新成功/失败的弹窗提示（使用toast提示）
+- [x] 删除浏览器标签页标题中的"Test Site"字样（直接修改index.html）
+- [ ] 测试所有页面（Home, Services, Leadership, About, Contact）中英文版
+- [ ] 生成最新的AWS部署包v2.6
+
+## v2.6 修复用户反馈的问题（2026-02-15）
+
+- [x] 修复Services和Leadership页面（中英文版）顶部被行情条遮挡的问题（pt-24改为pt-32）
+- [x] 将"行情更新"按钮与滚动行情分离处理，不要重叠在一起（按钮放在右侧独立区域）
+- [x] 添加行情更新成功/失败的弹窗提示（使用toast提示）
+- [x] 删除浏览器标签页标题中的"Test Site"字样（直接修改index.html）
+- [x] 禁用WebSocket服务器端自动更新市场数据（改为完全手动触发）
+- [x] 修改MarketTicker组件为手动更新模式（enabled: false）
+- [x] 修改NewsPopover组件为延迟加载（鼠标悬停或点击时才加载）
+- [ ] 测试所有页面（Home, Services, Leadership, About, Contact）中英文版（由于API限流，将在部署后测试）
+- [ ] 生成最新的AWS部署包v2.6

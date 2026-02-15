@@ -12,7 +12,11 @@ export default function NewsPopover() {
   const [currentImages, setCurrentImages] = useState<string[]>([]);
   const { language } = useLanguage();
   const [, setLocation] = useLocation();
-  const { data: newsList = [] } = trpc.news.getAll.useQuery();
+  const { data: newsList = [], refetch } = trpc.news.getAll.useQuery(undefined, {
+    enabled: false, // 禁用自动查询
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  });
 
   // Check if mobile
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
@@ -24,12 +28,18 @@ export default function NewsPopover() {
     } else {
       // Desktop: toggle popover
       setIsOpen(!isOpen);
+      if (!isOpen) {
+        // 点击打开时才加载数据
+        refetch();
+      }
     }
   };
 
   const handleMouseEnter = () => {
     if (!isMobile) {
       setIsOpen(true);
+      // 鼠标悬停时才加载数据
+      refetch();
     }
   };
 

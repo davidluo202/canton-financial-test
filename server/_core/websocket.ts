@@ -126,8 +126,8 @@ export class MarketDataWebSocketServer {
       });
     });
 
-    // 启动定时更新市场数据（每15分钟 - 降低API用量消耗）
-    this.startDataUpdate();
+    // 禁用自动更新市场数据，改为手动触发
+    // this.startDataUpdate();
 
     // 启动心跳检测（每60秒）
     this.startHeartbeat();

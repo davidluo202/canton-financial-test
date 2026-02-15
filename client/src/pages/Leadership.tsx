@@ -48,7 +48,7 @@ export default function Leadership() {
       <Navbar />
       <MarketTicker />
       
-      <div className="flex-1 pt-24">
+      <div className="flex-1 pt-32">
         {/* Hero Section */}
         <div className="relative bg-gradient-to-r from-indigo-900/60 via-purple-900/60 to-blue-900/60 text-white py-16">
           <div className="absolute inset-0 bg-black/10"></div>
