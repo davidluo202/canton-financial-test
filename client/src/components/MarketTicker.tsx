@@ -136,11 +136,12 @@ export default function MarketTicker() {
             const name = language === "zh" ? item.nameZh : item.nameEn;
             
             return (
-              <div key={`${item.symbol}-${index}`} className={`flex items-center mx-4 whitespace-nowrap ${colorClass}`}>
-                <span className="font-semibold text-xs">{name}</span>
-                <span className="ml-3 text-[10px]">{formatPrice(item.price, item.currency)}</span>
-                <span className="ml-2 text-[10px]">{formatChange(item.change)}</span>
-                <span className="ml-1.5 text-[10px]">({formatChangePercent(item.changePercent)})</span>
+              <div key={`${item.symbol}-${index}`} className={`inline-flex items-center px-6 border-r border-white/20 ${colorClass}`}>
+                <span className="font-medium mr-2">{name}</span>
+                <span className="mr-2">{formatPrice(item.price, item.currency)}</span>
+                <span className="font-medium">
+                  {formatChange(item.change)} ({formatChangePercent(item.changePercent)})
+                </span>
               </div>
               );
             })}
