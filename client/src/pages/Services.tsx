@@ -18,7 +18,7 @@ export default function Services() {
       <Navbar />
       <MarketTicker />
       
-      <div className="pt-32 pb-12">
+      <div className="pt-40 pb-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Page Header */}
           <div className="text-center mb-12">

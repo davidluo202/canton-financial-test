@@ -13,11 +13,11 @@ export default function AboutUs() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/中环夜景图.jpg)' }}>
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: 'url(/VIctoriaHarbor.jpg)' }}>
       <Navbar />
       <MarketTicker />
       
-      <div className="pt-32 pb-12">
+      <div className="pt-40 pb-12">
         <div className="max-w-6xl mx-auto px-4">
           {/* Page Header */}
           <div className="text-center mb-12">
