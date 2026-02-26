@@ -787,3 +787,11 @@
 - [x] 同时调整Jack Mou照片位置保持一致（objectPosition: 'center 20%'）
 - [x] 测试照片显示效果
 - [x] 生成v2.14检查点
+
+
+## v2.15 修改Footer公司声明文字（2026-02-17）
+
+- [x] 修改Footer中的中文版公司声明文字，使语义更清晰（受其監管并为客户提供證券交易和服务）
+- [x] 修改Footer中的英文版公司声明文字，与中文版对应（regulated by it and provides securities trading and services to clients）
+- [x] 测试所有页面Footer显示
+- [x] 生成v2.15检查点

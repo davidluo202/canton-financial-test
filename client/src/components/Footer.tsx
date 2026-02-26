@@ -20,8 +20,8 @@ export default function Footer() {
           <div className="text-center space-y-2">
             <p className="text-sm text-gray-300">
               {language === "zh"
-                ? "誠港金融股份有限公司為香港證監會認可的持牌法團（中央編號：BSU667），提供證券並受其監管"
-                : "Canton Mutual Financial Limited provides services and is regulated as a licensed corporation recognized by the Securities and Futures Commission of Hong Kong (Central No.: BSU667)"}
+                ? "誠港金融股份有限公司為香港證監會認可的持牌法團（中央編號：BSU667），受其監管并为客户提供證券交易和服务"
+                : "Canton Mutual Financial Limited is a licensed corporation recognized by the Hong Kong Securities and Futures Commission (Central Number: BSU667), regulated by it and provides securities trading and services to clients"}
             </p>
             <p className="text-sm text-gray-400">
               {language === "zh"
