@@ -190,7 +190,7 @@ export default function AboutUs() {
                         src="/Jack.jpg" 
                         alt="Jack Mou" 
                         className="w-32 h-32 rounded-xl object-cover border-4 border-white/20"
-                        style={{ objectPosition: 'center 30%' }}
+                        style={{ objectPosition: 'center 20%' }}
                       />
                     </div>
                     <div className="flex-1">
@@ -238,7 +238,7 @@ Jack's leadership philosophy—"Compliance precedes commerce"—permeates every 
                         src="/Xintao.jpg" 
                         alt="Xintao Luo" 
                         className="w-32 h-32 rounded-xl object-cover border-4 border-white/20"
-                        style={{ objectPosition: 'center 30%' }}
+                        style={{ objectPosition: 'center 20%' }}
                       />
                     </div>
                     <div className="flex-1">

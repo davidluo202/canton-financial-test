@@ -779,3 +779,11 @@
 - [x] 调整About页面中两位创始人照片的位置，完全露出头顶（objectPosition: 'center 30%'）
 - [x] 测试所有修复
 - [x] 生成v2.13检查点
+
+
+## v2.14 进一步调整行政总裁照片位置（2026-02-17）
+
+- [x] 进一步调整行政总裁（Xintao Luo）照片位置，确保头顶完全露出不被裁切（objectPosition: 'center 20%'）
+- [x] 同时调整Jack Mou照片位置保持一致（objectPosition: 'center 20%'）
+- [x] 测试照片显示效果
+- [x] 生成v2.14检查点
