@@ -771,3 +771,11 @@
 - [x] 增加Services页面的上下间距（pt-32改为pt-40）
 - [x] 测试所有修复
 - [x] 生成v2.12检查点
+
+
+## v2.13 删除Test Site标题并调整创始人照片位置（2026-02-17）
+
+- [x] 删除网站标题“Canton Mutual Financial Limited - Test Site”中的“ - Test Site”（修改const.ts中的APP_TITLE）
+- [x] 调整About页面中两位创始人照片的位置，完全露出头顶（objectPosition: 'center 30%'）
+- [x] 测试所有修复
+- [x] 生成v2.13检查点
