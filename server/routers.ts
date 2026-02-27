@@ -1,4 +1,7 @@
-import { COOKIE_NAME } from "@shared/const";
+import { z } from "zod";
+import { SignJWT } from "jose";
+import { COOKIE_NAME, ONE_YEAR_MS } from "@shared/const";
+import { ENV } from "./_core/env";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
@@ -14,6 +17,25 @@ export const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    login: publicProcedure
+      .input(z.object({ password: z.string() }))
+      .mutation(async ({ input, ctx }) => {
+        // Simple password check using process.env.ADMIN_PASSWORD
+        const adminPassword = process.env.ADMIN_PASSWORD || "cmfadmin2026";
+        if (input.password === adminPassword) {
+          const cookieOptions = getSessionCookieOptions(ctx.req);
+          
+          const secretKey = new TextEncoder().encode(ENV.cookieSecret);
+          const token = await new SignJWT({ role: "admin", openId: "admin" })
+            .setProtectedHeader({ alg: "HS256" })
+            .setExpirationTime("30d")
+            .sign(secretKey);
+            
+          ctx.res.cookie(COOKIE_NAME, token, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+          return { success: true };
+        }
+        throw new Error("Invalid password");
+      }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
