@@ -29,7 +29,23 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
-  const app = express();
+  
+  // Auto-migrate database on startup
+  try {
+    const { execSync } = require('child_process');
+    console.log('[Auto-Migrate] Running database migrations...');
+    if (process.env.DATABASE_URL) {
+      execSync('npx drizzle-kit push', { stdio: 'inherit', env: { ...process.env } });
+      console.log('[Auto-Migrate] Database migrations completed successfully.');
+    } else {
+      console.log('[Auto-Migrate] No DATABASE_URL found, skipping migration.');
+    }
+  } catch (error) {
+    console.error('[Auto-Migrate] Failed to run migrations:', error.message);
+    // Continue anyway, maybe tables already exist
+  }
+  
+const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));

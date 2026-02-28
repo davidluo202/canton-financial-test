@@ -10,6 +10,13 @@ const CONSOLE_AUTH_TOKEN = "console_admin_session";
 
 
 export const newsRouter = router({
+  debugDb: publicProcedure.query(async () => {
+    return {
+      hasUrl: !!process.env.DATABASE_URL,
+      urlPrefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 15) + '...' : null,
+    };
+  }),
+
   // Get all news (public, no auth required)
   getAll: publicProcedure.query(async () => {
     const db = await getDb();
