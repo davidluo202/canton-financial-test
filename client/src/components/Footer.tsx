@@ -36,7 +36,6 @@ export default function Footer() {
                 {language === "zh" ? "免責聲明和使用條款" : "Disclaimer & Terms of Use"}
               </button>
             </div>
-            <p className="text-xs text-gray-500 mt-4">Made with Manus</p>
           </div>
         </div>
       </footer>
