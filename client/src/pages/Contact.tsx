@@ -40,9 +40,9 @@ export default function Contact() {
       icon: Mail,
       labelZh: "電子郵箱",
       labelEn: "Email",
-      contentZh: "customer-services@cmfinancial.com\ninfo@cmfinancial.com",
-      contentEn: "customer-services@cmfinancial.com\ninfo@cmfinancial.com",
-      links: ["mailto:customer-services@cmfinancial.com", "mailto:info@cmfinancial.com"]
+      contentZh: "customer-services@cmfinancial.com",
+      contentEn: "customer-services@cmfinancial.com",
+      links: ["mailto:customer-services@cmfinancial.com"]
     },
     {
       icon: Globe,
