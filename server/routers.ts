@@ -11,6 +11,7 @@ import { dashboardRouter } from "./dashboardRouter";
 import { marketRouter } from "./marketRouter";
 import { newsRouter } from "./newsRouter";
 import { uploadRouter } from "./uploadRouter";
+import { initRouter } from "./initRouter";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -62,6 +63,9 @@ export const appRouter = router({
   
   // Upload router
   upload: uploadRouter,
+
+  // DB init router (admin only)
+  init: initRouter,
 });
 
 export type AppRouter = typeof appRouter;
