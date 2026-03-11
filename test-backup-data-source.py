@@ -4,9 +4,14 @@
 使用Manus内置的Yahoo Finance Data API作为备用数据源
 """
 
-import sys
-sys.path.append('/opt/.manus/.sandbox-runtime')
-from data_api import ApiClient
+# NOTE: This script originally depended on a Manus sandbox runtime.
+# If you still have a compatible `data_api` module available, make sure it's on PYTHONPATH.
+try:
+    from data_api import ApiClient
+except ImportError as e:
+    raise ImportError(
+        "Missing dependency: `data_api`. Provide a compatible module on PYTHONPATH to run this script."
+    ) from e
 import json
 from datetime import datetime
 
@@ -77,7 +82,7 @@ def test_yahoo_finance_data_api():
     print(f"成功获取 {len(results)}/{len(symbols)} 个市场数据")
     
     # 保存结果到文件
-    output_file = '/home/ubuntu/canton-financial-test/backup-data-source-test-results.json'
+    output_file = 'backup-data-source-test-results.json'
     with open(output_file, 'w', encoding='utf-8') as f:
         json.dump({
             'timestamp': datetime.now().isoformat(),

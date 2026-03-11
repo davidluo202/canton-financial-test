@@ -4,9 +4,14 @@
 测试获取股票指数、外汇和贵金属数据
 """
 
-import sys
-sys.path.append('/opt/.manus/.sandbox-runtime')
-from data_api import ApiClient
+# NOTE: This script originally depended on a Manus sandbox runtime.
+# If you still have a compatible `data_api` module available, make sure it's on PYTHONPATH.
+try:
+    from data_api import ApiClient
+except ImportError as e:
+    raise ImportError(
+        "Missing dependency: `data_api`. Provide a compatible module on PYTHONPATH to run this script."
+    ) from e
 import json
 
 def test_market_data():
@@ -91,11 +96,12 @@ def test_market_data():
     print("\n测试结果汇总:")
     print(f"成功: {sum(1 for v in results.values() if v is not None)}/{len(all_symbols)}")
     
-    # 保存结果到JSON文件
-    with open('/home/ubuntu/canton-financial-test/market-data-test-results.json', 'w', encoding='utf-8') as f:
+    # 保存结果到JSON文件（写到当前目录）
+    out_file = 'market-data-test-results.json'
+    with open(out_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     
-    print("\n结果已保存到: market-data-test-results.json")
+    print(f"\n结果已保存到: {out_file}")
     
     return results
 
