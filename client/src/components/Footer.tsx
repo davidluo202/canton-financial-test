@@ -28,13 +28,16 @@ export default function Footer() {
                 ? "© 2025 誠港金融股份有限公司版權所有"
                 : "© 2025 Canton Mutual Financial Limited All Rights Reserved"}
             </p>
-            <div className="mt-4">
+            <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 relative">
               <button
                 onClick={() => setShowDisclaimer(true)}
                 className="text-yellow-400 hover:text-yellow-300 font-semibold text-sm underline transition-colors"
               >
                 {language === "zh" ? "免責聲明和使用條款" : "Disclaimer & Terms of Use"}
               </button>
+              <div className="sm:absolute sm:right-0 text-xs text-gray-500 mt-2 sm:mt-0">
+                v1.0.260312.001
+              </div>
             </div>
           </div>
         </div>
