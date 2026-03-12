@@ -59,7 +59,7 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               onClick={toggleLanguage}
-              className="ml-4"
+              className="ml-4 text-gray-700 hover:text-blue-600 hover:bg-blue-50"
               title={language === "zh" ? "Switch to English" : "切换到中文"}
             >
               <Globe className="h-5 w-5" />
@@ -72,6 +72,7 @@ export default function Navbar() {
               variant="ghost"
               size="icon"
               onClick={toggleLanguage}
+              className="text-gray-700 hover:text-blue-600 hover:bg-blue-50"
               title={language === "zh" ? "Switch to English" : "切换到中文"}
             >
               <Globe className="h-5 w-5" />
