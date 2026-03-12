@@ -36,7 +36,7 @@ export default function Footer() {
                 {language === "zh" ? "免責聲明和使用條款" : "Disclaimer & Terms of Use"}
               </button>
               <div className="sm:absolute sm:right-0 text-xs text-gray-500 mt-2 sm:mt-0">
-                v1.0.260312.001
+                v1.0.260312.002
               </div>
             </div>
           </div>
