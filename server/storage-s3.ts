@@ -31,9 +31,10 @@ function getS3Client(): S3Client {
 }
 
 function getBucketName(): string {
-  const bucketName = process.env.S3_BUCKET_NAME;
+  // Check both S3_BUCKET_NAME and AWS_S3_BUCKET for compatibility
+  const bucketName = process.env.S3_BUCKET_NAME || process.env.AWS_S3_BUCKET;
   if (!bucketName) {
-    throw new Error("S3 bucket name missing: set S3_BUCKET_NAME");
+    throw new Error("S3 bucket name missing: set S3_BUCKET_NAME or AWS_S3_BUCKET");
   }
   return bucketName;
 }
