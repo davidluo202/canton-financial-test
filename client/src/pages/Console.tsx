@@ -307,31 +307,33 @@ export default function Console() {
   // Login page
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-          <h1 className="text-2xl font-bold mb-6 text-center">新聞稿管理後台</h1>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md border border-gray-200">
+          <h1 className="text-2xl font-bold mb-6 text-center text-gray-900">新聞稿管理後台</h1>
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">用戶名</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">用戶名</label>
               <Input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="請輸入用戶名"
                 required
+                className="bg-white text-gray-900 border-gray-300"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">密碼</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">密碼</label>
               <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="請輸入密碼"
                 required
+                className="bg-white text-gray-900 border-gray-300"
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
               登錄
             </Button>
           </form>
@@ -342,32 +344,33 @@ export default function Console() {
 
   // Console page
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-white p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">新聞稿管理後台</h1>
-          <Button onClick={handleLogout} variant="outline">
+          <h1 className="text-3xl font-bold text-gray-900">新聞稿管理後台</h1>
+          <Button onClick={handleLogout} variant="outline" className="border-gray-300 text-gray-700">
             退出登錄
           </Button>
         </div>
 
         {/* News Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200 mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">
             {editingId ? "編輯新聞" : "發布新聞"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">日期</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">日期</label>
               <Input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
+                className="bg-white text-gray-900 border-gray-300"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
                 內容（最多300個字）
               </label>
               <Textarea
@@ -377,6 +380,7 @@ export default function Console() {
                 rows={4}
                 maxLength={300}
                 required
+                className="bg-white text-gray-900 border-gray-300"
               />
               <p className="text-sm text-gray-500 mt-1">
                 {content.length}/300 字
@@ -385,7 +389,7 @@ export default function Console() {
 
             {/* Image uploads with drag and drop */}
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
                 圖片（最多9張，支持拖拽排序）
               </label>
               
@@ -404,7 +408,7 @@ export default function Console() {
                   id="batch-upload"
                 />
                 <label htmlFor="batch-upload">
-                  <Button type="button" variant="outline" className="w-full" asChild>
+                  <Button type="button" variant="outline" className="w-full border-gray-300 text-gray-700" asChild>
                     <span className="flex items-center justify-center gap-2 cursor-pointer">
                       <Upload className="h-4 w-4" />
                       批量上傳圖片（{images.length}/9）
@@ -454,7 +458,7 @@ export default function Console() {
                     id="single-upload"
                   />
                   <label htmlFor="single-upload">
-                    <Button type="button" variant="ghost" className="w-full border-2 border-dashed" asChild>
+                    <Button type="button" variant="ghost" className="w-full border-2 border-dashed border-gray-300 text-gray-700 hover:bg-gray-50" asChild>
                       <span className="flex items-center justify-center gap-2 cursor-pointer">
                         <Upload className="h-4 w-4" />
                         添加單張圖片
@@ -466,11 +470,11 @@ export default function Console() {
             </div>
 
             <div className="flex gap-2">
-              <Button type="submit">
+              <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
                 {editingId ? "更新新聞" : "發布新聞"}
               </Button>
               {editingId && (
-                <Button type="button" variant="outline" onClick={handleCancelEdit}>
+                <Button type="button" variant="outline" onClick={handleCancelEdit} className="border-gray-300 text-gray-700">
                   取消編輯
                 </Button>
               )}
@@ -479,8 +483,8 @@ export default function Console() {
         </div>
 
         {/* News List */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold mb-4">已發布新聞</h2>
+        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+          <h2 className="text-xl font-semibold mb-4 text-gray-900">已發布新聞</h2>
           {newsList.length === 0 ? (
             <p className="text-gray-500">暫無新聞</p>
           ) : (
@@ -488,10 +492,10 @@ export default function Console() {
               {newsList.map((item) => (
                 <div
                   key={item.id}
-                  className="border rounded-lg p-4 hover:bg-gray-50"
+                  className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <p className="font-semibold text-gray-700">
+                    <p className="font-semibold text-gray-900">
                       {new Date(item.date).toLocaleDateString("zh-CN")}
                     </p>
                     <div className="flex gap-2">
@@ -499,6 +503,7 @@ export default function Console() {
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(item)}
+                        className="border-gray-300 text-gray-700"
                       >
                         編輯
                       </Button>
@@ -513,14 +518,18 @@ export default function Console() {
                   </div>
                   <p className="text-gray-800 mb-2">{item.content}</p>
                   {(item.image1 || item.image2 || item.image3 || item.image4 || item.image5 || item.image6 || item.image7 || item.image8 || item.image9) && (
-                    <div className="flex gap-2 flex-wrap">
+                    <div className="flex gap-2 flex-wrap mt-2">
                       {[item.image1, item.image2, item.image3, item.image4, item.image5, item.image6, item.image7, item.image8, item.image9].map((img, idx) => 
                         img && (
                           <img
                             key={idx}
                             src={img}
-                            alt={`Image ${idx + 1}`}
-                            className="w-24 h-24 object-cover rounded"
+                            alt={`新聞圖片 ${idx + 1}`}
+                            className="w-24 h-24 object-cover rounded border border-gray-200"
+                            onError={(e) => {
+                              console.error("圖片加載失敗:", img);
+                              e.currentTarget.style.display = "none";
+                            }}
                           />
                         )
                       )}
