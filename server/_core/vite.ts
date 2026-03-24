@@ -8,10 +8,11 @@ export async function setupVite(app: Express, server: Server) {
   // 动态导入vite和vite.config，只在开发环境使用，并且通过变量隐藏导入以防Vercel nft打包进去
   const viteName = "vite";
   const viteConfigName = "../../vite.config.js";
-  const [{ createServer: createViteServer }, viteConfigModule] = await Promise.all([
+  const [viteModule, viteConfigModule] = await Promise.all([
     import(viteName),
     import(viteConfigName as any)
   ]);
+  const createViteServer = viteModule.createServer;
   
   const serverOptions = {
     middlewareMode: true,
