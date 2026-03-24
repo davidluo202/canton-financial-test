@@ -5,10 +5,12 @@ import { nanoid } from "nanoid";
 import path from "path";
 
 export async function setupVite(app: Express, server: Server) {
-  // 动态导入vite和vite.config，只在开发环境使用
+  // 动态导入vite和vite.config，只在开发环境使用，并且通过变量隐藏导入以防Vercel nft打包进去
+  const viteName = "vite";
+  const viteConfigName = "../../vite.config.js";
   const [{ createServer: createViteServer }, viteConfigModule] = await Promise.all([
-    import("vite"),
-    import("../../vite.config.js")
+    import(viteName),
+    import(viteConfigName as any)
   ]);
   
   const serverOptions = {
