@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 // import AIChatbot from "@/components/AIChatbot"; // 暂停AI聊天机器人以降低API用量消耗
 import NewsPopover from "@/components/NewsPopover";
+import FraudWarningDialog from "@/components/FraudWarningDialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Link } from "wouter";
 
@@ -221,6 +222,7 @@ export default function Home() {
       <Footer />
       {/* <AIChatbot /> */} {/* 暂停AI聊天机器人以降低API用量消耗 */}
       <NewsPopover />
+      <FraudWarningDialog />
     </div>
   );
 }
