@@ -63,7 +63,7 @@ export default function FraudWarningDialog() {
                 我司<strong>不設</strong>任何形式的對外銷售工牌。任何聲稱持有我司工牌進行銷售活動的行為均屬虛假及未經授權。
               </li>
               <li>
-                我司所有官方資訊及服務<strong>僅</strong>通過本公司官方網站（<a href="https://www.cantonmutual.com" className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">www.cantonmutual.com</a>）發佈。任何非經本網站發佈的系統、資訊或通訊均不代表我司立場。
+                我司所有官方資訊及服務<strong>僅</strong>通過本公司官方網站（<a href="https://www.cmfinancial.com" className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">www.cmfinancial.com</a>）發佈。任何非經本網站發佈的系統、資訊或通訊均不代表我司立場。
               </li>
               <li>
                 如閣下對任何以我司名義進行的通訊、邀約或活動有疑問，請通過我司官方網站上列明的聯繫方式以<strong>正式電子郵件</strong>向我司查詢核實。
@@ -97,7 +97,7 @@ export default function FraudWarningDialog() {
                 We do <strong>not</strong> issue any form of external sales identification badges. Any person claiming to hold such credentials from our company is acting fraudulently and without authorization.
               </li>
               <li>
-                All official information and services of our company are published <strong>exclusively</strong> through our official website (<a href="https://www.cantonmutual.com" className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">www.cantonmutual.com</a>). Any systems, information, or communications not published through this website do not represent our company.
+                All official information and services of our company are published <strong>exclusively</strong> through our official website (<a href="https://www.cmfinancial.com" className="text-blue-400 hover:text-blue-300 underline" target="_blank" rel="noopener noreferrer">www.cmfinancial.com</a>). Any systems, information, or communications not published through this website do not represent our company.
               </li>
               <li>
                 Should you have any doubts regarding any communication, solicitation, or activity purportedly conducted in our name, please verify directly with us via <strong>formal email</strong> using the contact details listed on our official website.
