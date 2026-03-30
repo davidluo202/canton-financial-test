@@ -35,7 +35,7 @@ export default function FraudWarningDialog() {
       {dismissed && !open && (
         <button
           onClick={handleReopen}
-          className="fixed top-20 right-4 z-50 bg-amber-600 hover:bg-amber-500 text-white rounded-full w-11 h-11 flex items-center justify-center shadow-lg shadow-amber-900/40 transition-all duration-300 hover:scale-110 animate-pulse hover:animate-none"
+          className="fixed top-32 right-4 z-50 bg-amber-600 hover:bg-amber-500 text-white rounded-full w-11 h-11 flex items-center justify-center shadow-lg shadow-amber-900/40 transition-all duration-300 hover:scale-110 animate-pulse hover:animate-none"
           title={language === "zh" ? "重要聲明" : "Important Notice"}
         >
           <AlertTriangle className="w-6 h-6" />
