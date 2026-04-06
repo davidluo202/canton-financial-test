@@ -82,6 +82,13 @@ export default function FraudWarningDialog() {
                 <p className="text-amber-200 font-medium">
                   我司懇請公眾提高警惕，謹防詐騙。如發現可疑活動，建議向香港警務處或證券及期貨事務監察委員會舉報。
                 </p>
+                <div className="border-t border-amber-500/30 mt-4 pt-4">
+                  <p>本公司從未授權任何機構或个人在國內舉辦"創投之星"投資大賽或其他類似活動。</p>
+                  <p>任何以本公司名義進行的推廣、宣傳行為均與本公司無關，本公司將保留追究其法律責任的權利。</p>
+                  <p>如發現相關侵權行為，請立即向本公司舉報。</p>
+                  <p className="mt-2">誠港金融股份有限公司</p>
+                  <p>2026年4月6日</p>
+                </div>
               </div>
             ) : (
               /* English Version */
@@ -110,6 +117,13 @@ export default function FraudWarningDialog() {
                 <p className="text-amber-200 font-medium">
                   We urge the public to remain vigilant against fraud. If you encounter any suspicious activity, we recommend reporting it to the Hong Kong Police Force or the Securities and Futures Commission.
                 </p>
+                <div className="border-t border-amber-500/30 mt-4 pt-4">
+                  <p>This company has never authorized any organization or individual to host "Venture Capital Star" investment competitions or similar activities within mainland China.</p>
+                  <p>Any promotion or publicity activities conducted in the name of this company are unrelated to this company, which reserves the right to pursue legal liability.</p>
+                  <p>If any such infringing activities are discovered, please report them to this company immediately.</p>
+                  <p className="mt-2">Canton Mutual Financial Limited</p>
+                  <p>April 6, 2026</p>
+                </div>
               </div>
             )}
           </div>
