@@ -3,26 +3,35 @@ import { router, publicProcedure } from "./_core/trpc";
 import { verifyEmailConfig, sendDailyChatReport } from "./emailService";
 import { triggerDailyReportManually } from "./scheduler";
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export const emailRouter = router({
   submitContactForm: publicProcedure
     .input(z.object({
-      name: z.string().min(1, "Name is required"),
-      email: z.string().email("Invalid email format"),
-      phone: z.string().optional(),
-      subject: z.string().min(1, "Subject is required"),
-      message: z.string().min(10, "Message must be at least 10 characters")
+      name: z.string().min(1, "Name is required").max(200),
+      email: z.string().email("Invalid email format").max(200),
+      phone: z.string().max(50).optional(),
+      subject: z.string().min(1, "Subject is required").max(500),
+      message: z.string().min(10, "Message must be at least 10 characters").max(5000)
     }))
     .mutation(async ({ input }) => {
       const { sendEmail } = await import("./emailService");
-      
+
       const html = `
         <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${input.name}</p>
-        <p><strong>Email:</strong> ${input.email}</p>
-        <p><strong>Phone:</strong> ${input.phone || 'N/A'}</p>
-        <p><strong>Subject:</strong> ${input.subject}</p>
+        <p><strong>Name:</strong> ${escapeHtml(input.name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(input.email)}</p>
+        <p><strong>Phone:</strong> ${escapeHtml(input.phone || 'N/A')}</p>
+        <p><strong>Subject:</strong> ${escapeHtml(input.subject)}</p>
         <h3>Message:</h3>
-        <p style="white-space: pre-wrap;">${input.message}</p>
+        <p style="white-space: pre-wrap;">${escapeHtml(input.message)}</p>
       `;
 
       const success = await sendEmail({
