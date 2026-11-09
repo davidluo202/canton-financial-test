@@ -284,6 +284,13 @@ export default function Services() {
               </div>
             </div>
           </section>
+
+          {/* 持牌法團收費表 */}
+          <section className="mt-12 bg-white/95 rounded-lg shadow-xl p-8 text-center" data-testid="fee-schedule">
+            <h2 className="text-2xl font-bold text-blue-900 mb-3">{language === "zh" ? "交易及服務費用" : "Fees and Charges"}</h2>
+            <p className="text-gray-700 mb-5">{language === "zh" ? "誠港金融股份有限公司（CE No. BSU667）證券交易及相關服務收費表。" : "Schedule of fees for securities dealing and related services of Canton Mutual Financial Limited (CE No. BSU667)."}</p>
+            <a href="/docs/fee-schedule.pdf" target="_blank" rel="noopener noreferrer" className="inline-block px-6 py-3 rounded bg-blue-900 text-white font-semibold hover:bg-blue-800">{language === "zh" ? "查看收費表（PDF）" : "View Fee Schedule (PDF)"}</a>
+          </section>
         </div>
       </div>
 
