@@ -35,8 +35,16 @@ export default function Footer() {
               >
                 {language === "zh" ? "免責聲明和使用條款" : "Disclaimer & Terms of Use"}
               </button>
+              <a
+                href="https://trading.cmfinancial.com/privacy"
+                target="_blank"
+                rel="noopener"
+                className="text-yellow-400 hover:text-yellow-300 font-semibold text-sm underline transition-colors"
+              >
+                {language === "zh" ? "私隱政策" : "Privacy Policy"}
+              </a>
               <div className="sm:absolute sm:right-0 text-xs text-gray-500 mt-2 sm:mt-0">
-                v1.0.260312.005
+                v1.0.261125.001
               </div>
             </div>
           </div>
